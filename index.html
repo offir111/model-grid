@@ -2,670 +2,416 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Model GRID — Pionex AI Grid Bot 2.0</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: #080c10;
-      color: #e0e8f0;
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      background: #070d14;
+      color: #dce8f0;
       font-family: 'Segoe UI', Arial, sans-serif;
-      min-height: 100vh;
-      padding: 32px 48px;
+    }
+
+    /* ── LAYOUT ── */
+    .root {
+      display: grid;
+      grid-template-rows: 54px 1fr;
+      grid-template-columns: 1fr 320px;
+      height: 100vh;
+      gap: 0;
     }
 
     /* ── HEADER ── */
     .header {
+      grid-column: 1 / -1;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 36px;
-      border-bottom: 1px solid #1a2a3a;
-      padding-bottom: 24px;
+      justify-content: space-between;
+      padding: 0 20px;
+      background: #0a1520;
+      border-bottom: 1px solid #152535;
     }
-    .header-left h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      color: #00d4ff;
-      letter-spacing: 1px;
-    }
-    .header-left p {
-      font-size: 1rem;
-      color: #5a7a9a;
-      margin-top: 4px;
-    }
-    .header-right {
-      text-align: left;
-    }
-    .btc-price {
-      font-size: 2.4rem;
-      font-weight: 800;
-      color: #f7931a;
-    }
-    .btc-label {
-      font-size: 0.9rem;
-      color: #5a7a9a;
-      text-align: center;
-      margin-top: 2px;
-    }
-    .refresh-info {
-      font-size: 0.8rem;
-      color: #3a5a7a;
-      margin-top: 6px;
-      text-align: left;
+    .header-title { font-size:1.1rem; font-weight:700; color:#00d4ff; letter-spacing:1px; }
+    .header-sub   { font-size:0.72rem; color:#3a5a7a; margin-top:1px; }
+    .btc-now      { font-size:1.5rem; font-weight:800; color:#f7931a; }
+    .refresh-txt  { font-size:0.7rem; color:#3a5a7a; text-align:left; margin-top:1px; }
+    .header-mid   { display:flex; gap:28px; }
+    .hm-item      { text-align:center; }
+    .hm-val       { font-size:1rem; font-weight:700; }
+    .hm-lbl       { font-size:0.65rem; color:#3a5a7a; margin-top:1px; }
+
+    /* ── LEFT PANEL ── */
+    .left {
+      grid-column: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px 10px 16px;
+      overflow: hidden;
     }
 
-    /* ── CARDS ROW ── */
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-      margin-bottom: 24px;
-    }
+    /* stat rows */
+    .row4 { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .row5 { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
+
     .card {
       background: #0d1820;
-      border: 1px solid #1a2f45;
-      border-radius: 14px;
-      padding: 24px 28px;
-    }
-    .card-label {
-      font-size: 0.85rem;
-      color: #4a6a8a;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
-    }
-    .card-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #e0e8f0;
-    }
-    .card-value.green  { color: #00e676; }
-    .card-value.red    { color: #ff5252; }
-    .card-value.blue   { color: #00d4ff; }
-    .card-value.orange { color: #f7931a; }
-    .card-sub {
-      font-size: 0.8rem;
-      color: #3a5a7a;
-      margin-top: 6px;
-    }
-
-    /* ── SECOND ROW ── */
-    .cards2 {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-      margin-bottom: 28px;
-    }
-    .card2 {
-      background: #0a1520;
       border: 1px solid #152535;
-      border-radius: 10px;
-      padding: 18px 20px;
+      border-radius: 9px;
+      padding: 10px 12px;
     }
-    .card2-label {
-      font-size: 0.78rem;
-      color: #3a5a7a;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-    .card2-value {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #b0c8e0;
-    }
+    .card-lbl { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:4px; }
+    .card-val { font-size:1.25rem; font-weight:700; }
+    .card-sub { font-size:0.65rem; color:#2a4a6a; margin-top:3px; }
+    .green  { color:#00e676; }
+    .blue   { color:#00d4ff; }
+    .orange { color:#f7931a; }
+    .gray   { color:#7a9ab0; }
 
-    /* ── GRID VISUALIZATION ── */
-    .section {
+    /* grid viz */
+    .grid-viz {
       background: #0d1820;
-      border: 1px solid #1a2f45;
-      border-radius: 14px;
-      padding: 28px 32px;
-      margin-bottom: 24px;
+      border: 1px solid #152535;
+      border-radius: 9px;
+      padding: 10px 14px;
     }
-    .section-title {
-      font-size: 1rem;
-      color: #4a6a8a;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .section-title::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #1a2f45;
-    }
-
-    /* Range bar */
-    .range-bar-wrap {
-      margin: 8px 0 24px 0;
-    }
-    .range-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      color: #4a6a8a;
-      margin-bottom: 8px;
-    }
+    .viz-title { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; }
+    .range-labels { display:flex; justify-content:space-between; font-size:0.68rem; color:#3a5a7a; margin-bottom:5px; }
     .range-bar {
-      position: relative;
-      height: 28px;
-      background: #0a1520;
-      border-radius: 14px;
-      border: 1px solid #1a2f45;
-      overflow: visible;
+      position:relative; height:20px;
+      background:#0a1520; border-radius:10px;
+      border:1px solid #152535; overflow:visible;
+      margin-bottom:10px;
     }
     .range-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #003a5a, #005a8a);
-      border-radius: 14px 0 0 14px;
-      transition: width 0.6s ease;
+      height:100%; background:linear-gradient(90deg,#003a5a,#005a8a);
+      border-radius:10px 0 0 10px;
     }
-    .price-marker {
-      position: absolute;
-      top: -8px;
-      width: 4px;
-      height: 44px;
-      background: #f7931a;
-      border-radius: 2px;
-      transform: translateX(-50%);
-      box-shadow: 0 0 12px #f7931a88;
+    .price-pin {
+      position:absolute; top:-5px;
+      width:3px; height:30px;
+      background:#f7931a; border-radius:2px;
+      transform:translateX(-50%);
+      box-shadow:0 0 8px #f7931a88;
     }
-    .price-marker-label {
-      position: absolute;
-      top: -28px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 0.75rem;
-      color: #f7931a;
-      white-space: nowrap;
-      font-weight: 700;
+    .pin-lbl {
+      position:absolute; top:-18px; left:50%;
+      transform:translateX(-50%);
+      font-size:0.65rem; color:#f7931a;
+      white-space:nowrap; font-weight:700;
     }
+    .grid-mini { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+    .gm { background:#0a1520; border-radius:7px; padding:7px 8px; text-align:center; border:1px solid #122030; }
+    .gm-v { font-size:1rem; font-weight:700; color:#00d4ff; }
+    .gm-l { font-size:0.6rem; color:#2a4a6a; margin-top:2px; }
 
-    /* Grid stats */
-    .grid-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 8px;
-    }
-    .grid-stat {
-      text-align: center;
-      background: #0a1520;
-      border-radius: 10px;
-      padding: 16px;
+    /* fills */
+    .fills-wrap {
+      background: #0d1820;
       border: 1px solid #152535;
-    }
-    .grid-stat-val {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #00d4ff;
-    }
-    .grid-stat-lbl {
-      font-size: 0.78rem;
-      color: #3a5a7a;
-      margin-top: 4px;
-    }
-
-    /* Profit per cycle info */
-    .profit-per-cycle {
+      border-radius: 9px;
+      padding: 8px 12px;
+      flex: 1;
+      overflow: hidden;
       display: flex;
-      align-items: center;
-      gap: 32px;
-      background: #0a1520;
-      border-radius: 10px;
-      padding: 16px 24px;
-      margin-top: 20px;
-      border: 1px solid #152535;
+      flex-direction: column;
     }
-    .ppc-item { text-align: center; }
-    .ppc-val {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #00e676;
-    }
-    .ppc-lbl {
-      font-size: 0.75rem;
-      color: #3a5a7a;
-      margin-top: 2px;
-    }
+    .fills-title { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:6px; }
+    .fills-table { flex:1; overflow-y:auto; }
+    table { width:100%; border-collapse:collapse; font-size:0.78rem; }
+    thead th { color:#2a4a6a; font-size:0.62rem; text-transform:uppercase; padding:4px 8px; border-bottom:1px solid #122030; text-align:right; }
+    tbody tr { border-bottom:1px solid #0c1820; }
+    tbody td { padding:5px 8px; }
+    .badge-sell { background:#003a20; color:#00e676; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; }
+    .pp { color:#00e676; font-weight:600; }
 
-    /* ── TRADE LOG ── */
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    /* ── RIGHT PANEL — GRID LEVELS ── */
+    .right {
+      grid-column: 2;
+      background: #0a1118;
+      border-right: 1px solid #152535;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
-    thead th {
-      text-align: right;
-      padding: 12px 16px;
-      font-size: 0.8rem;
+    .right-title {
+      padding: 10px 14px 8px;
+      font-size: 0.7rem;
       color: #3a5a7a;
       text-transform: uppercase;
       letter-spacing: 1px;
-      border-bottom: 1px solid #1a2f45;
-    }
-    tbody tr {
-      border-bottom: 1px solid #0f1e2d;
-      transition: background 0.15s;
-    }
-    tbody tr:hover { background: #0f1e2d; }
-    tbody td {
-      padding: 14px 16px;
-      font-size: 0.95rem;
-    }
-    .badge {
-      display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .badge-sell { background: #003a20; color: #00e676; }
-    .badge-buy  { background: #0a2540; color: #00d4ff; }
-    .profit-pos { color: #00e676; font-weight: 600; }
-    .profit-neg { color: #ff5252; font-weight: 600; }
-
-    /* ── STATUS BAR ── */
-    .status-bar {
+      border-bottom: 1px solid #122030;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: 20px;
-      padding: 12px 20px;
-      background: #0a1520;
-      border-radius: 8px;
-      font-size: 0.82rem;
-      color: #3a5a7a;
+      flex-shrink: 0;
     }
-    .status-dot {
-      width: 8px; height: 8px;
-      background: #00e676;
-      border-radius: 50%;
-      display: inline-block;
-      margin-left: 8px;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
-    }
+    .legend { display:flex; gap:10px; font-size:0.6rem; }
+    .leg { display:flex; align-items:center; gap:4px; }
+    .dot-green  { width:7px;height:7px;background:#00e676;border-radius:50%; }
+    .dot-orange { width:7px;height:7px;background:#f7931a;border-radius:50%; }
+    .dot-gray   { width:7px;height:7px;background:#2a4060;border-radius:50%; }
 
-    /* ── LOADING ── */
-    .loading {
-      text-align: center;
-      padding: 80px;
-      font-size: 1.2rem;
-      color: #3a5a7a;
+    .levels-scroll { flex:1; overflow-y:auto; }
+    .lvl-table { width:100%; border-collapse:collapse; font-size:0.75rem; }
+    .lvl-table thead th {
+      position:sticky; top:0;
+      background:#0a1118; z-index:1;
+      color:#2a4a6a; font-size:0.6rem;
+      text-transform:uppercase;
+      padding:5px 8px;
+      border-bottom:1px solid #122030;
+      text-align:right;
     }
-    .spinner {
-      border: 3px solid #1a2f45;
-      border-top: 3px solid #00d4ff;
-      border-radius: 50%;
-      width: 48px; height: 48px;
-      animation: spin 1s linear infinite;
-      margin: 0 auto 20px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .lvl-table tbody tr { border-bottom:1px solid #0c1520; }
+    .lvl-table tbody td { padding:4px 8px; }
+    .lvl-filled  { background:#001a10; }
+    .lvl-current { background:#1a0e00; }
 
-    /* ── ERROR ── */
-    .error-box {
-      background: #1a0a0a;
-      border: 1px solid #5a1a1a;
-      border-radius: 10px;
-      padding: 24px;
-      color: #ff5252;
-      text-align: center;
+    /* status */
+    .status {
+      grid-column: 1 / -1;
+      background: #091018;
+      border-top: 1px solid #122030;
+      padding: 4px 16px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: #2a4a6a;
+      flex-shrink: 0;
     }
+    .dot-live { width:6px;height:6px;background:#00e676;border-radius:50%;display:inline-block;margin-left:5px;animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar-track { background:#070d14; }
+    ::-webkit-scrollbar-thumb { background:#1a2f45; border-radius:2px; }
   </style>
 </head>
 <body>
-
-<div id="app">
-  <div class="loading">
-    <div class="spinner"></div>
-    טוען נתונים מ-GitHub...
+<div class="root" id="root">
+  <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;color:#3a5a7a;font-size:1rem">
+    טוען...
   </div>
 </div>
 
 <script>
-const PORTFOLIO_URL  = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/portfolio.json';
-const STATE_URL      = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/grid_state.json';
-const PRICE_URL      = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+const P_URL = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/portfolio.json';
+const S_URL = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/grid_state.json';
+const B_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
 
-let countdown = 60;
-let timer;
+let countdown = 60, timer;
 
-function fmt(n, dec=2) {
-  if (n == null || isNaN(n)) return '—';
-  return Number(n).toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-}
-function fmtDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('he-IL') + '  ' + d.toTimeString().slice(0,5);
-}
-function daysSince(iso) {
-  if (!iso) return 0;
-  return Math.max(0.001, (Date.now() - new Date(iso).getTime()) / 86400000);
-}
+const fmt  = (n,d=2) => n==null||isNaN(n)?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtD = iso => { if(!iso) return '—'; const d=new Date(iso); return d.toLocaleDateString('he-IL')+' '+d.toTimeString().slice(0,5); };
+const days = iso => Math.max(0.001,(Date.now()-new Date(iso).getTime())/86400000);
 
-async function loadData() {
-  try {
-    const [pRes, sRes, prRes] = await Promise.all([
-      fetch(PORTFOLIO_URL  + '?t=' + Date.now()),
-      fetch(STATE_URL      + '?t=' + Date.now()),
-      fetch(PRICE_URL),
-    ]);
-
-    const p    = await pRes.json();
-    const s    = sRes.ok ? await sRes.json() : null;
-    const prData = await prRes.json();
-    const btcPrice = parseFloat(prData.price || 0);
-
-    render(p, s, btcPrice);
-  } catch (e) {
-    document.getElementById('app').innerHTML = `
-      <div class="error-box">
-        <div style="font-size:2rem;margin-bottom:12px">⚠️</div>
-        <div>שגיאה בטעינת הנתונים</div>
-        <div style="font-size:0.85rem;margin-top:8px;color:#aa4444">${e.message}</div>
-      </div>`;
-  }
+async function load() {
+  const [pr,sr,br] = await Promise.all([
+    fetch(P_URL+'?t='+Date.now()), fetch(S_URL+'?t='+Date.now()), fetch(B_URL)
+  ]);
+  const p  = await pr.json();
+  const s  = sr.ok ? await sr.json() : null;
+  const bt = parseFloat((await br.json()).price||0);
+  render(p,s,bt);
 }
 
-function render(p, s, btcPrice) {
-  const inv        = p.investment || 0;
-  const pnl        = p.realized_pnl || 0;
-  const total      = inv + pnl;
-  const apr        = p.apr || 0;
-  const cycles     = p.total_cycles || 0;
-  const dgt        = p.dgt_count || 0;
-  const mdd        = p.max_drawdown || 0;
-  const days       = daysSince(p.start_time);
-  const startInv   = p.starting_investment || inv;
-  const pnlPct     = inv > 0 ? (pnl / inv * 100) : 0;
+function render(p,s,btc) {
+  const inv   = p.investment||0, pnl=p.realized_pnl||0;
+  const total = inv+pnl, apr=p.apr||0, cycles=p.total_cycles||0;
+  const dgt   = p.dgt_count||0, mdd=p.max_drawdown||0;
+  const d     = days(p.start_time);
+  const pnlPct= inv>0?pnl/inv*100:0;
 
-  const lower   = s ? s.lower  : 0;
-  const upper   = s ? s.upper  : 0;
-  const grids   = s ? s.grids  : 0;
-  const atr14   = s ? s.atr14  : 0;
-  const filled  = s ? s.grid.filter(l => l.filled).length : 0;
-  const waiting = grids - filled;
-  const inPct   = (upper > lower && btcPrice > 0)
-                  ? Math.max(0, Math.min(100, (btcPrice - lower) / (upper - lower) * 100))
-                  : 0;
-  const perGrid     = grids > 0 ? inv / grids : 0;
-  const midLevel    = s && s.grid && s.grid.length > 0 ? s.grid[Math.floor(grids/2)] : null;
-  const profitCycle = midLevel ? midLevel.profit : 0;
-  const dailyCycles = days > 0 ? (cycles / days) : 0;
-  const dailyProfit = dailyCycles * profitCycle;
+  const lower = s?s.lower:0, upper=s?s.upper:0, grids=s?s.grids:0, atr=s?s.atr14:0;
+  const filled= s?s.grid.filter(l=>l.filled).length:0, waiting=grids-filled;
+  const inPct = upper>lower&&btc>0?Math.max(0,Math.min(100,(btc-lower)/(upper-lower)*100)):0;
+  const mid   = s&&s.grid?s.grid[Math.floor(grids/2)]:null;
+  const ppc   = mid?mid.profit:0;
+  const perG  = grids>0?inv/grids:0;
+  const dcyc  = d>0?cycles/d:0;
 
-  // Trade log — sells only
-  const log    = (p.trade_log || []).filter(t => t.type === 'SELL').slice(-15).reverse();
-  const lastDgt = s && s.last_dgt ? fmtDate(s.last_dgt) : '—';
+  const log   = (p.trade_log||[]).filter(t=>t.type==='SELL').slice(-8).reverse();
 
-  const pnlClass   = pnl >= 0 ? 'green' : 'red';
-  const aprClass   = apr >= 0 ? 'green' : 'red';
+  const pc = pnl>=0?'green':'red';
+  const ac = apr>=0?'green':'red';
 
-  document.getElementById('app').innerHTML = `
+  // grid levels HTML
+  const lvlRows = s&&s.grid ? [...s.grid].reverse().map((lv,i)=>{
+    const idx = grids-i;
+    const isFilled = lv.filled;
+    const isHere   = !lv.filled && btc>=lv.buy && btc<lv.sell;
+    let cls='', badge='';
+    if(isFilled){ cls='lvl-filled'; badge=`<span style="color:#00e676;font-weight:700">✅ קנוי</span>`; }
+    else if(isHere){ cls='lvl-current'; badge=`<span style="color:#f7931a;font-weight:700">← כאן</span>`; }
+    else badge=`<span style="color:#2a4060">⏳</span>`;
+    return `<tr class="${cls}">
+      <td style="color:#2a4060;text-align:center">${idx}</td>
+      <td style="font-weight:600;color:#9ab8d0">$${fmt(lv.buy,0)}</td>
+      <td style="color:#3a5a7a">$${fmt(lv.sell,0)}</td>
+      <td style="color:#00e676;font-size:0.7rem">+$${fmt(lv.profit,4)}</td>
+      <td>${badge}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" style="color:#2a4060;padding:20px;text-align:center">טוען רמות...</td></tr>';
+
+  document.getElementById('root').innerHTML = `
 
     <!-- HEADER -->
     <div class="header">
-      <div class="header-left">
-        <h1>⚡ MODEL GRID</h1>
-        <p>Pionex AI Grid Bot 2.0 &nbsp;|&nbsp; BTC/USDT &nbsp;|&nbsp; סימולציה</p>
+      <div>
+        <div class="header-title">⚡ MODEL GRID</div>
+        <div class="header-sub">Pionex AI Grid Bot 2.0 | BTC/USDT | סימולציה</div>
       </div>
-      <div class="header-right">
-        <div class="btc-price">$${fmt(btcPrice)}</div>
-        <div class="btc-label">מחיר BTC עכשיו</div>
-        <div class="refresh-info" id="refresh-label">מתרענן בעוד ${countdown}ש׳</div>
+      <div class="header-mid">
+        <div class="hm-item">
+          <div class="hm-val blue">$${fmt(total)}</div>
+          <div class="hm-lbl">שווי כולל</div>
+        </div>
+        <div class="hm-item">
+          <div class="hm-val ${pc}">${pnl>=0?'+':''}$${fmt(pnl,4)}</div>
+          <div class="hm-lbl">רווח מצטבר</div>
+        </div>
+        <div class="hm-item">
+          <div class="hm-val ${ac}">${fmt(apr,1)}%</div>
+          <div class="hm-lbl">APR שנתי</div>
+        </div>
+        <div class="hm-item">
+          <div class="hm-val orange">${cycles}</div>
+          <div class="hm-lbl">סייקלים</div>
+        </div>
+        <div class="hm-item">
+          <div class="hm-val" style="color:#7a9ab0">${fmt(d,1)}</div>
+          <div class="hm-lbl">ימי פעילות</div>
+        </div>
       </div>
-    </div>
-
-    <!-- ROW 1 — Main KPIs -->
-    <div class="cards">
-      <div class="card">
-        <div class="card-label">💼 שווי כולל</div>
-        <div class="card-value blue">$${fmt(total)}</div>
-        <div class="card-sub">התחלה: $${fmt(startInv)}</div>
-      </div>
-      <div class="card">
-        <div class="card-label">📈 רווח מצטבר</div>
-        <div class="card-value ${pnlClass}">${pnl >= 0 ? '+' : ''}$${fmt(pnl, 4)}</div>
-        <div class="card-sub">${pnl >= 0 ? '+' : ''}${fmt(pnlPct, 3)}% על ההשקעה</div>
-      </div>
-      <div class="card">
-        <div class="card-label">🚀 APR שנתי</div>
-        <div class="card-value ${aprClass}">${fmt(apr, 1)}%</div>
-        <div class="card-sub">מחושב על ${fmt(days, 1)} ימים</div>
-      </div>
-      <div class="card">
-        <div class="card-label">🔄 סייקלים</div>
-        <div class="card-value orange">${cycles.toLocaleString()}</div>
-        <div class="card-sub">~${fmt(dailyCycles, 1)} ליום</div>
+      <div>
+        <div class="btc-now">$${fmt(btc)}</div>
+        <div class="refresh-txt" id="ref">BTC מחיר עכשיו | מתרענן בעוד ${countdown}ש׳</div>
       </div>
     </div>
 
-    <!-- ROW 2 — Secondary stats -->
-    <div class="cards2">
-      <div class="card2">
-        <div class="card2-label">💰 השקעה</div>
-        <div class="card2-value">$${fmt(inv)}</div>
-      </div>
-      <div class="card2">
-        <div class="card2-label">🔁 DGT איפוסים</div>
-        <div class="card2-value">${dgt}</div>
-      </div>
-      <div class="card2">
-        <div class="card2-label">📉 MDD</div>
-        <div class="card2-value" style="color:${mdd > 10 ? '#ff5252' : '#b0c8e0'}">${fmt(mdd, 2)}%</div>
-      </div>
-      <div class="card2">
-        <div class="card2-label">📅 ימי פעילות</div>
-        <div class="card2-value">${fmt(days, 1)}</div>
-      </div>
-      <div class="card2">
-        <div class="card2-label">💵 רווח יומי</div>
-        <div class="card2-value" style="color:#00e676">~$${fmt(dailyProfit, 4)}</div>
-      </div>
-    </div>
+    <!-- LEFT -->
+    <div class="left">
 
-    <!-- GRID VISUALIZATION -->
-    <div class="section">
-      <div class="section-title">📐 מצב הגריד</div>
+      <!-- row 1 -->
+      <div class="row4">
+        <div class="card">
+          <div class="card-lbl">💰 השקעה</div>
+          <div class="card-val gray">$${fmt(inv)}</div>
+          <div class="card-sub">התחלה: $${fmt(p.starting_investment||inv)}</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">📈 רווח יומי</div>
+          <div class="card-val green">~$${fmt(dcyc*ppc,4)}</div>
+          <div class="card-sub">${fmt(dcyc,1)} cycles/יום × $${fmt(ppc,4)}</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">📉 MDD</div>
+          <div class="card-val" style="color:${mdd>10?'#ff5252':'#7a9ab0'}">${fmt(mdd,2)}%</div>
+          <div class="card-sub">ירידה מקסימלית</div>
+        </div>
+        <div class="card">
+          <div class="card-lbl">🔁 DGT איפוסים</div>
+          <div class="card-val gray">${dgt}</div>
+          <div class="card-sub">טווח אוטומטי</div>
+        </div>
+      </div>
 
-      <div class="range-bar-wrap">
+      <!-- GRID VIZ -->
+      <div class="grid-viz">
+        <div class="viz-title">📐 מצב הגריד</div>
         <div class="range-labels">
-          <span>תחתית: $${fmt(lower)}</span>
-          <span>מחיר BTC: <strong style="color:#f7931a">$${fmt(btcPrice)}</strong> — ${fmt(inPct, 0)}% בתוך הטווח</span>
-          <span>פסגה: $${fmt(upper)}</span>
+          <span>$${fmt(lower,0)}</span>
+          <span style="color:#f7931a;font-weight:600">BTC $${fmt(btc,0)} — ${fmt(inPct,0)}% בטווח</span>
+          <span>$${fmt(upper,0)}</span>
         </div>
         <div class="range-bar">
           <div class="range-fill" style="width:${inPct}%"></div>
-          <div class="price-marker" style="left:${inPct}%">
-            <div class="price-marker-label">$${fmt(btcPrice, 0)}</div>
+          <div class="price-pin" style="left:${inPct}%">
+            <div class="pin-lbl">$${fmt(btc,0)}</div>
           </div>
         </div>
-      </div>
-
-      <div class="grid-stats">
-        <div class="grid-stat">
-          <div class="grid-stat-val">${grids}</div>
-          <div class="grid-stat-lbl">סה"כ רמות</div>
-        </div>
-        <div class="grid-stat">
-          <div class="grid-stat-val" style="color:#00e676">${filled}</div>
-          <div class="grid-stat-lbl">פעילות (קנויות)</div>
-        </div>
-        <div class="grid-stat">
-          <div class="grid-stat-val" style="color:#5a7a9a">${waiting}</div>
-          <div class="grid-stat-lbl">ממתינות לקנייה</div>
-        </div>
-        <div class="grid-stat">
-          <div class="grid-stat-val" style="color:#f7931a">$${fmt(atr14)}</div>
-          <div class="grid-stat-lbl">ATR-14 שעתי</div>
+        <div class="grid-mini">
+          <div class="gm"><div class="gm-v">${grids}</div><div class="gm-l">סה"כ רמות</div></div>
+          <div class="gm"><div class="gm-v" style="color:#00e676">${filled}</div><div class="gm-l">קנויות</div></div>
+          <div class="gm"><div class="gm-v" style="color:#3a5a7a">${waiting}</div><div class="gm-l">ממתינות</div></div>
+          <div class="gm"><div class="gm-v" style="color:#f7931a">$${fmt(atr,0)}</div><div class="gm-l">ATR-14</div></div>
         </div>
       </div>
 
-      <div class="profit-per-cycle">
-        <div class="ppc-item">
-          <div class="ppc-val">$${fmt(perGrid, 2)}</div>
-          <div class="ppc-lbl">השקעה לרמה</div>
-        </div>
-        <div style="width:1px;height:40px;background:#1a2f45;margin:0 8px"></div>
-        <div class="ppc-item">
-          <div class="ppc-val">~$${fmt(profitCycle, 5)}</div>
-          <div class="ppc-lbl">רווח ממוצע לסייקל</div>
-        </div>
-        <div style="width:1px;height:40px;background:#1a2f45;margin:0 8px"></div>
-        <div class="ppc-item">
-          <div class="ppc-val">$${fmt(lower)}&nbsp;↔&nbsp;$${fmt(upper)}</div>
-          <div class="ppc-lbl">טווח גריד פעיל</div>
-        </div>
-        <div style="width:1px;height:40px;background:#1a2f45;margin:0 8px"></div>
-        <div class="ppc-item">
-          <div class="ppc-val">${lastDgt}</div>
-          <div class="ppc-lbl">DGT איפוס אחרון</div>
+      <!-- FILLS -->
+      <div class="fills-wrap">
+        <div class="fills-title">📋 עסקאות אחרונות (SELL)</div>
+        <div class="fills-table">
+          ${log.length===0
+            ? `<div style="text-align:center;padding:16px;color:#2a4060;font-size:0.82rem">⏳ אין עסקאות עדיין — הגריד ממתין לתנועת מחיר</div>`
+            : `<table>
+                <thead><tr>
+                  <th>סוג</th><th>מחיר</th><th>BTC</th><th>רווח</th><th>זמן</th>
+                </tr></thead>
+                <tbody>${log.map(t=>`
+                  <tr>
+                    <td><span class="badge-sell">SELL</span></td>
+                    <td style="font-weight:600">$${fmt(t.price,0)}</td>
+                    <td style="color:#3a5a7a">${t.qty?fmt(t.qty,5):'—'}</td>
+                    <td class="pp">+$${fmt(t.profit,4)}</td>
+                    <td style="color:#2a4060">${fmtD(t.time)}</td>
+                  </tr>`).join('')}
+                </tbody>
+               </table>`
+          }
         </div>
       </div>
     </div>
 
-    <!-- TRADE LOG -->
-    <div class="section">
-      <div class="section-title">📋 עסקאות אחרונות (SELL)</div>
-      ${log.length === 0 ? `
-        <div style="text-align:center;padding:40px;color:#3a5a7a;font-size:1rem">
-          ⏳ עדיין אין עסקאות סגורות — הגריד פועל, ממתין לחצייה ראשונה
-        </div>
-      ` : `
-        <table>
-          <thead>
-            <tr>
-              <th>סוג</th>
-              <th>מחיר</th>
-              <th>כמות BTC</th>
-              <th>רווח</th>
-              <th>תאריך ושעה</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${log.map(t => `
-              <tr>
-                <td><span class="badge badge-sell">SELL ✓</span></td>
-                <td style="font-weight:600">$${fmt(t.price)}</td>
-                <td style="color:#5a7a9a">${t.qty ? fmt(t.qty, 6) : '—'} BTC</td>
-                <td class="${(t.profit||0) >= 0 ? 'profit-pos' : 'profit-neg'}">
-                  ${(t.profit||0) >= 0 ? '+' : ''}$${fmt(t.profit, 5)}
-                </td>
-                <td style="color:#4a6a8a">${fmtDate(t.time)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      `}
-    </div>
-
-    <!-- GRID LEVELS TABLE -->
-    ${s && s.grid ? `
-    <div class="section">
-      <div class="section-title">📊 כל רמות הגריד — ${grids} רמות</div>
-
-      <div style="display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap">
-        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
-          <span style="background:#003a20;color:#00e676;padding:3px 10px;border-radius:12px;font-weight:700">✅ קנוי</span>
-          <span style="color:#4a6a8a">רמה שהמחיר ירד אליה — מחכה למכירה</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
-          <span style="background:#1a0a00;color:#f7931a;padding:3px 10px;border-radius:12px;font-weight:700">← מחיר</span>
-          <span style="color:#4a6a8a">רמה הקרובה ביותר למחיר הנוכחי</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
-          <span style="background:#0a1520;color:#4a6a8a;padding:3px 10px;border-radius:12px;font-weight:700">⏳ ממתין</span>
-          <span style="color:#4a6a8a">מחכה שהמחיר יגיע אליה</span>
+    <!-- RIGHT — GRID LEVELS -->
+    <div class="right">
+      <div class="right-title">
+        <span>📊 כל ${grids} רמות הגריד</span>
+        <div class="legend">
+          <div class="leg"><div class="dot-green"></div><span>קנוי</span></div>
+          <div class="leg"><div class="dot-orange"></div><span>מחיר כאן</span></div>
+          <div class="leg"><div class="dot-gray"></div><span>ממתין</span></div>
         </div>
       </div>
-
-      <div style="max-height:420px;overflow-y:auto;border-radius:10px;border:1px solid #1a2f45">
-        <table style="font-size:0.88rem">
-          <thead style="position:sticky;top:0;background:#0d1820;z-index:1">
-            <tr>
-              <th style="width:60px">#</th>
-              <th>קנייה</th>
-              <th>מכירה</th>
-              <th>כמות BTC</th>
-              <th>רווח לסייקל</th>
-              <th>סטטוס</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${[...s.grid].reverse().map((lvl, i) => {
-              const idx      = grids - i;
-              const isFilled = lvl.filled;
-              const isNear   = !isFilled && btcPrice >= lvl.buy && btcPrice < lvl.sell;
-              const isAbove  = lvl.buy > btcPrice;
-              let rowStyle   = '';
-              let badge      = '';
-              if (isFilled) {
-                rowStyle = 'background:#001a10;';
-                badge    = '<span style="background:#003a20;color:#00e676;padding:3px 12px;border-radius:12px;font-size:0.8rem;font-weight:700">✅ קנוי</span>';
-              } else if (isNear) {
-                rowStyle = 'background:#1a0e00;';
-                badge    = '<span style="background:#1a0a00;color:#f7931a;padding:3px 12px;border-radius:12px;font-size:0.8rem;font-weight:700">← מחיר כאן</span>';
-              } else if (isAbove) {
-                badge    = '<span style="color:#3a5a7a;font-size:0.82rem">⏳ ממתין</span>';
-              } else {
-                badge    = '<span style="color:#3a5a7a;font-size:0.82rem">⏳ ממתין</span>';
-              }
-              return `<tr style="${rowStyle}border-bottom:1px solid #0f1e2d">
-                <td style="color:#3a5a7a;text-align:center">${idx}</td>
-                <td style="font-weight:600;color:#b0c8e0">$${fmt(lvl.buy)}</td>
-                <td style="color:#5a7a9a">$${fmt(lvl.sell)}</td>
-                <td style="color:#3a5a7a">${lvl.qty ? fmt(lvl.qty, 6) : '—'}</td>
-                <td style="color:#00e676">+$${fmt(lvl.profit, 5)}</td>
-                <td>${badge}</td>
-              </tr>`;
-            }).join('')}
-          </tbody>
+      <div class="levels-scroll">
+        <table class="lvl-table">
+          <thead><tr>
+            <th style="width:32px">#</th>
+            <th>קנייה</th>
+            <th>מכירה</th>
+            <th>רווח</th>
+            <th>סטטוס</th>
+          </tr></thead>
+          <tbody>${lvlRows}</tbody>
         </table>
       </div>
     </div>
-    ` : ''}
 
-    <!-- STATUS BAR -->
-    <div class="status-bar">
-      <div>
-        <span class="status-dot"></span>
-        בוט פעיל — מריץ כל 15 דקות ב-GitHub Actions
-      </div>
-      <div>עדכון אחרון מהבוט: ${fmtDate(p.last_updated)}</div>
-      <div>התחלת סימולציה: ${fmtDate(p.start_time)}</div>
+    <!-- STATUS -->
+    <div class="status">
+      <div><span class="dot-live"></span> פעיל — GitHub Actions כל 15 דקות</div>
+      <div>עדכון אחרון: ${fmtD(p.last_updated)}</div>
+      <div>$${fmt(perG,2)} לרמה | ~$${fmt(ppc,5)} רווח/cycle</div>
+      <div>התחלה: ${fmtD(p.start_time)}</div>
     </div>
   `;
 
   startCountdown();
 }
 
-function startCountdown() {
-  clearInterval(timer);
-  countdown = 60;
-  timer = setInterval(() => {
+function startCountdown(){
+  clearInterval(timer); countdown=60;
+  timer=setInterval(()=>{
     countdown--;
-    const el = document.getElementById('refresh-label');
-    if (el) el.textContent = `מתרענן בעוד ${countdown}ש׳`;
-    if (countdown <= 0) {
-      clearInterval(timer);
-      loadData();
-    }
-  }, 1000);
+    const el=document.getElementById('ref');
+    if(el) el.textContent=`BTC מחיר עכשיו | מתרענן בעוד ${countdown}ש׳`;
+    if(countdown<=0){ clearInterval(timer); load(); }
+  },1000);
 }
 
-loadData();
+load();
 </script>
 </body>
 </html>
