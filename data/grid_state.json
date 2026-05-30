@@ -1,0 +1,654 @@
+{
+  "lower": 73159.58,
+  "upper": 81905.93,
+  "grids": 80,
+  "atr14": 177.64,
+  "investment": 1000.0,
+  "grid": [
+    {
+      "buy": 73159.58,
+      "sell": 73268.91,
+      "qty": 0.00017086,
+      "profit": 0.006171,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73268.91,
+      "sell": 73378.24,
+      "qty": 0.0001706,
+      "profit": 0.006143,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73378.24,
+      "sell": 73487.57,
+      "qty": 0.00017035,
+      "profit": 0.006115,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73487.57,
+      "sell": 73596.9,
+      "qty": 0.0001701,
+      "profit": 0.006087,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73596.9,
+      "sell": 73706.23,
+      "qty": 0.00016984,
+      "profit": 0.00606,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73706.23,
+      "sell": 73815.56,
+      "qty": 0.00016959,
+      "profit": 0.006032,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73815.56,
+      "sell": 73924.89,
+      "qty": 0.00016934,
+      "profit": 0.006005,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 73924.89,
+      "sell": 74034.22,
+      "qty": 0.00016909,
+      "profit": 0.005977,
+      "filled": true,
+      "just_bought": false
+    },
+    {
+      "buy": 74034.21,
+      "sell": 74143.54,
+      "qty": 0.00016884,
+      "profit": 0.00595,
+      "filled": true,
+      "just_bought": false
+    },
+    {
+      "buy": 74143.54,
+      "sell": 74252.87,
+      "qty": 0.00016859,
+      "profit": 0.005923,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74252.87,
+      "sell": 74362.2,
+      "qty": 0.00016834,
+      "profit": 0.005896,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74362.2,
+      "sell": 74471.53,
+      "qty": 0.0001681,
+      "profit": 0.005869,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74471.53,
+      "sell": 74580.86,
+      "qty": 0.00016785,
+      "profit": 0.005842,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74580.86,
+      "sell": 74690.19,
+      "qty": 0.0001676,
+      "profit": 0.005815,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74690.19,
+      "sell": 74799.52,
+      "qty": 0.00016736,
+      "profit": 0.005788,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74799.52,
+      "sell": 74908.85,
+      "qty": 0.00016711,
+      "profit": 0.005761,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 74908.85,
+      "sell": 75018.18,
+      "qty": 0.00016687,
+      "profit": 0.005735,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75018.18,
+      "sell": 75127.51,
+      "qty": 0.00016663,
+      "profit": 0.005708,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75127.51,
+      "sell": 75236.84,
+      "qty": 0.00016638,
+      "profit": 0.005682,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75236.84,
+      "sell": 75346.17,
+      "qty": 0.00016614,
+      "profit": 0.005655,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75346.17,
+      "sell": 75455.5,
+      "qty": 0.0001659,
+      "profit": 0.005629,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75455.5,
+      "sell": 75564.83,
+      "qty": 0.00016566,
+      "profit": 0.005603,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75564.83,
+      "sell": 75674.16,
+      "qty": 0.00016542,
+      "profit": 0.005576,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75674.16,
+      "sell": 75783.49,
+      "qty": 0.00016518,
+      "profit": 0.00555,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75783.49,
+      "sell": 75892.82,
+      "qty": 0.00016494,
+      "profit": 0.005524,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 75892.81,
+      "sell": 76002.14,
+      "qty": 0.00016471,
+      "profit": 0.005498,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76002.14,
+      "sell": 76111.47,
+      "qty": 0.00016447,
+      "profit": 0.005472,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76111.47,
+      "sell": 76220.8,
+      "qty": 0.00016423,
+      "profit": 0.005447,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76220.8,
+      "sell": 76330.13,
+      "qty": 0.000164,
+      "profit": 0.005421,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76330.13,
+      "sell": 76439.46,
+      "qty": 0.00016376,
+      "profit": 0.005395,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76439.46,
+      "sell": 76548.79,
+      "qty": 0.00016353,
+      "profit": 0.00537,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76548.79,
+      "sell": 76658.12,
+      "qty": 0.00016329,
+      "profit": 0.005344,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76658.12,
+      "sell": 76767.45,
+      "qty": 0.00016306,
+      "profit": 0.005319,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76767.45,
+      "sell": 76876.78,
+      "qty": 0.00016283,
+      "profit": 0.005293,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76876.78,
+      "sell": 76986.11,
+      "qty": 0.0001626,
+      "profit": 0.005268,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 76986.11,
+      "sell": 77095.44,
+      "qty": 0.00016237,
+      "profit": 0.005243,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77095.44,
+      "sell": 77204.77,
+      "qty": 0.00016214,
+      "profit": 0.005218,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77204.77,
+      "sell": 77314.1,
+      "qty": 0.00016191,
+      "profit": 0.005192,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77314.1,
+      "sell": 77423.43,
+      "qty": 0.00016168,
+      "profit": 0.005167,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77423.43,
+      "sell": 77532.76,
+      "qty": 0.00016145,
+      "profit": 0.005142,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77532.76,
+      "sell": 77642.09,
+      "qty": 0.00016122,
+      "profit": 0.005118,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77642.08,
+      "sell": 77751.41,
+      "qty": 0.000161,
+      "profit": 0.005093,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77751.41,
+      "sell": 77860.74,
+      "qty": 0.00016077,
+      "profit": 0.005068,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77860.74,
+      "sell": 77970.07,
+      "qty": 0.00016054,
+      "profit": 0.005043,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 77970.07,
+      "sell": 78079.4,
+      "qty": 0.00016032,
+      "profit": 0.005019,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78079.4,
+      "sell": 78188.73,
+      "qty": 0.00016009,
+      "profit": 0.004994,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78188.73,
+      "sell": 78298.06,
+      "qty": 0.00015987,
+      "profit": 0.00497,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78298.06,
+      "sell": 78407.39,
+      "qty": 0.00015965,
+      "profit": 0.004945,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78407.39,
+      "sell": 78516.72,
+      "qty": 0.00015942,
+      "profit": 0.004921,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78516.72,
+      "sell": 78626.05,
+      "qty": 0.0001592,
+      "profit": 0.004897,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78626.05,
+      "sell": 78735.38,
+      "qty": 0.00015898,
+      "profit": 0.004873,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78735.38,
+      "sell": 78844.71,
+      "qty": 0.00015876,
+      "profit": 0.004849,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78844.71,
+      "sell": 78954.04,
+      "qty": 0.00015854,
+      "profit": 0.004824,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 78954.04,
+      "sell": 79063.37,
+      "qty": 0.00015832,
+      "profit": 0.0048,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79063.37,
+      "sell": 79172.7,
+      "qty": 0.0001581,
+      "profit": 0.004777,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79172.7,
+      "sell": 79282.03,
+      "qty": 0.00015788,
+      "profit": 0.004753,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79282.02,
+      "sell": 79391.35,
+      "qty": 0.00015767,
+      "profit": 0.004729,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79391.35,
+      "sell": 79500.68,
+      "qty": 0.00015745,
+      "profit": 0.004705,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79500.68,
+      "sell": 79610.01,
+      "qty": 0.00015723,
+      "profit": 0.004682,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79610.01,
+      "sell": 79719.34,
+      "qty": 0.00015702,
+      "profit": 0.004658,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79719.34,
+      "sell": 79828.67,
+      "qty": 0.0001568,
+      "profit": 0.004634,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79828.67,
+      "sell": 79938.0,
+      "qty": 0.00015659,
+      "profit": 0.004611,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 79938.0,
+      "sell": 80047.33,
+      "qty": 0.00015637,
+      "profit": 0.004588,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80047.33,
+      "sell": 80156.66,
+      "qty": 0.00015616,
+      "profit": 0.004564,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80156.66,
+      "sell": 80265.99,
+      "qty": 0.00015594,
+      "profit": 0.004541,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80265.99,
+      "sell": 80375.32,
+      "qty": 0.00015573,
+      "profit": 0.004518,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80375.32,
+      "sell": 80484.65,
+      "qty": 0.00015552,
+      "profit": 0.004495,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80484.65,
+      "sell": 80593.98,
+      "qty": 0.00015531,
+      "profit": 0.004471,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80593.98,
+      "sell": 80703.31,
+      "qty": 0.0001551,
+      "profit": 0.004448,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80703.31,
+      "sell": 80812.64,
+      "qty": 0.00015489,
+      "profit": 0.004425,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80812.64,
+      "sell": 80921.97,
+      "qty": 0.00015468,
+      "profit": 0.004403,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 80921.97,
+      "sell": 81031.3,
+      "qty": 0.00015447,
+      "profit": 0.00438,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81031.29,
+      "sell": 81140.62,
+      "qty": 0.00015426,
+      "profit": 0.004357,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81140.62,
+      "sell": 81249.95,
+      "qty": 0.00015405,
+      "profit": 0.004334,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81249.95,
+      "sell": 81359.28,
+      "qty": 0.00015385,
+      "profit": 0.004312,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81359.28,
+      "sell": 81468.61,
+      "qty": 0.00015364,
+      "profit": 0.004289,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81468.61,
+      "sell": 81577.94,
+      "qty": 0.00015343,
+      "profit": 0.004266,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81577.94,
+      "sell": 81687.27,
+      "qty": 0.00015323,
+      "profit": 0.004244,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81687.27,
+      "sell": 81796.6,
+      "qty": 0.00015302,
+      "profit": 0.004222,
+      "filled": false,
+      "just_bought": false
+    },
+    {
+      "buy": 81796.6,
+      "sell": 81905.93,
+      "qty": 0.00015282,
+      "profit": 0.004199,
+      "filled": false,
+      "just_bought": false
+    }
+  ],
+  "prev_price": 73988.0,
+  "last_processed_candle": 1780152540000,
+  "last_run_time": "2026-05-30T17:49:25.823819",
+  "last_dgt": null,
+  "created": "2026-05-30T17:49:25.135172"
+}
