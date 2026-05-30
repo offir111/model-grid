@@ -571,6 +571,72 @@ function render(p, s, btcPrice) {
       `}
     </div>
 
+    <!-- GRID LEVELS TABLE -->
+    ${s && s.grid ? `
+    <div class="section">
+      <div class="section-title">📊 כל רמות הגריד — ${grids} רמות</div>
+
+      <div style="display:flex;gap:20px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
+          <span style="background:#003a20;color:#00e676;padding:3px 10px;border-radius:12px;font-weight:700">✅ קנוי</span>
+          <span style="color:#4a6a8a">רמה שהמחיר ירד אליה — מחכה למכירה</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
+          <span style="background:#1a0a00;color:#f7931a;padding:3px 10px;border-radius:12px;font-weight:700">← מחיר</span>
+          <span style="color:#4a6a8a">רמה הקרובה ביותר למחיר הנוכחי</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:0.85rem">
+          <span style="background:#0a1520;color:#4a6a8a;padding:3px 10px;border-radius:12px;font-weight:700">⏳ ממתין</span>
+          <span style="color:#4a6a8a">מחכה שהמחיר יגיע אליה</span>
+        </div>
+      </div>
+
+      <div style="max-height:420px;overflow-y:auto;border-radius:10px;border:1px solid #1a2f45">
+        <table style="font-size:0.88rem">
+          <thead style="position:sticky;top:0;background:#0d1820;z-index:1">
+            <tr>
+              <th style="width:60px">#</th>
+              <th>קנייה</th>
+              <th>מכירה</th>
+              <th>כמות BTC</th>
+              <th>רווח לסייקל</th>
+              <th>סטטוס</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${[...s.grid].reverse().map((lvl, i) => {
+              const idx      = grids - i;
+              const isFilled = lvl.filled;
+              const isNear   = !isFilled && btcPrice >= lvl.buy && btcPrice < lvl.sell;
+              const isAbove  = lvl.buy > btcPrice;
+              let rowStyle   = '';
+              let badge      = '';
+              if (isFilled) {
+                rowStyle = 'background:#001a10;';
+                badge    = '<span style="background:#003a20;color:#00e676;padding:3px 12px;border-radius:12px;font-size:0.8rem;font-weight:700">✅ קנוי</span>';
+              } else if (isNear) {
+                rowStyle = 'background:#1a0e00;';
+                badge    = '<span style="background:#1a0a00;color:#f7931a;padding:3px 12px;border-radius:12px;font-size:0.8rem;font-weight:700">← מחיר כאן</span>';
+              } else if (isAbove) {
+                badge    = '<span style="color:#3a5a7a;font-size:0.82rem">⏳ ממתין</span>';
+              } else {
+                badge    = '<span style="color:#3a5a7a;font-size:0.82rem">⏳ ממתין</span>';
+              }
+              return `<tr style="${rowStyle}border-bottom:1px solid #0f1e2d">
+                <td style="color:#3a5a7a;text-align:center">${idx}</td>
+                <td style="font-weight:600;color:#b0c8e0">$${fmt(lvl.buy)}</td>
+                <td style="color:#5a7a9a">$${fmt(lvl.sell)}</td>
+                <td style="color:#3a5a7a">${lvl.qty ? fmt(lvl.qty, 6) : '—'}</td>
+                <td style="color:#00e676">+$${fmt(lvl.profit, 5)}</td>
+                <td>${badge}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    ` : ''}
+
     <!-- STATUS BAR -->
     <div class="status-bar">
       <div>
