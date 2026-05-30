@@ -646,9 +646,9 @@
       "just_bought": false
     }
   ],
-  "prev_price": 73988.0,
-  "last_processed_candle": 1780152540000,
-  "last_run_time": "2026-05-30T17:49:25.823819",
+  "prev_price": 73912.84,
+  "last_processed_candle": 1780153380000,
+  "last_run_time": "2026-05-30T18:03:35.395679",
   "last_dgt": null,
   "created": "2026-05-30T17:49:25.135172"
 }
