@@ -1,0 +1,31 @@
+name: Model GRID Simulator
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # כל 15 דקות
+  workflow_dispatch:          # הפעלה ידנית
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Model GRID simulator
+        run: python grid_simulator.py
+
+      - name: Save results to GitHub
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          mkdir -p data
+          git add data/portfolio.json data/grid_state.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "grid: update $(date -u '+%Y-%m-%d %H:%M UTC')"
+          git push || true
