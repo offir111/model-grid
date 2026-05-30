@@ -2,323 +2,391 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>Model GRID — Pionex AI Grid Bot 2.0</title>
+  <title>Model GRID — מרכז שליטה</title>
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
-      height: 100vh;
-      overflow: hidden;
-      background: #070d14;
-      color: #dce8f0;
+      height: 100vh; overflow: hidden;
+      background: #070d14; color: #dce8f0;
       font-family: 'Segoe UI', Arial, sans-serif;
     }
 
-    /* ── LAYOUT ── */
     .root {
       display: grid;
-      grid-template-rows: 54px 1fr;
-      grid-template-columns: 1fr 320px;
+      grid-template-rows: 50px 96px 1fr 22px;
+      grid-template-columns: 1fr 310px;
       height: 100vh;
-      gap: 0;
     }
 
     /* ── HEADER ── */
     .header {
       grid-column: 1 / -1;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: #080f18;
+      border-bottom: 1px solid #0f2030;
+    }
+    .header-title  { font-size:1rem; font-weight:700; color:#00d4ff; letter-spacing:1px; }
+    .header-sub    { font-size:0.65rem; color:#2a4a6a; margin-top:1px; }
+    .btc-now       { font-size:1.4rem; font-weight:800; color:#f7931a; }
+    .refresh-txt   { font-size:0.62rem; color:#2a4a6a; text-align:left; margin-top:1px; }
+    .header-mid    { display:flex; gap:22px; }
+    .hm-item       { text-align:center; }
+    .hm-val        { font-size:0.95rem; font-weight:700; }
+    .hm-lbl        { font-size:0.6rem; color:#2a4a6a; margin-top:1px; }
+
+    /* ── BOTS BAR ── */
+    .bots-bar {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 8px 16px;
+      background: #060c14;
+      border-bottom: 1px solid #0f2030;
+    }
+    .bot-card {
+      background: #0a1520;
+      border: 1px solid #152535;
+      border-radius: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: #0a1520;
-      border-bottom: 1px solid #152535;
+      gap: 10px;
     }
-    .header-title { font-size:1.1rem; font-weight:700; color:#00d4ff; letter-spacing:1px; }
-    .header-sub   { font-size:0.72rem; color:#3a5a7a; margin-top:1px; }
-    .btc-now      { font-size:1.5rem; font-weight:800; color:#f7931a; }
-    .refresh-txt  { font-size:0.7rem; color:#3a5a7a; text-align:left; margin-top:1px; }
-    .header-mid   { display:flex; gap:28px; }
-    .hm-item      { text-align:center; }
-    .hm-val       { font-size:1rem; font-weight:700; }
-    .hm-lbl       { font-size:0.65rem; color:#3a5a7a; margin-top:1px; }
+    .bot-card:hover    { border-color: #00d4ff44; background: #0d1e2e; }
+    .bot-card.active   { border-color: #00d4ff; background: #0d1e30; }
+    .bot-card.loading  { opacity: .5; }
+    .bc-icon  { font-size:1.3rem; flex-shrink:0; }
+    .bc-right { flex:1; min-width:0; }
+    .bc-name  { font-size:0.78rem; font-weight:700; color:#9ab8d0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .bc-stats { display:flex; gap:8px; margin-top:3px; align-items:center; }
+    .bc-pnl   { font-size:0.82rem; font-weight:700; }
+    .bc-wl    { font-size:0.65rem; color:#2a4a6a; }
+    .bc-rate  { font-size:0.65rem; margin-right:auto; }
+    .bc-dot   { width:5px;height:5px;border-radius:50%;background:#00e676;flex-shrink:0;animation:pulse 2s infinite; }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-    /* ── LEFT PANEL ── */
+    /* ── LEFT ── */
     .left {
       grid-column: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 10px 12px 10px 16px;
+      display: flex; flex-direction: column; gap: 7px;
+      padding: 8px 10px 8px 14px;
       overflow: hidden;
     }
-
-    /* stat rows */
-    .row4 { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-    .row5 { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; }
-
+    .row4 { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+    .row5 { display:grid; grid-template-columns:repeat(5,1fr); gap:7px; }
     .card {
-      background: #0d1820;
-      border: 1px solid #152535;
-      border-radius: 9px;
-      padding: 10px 12px;
+      background: #0d1820; border: 1px solid #152535;
+      border-radius: 8px; padding: 8px 11px;
     }
-    .card-lbl { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:4px; }
-    .card-val { font-size:1.25rem; font-weight:700; }
-    .card-sub { font-size:0.65rem; color:#2a4a6a; margin-top:3px; }
-    .green  { color:#00e676; }
-    .blue   { color:#00d4ff; }
-    .orange { color:#f7931a; }
-    .gray   { color:#7a9ab0; }
+    .card-lbl { font-size:0.6rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.7px; margin-bottom:3px; }
+    .card-val { font-size:1.15rem; font-weight:700; }
+    .card-sub { font-size:0.6rem; color:#1a3a5a; margin-top:2px; }
+    .green  { color:#00e676; } .blue { color:#00d4ff; }
+    .orange { color:#f7931a; } .gray { color:#7a9ab0; }
 
-    /* grid viz */
     .grid-viz {
-      background: #0d1820;
-      border: 1px solid #152535;
-      border-radius: 9px;
-      padding: 10px 14px;
+      background: #0d1820; border: 1px solid #152535;
+      border-radius: 8px; padding: 8px 12px;
     }
-    .viz-title { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; }
-    .range-labels { display:flex; justify-content:space-between; font-size:0.68rem; color:#3a5a7a; margin-bottom:5px; }
+    .viz-title { font-size:0.6rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.7px; margin-bottom:6px; }
+    .range-labels { display:flex; justify-content:space-between; font-size:0.62rem; color:#2a4a6a; margin-bottom:4px; }
     .range-bar {
-      position:relative; height:20px;
-      background:#0a1520; border-radius:10px;
-      border:1px solid #152535; overflow:visible;
-      margin-bottom:10px;
+      position:relative; height:18px;
+      background:#0a1520; border-radius:9px;
+      border:1px solid #152535; overflow:visible; margin-bottom:8px;
     }
-    .range-fill {
-      height:100%; background:linear-gradient(90deg,#003a5a,#005a8a);
-      border-radius:10px 0 0 10px;
-    }
-    .price-pin {
-      position:absolute; top:-5px;
-      width:3px; height:30px;
+    .range-fill { height:100%; background:linear-gradient(90deg,#003a5a,#005a8a); border-radius:9px 0 0 9px; }
+    .price-pin  {
+      position:absolute; top:-4px; width:2px; height:26px;
       background:#f7931a; border-radius:2px;
-      transform:translateX(-50%);
-      box-shadow:0 0 8px #f7931a88;
+      transform:translateX(-50%); box-shadow:0 0 6px #f7931a88;
     }
     .pin-lbl {
-      position:absolute; top:-18px; left:50%;
+      position:absolute; top:-16px; left:50%;
       transform:translateX(-50%);
-      font-size:0.65rem; color:#f7931a;
-      white-space:nowrap; font-weight:700;
+      font-size:0.6rem; color:#f7931a; white-space:nowrap; font-weight:700;
     }
-    .grid-mini { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
-    .gm { background:#0a1520; border-radius:7px; padding:7px 8px; text-align:center; border:1px solid #122030; }
-    .gm-v { font-size:1rem; font-weight:700; color:#00d4ff; }
-    .gm-l { font-size:0.6rem; color:#2a4a6a; margin-top:2px; }
+    .grid-mini { display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
+    .gm { background:#0a1520; border-radius:6px; padding:5px 7px; text-align:center; border:1px solid #0f2030; }
+    .gm-v { font-size:0.9rem; font-weight:700; color:#00d4ff; }
+    .gm-l { font-size:0.58rem; color:#1a3a5a; margin-top:1px; }
 
-    /* fills */
     .fills-wrap {
-      background: #0d1820;
-      border: 1px solid #152535;
-      border-radius: 9px;
-      padding: 8px 12px;
-      flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
+      background:#0d1820; border:1px solid #152535;
+      border-radius:8px; padding:7px 10px;
+      flex:1; overflow:hidden; display:flex; flex-direction:column;
     }
-    .fills-title { font-size:0.65rem; color:#3a5a7a; text-transform:uppercase; letter-spacing:.8px; margin-bottom:6px; }
+    .fills-title { font-size:0.6rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.7px; margin-bottom:5px; }
     .fills-table { flex:1; overflow-y:auto; }
-    table { width:100%; border-collapse:collapse; font-size:0.78rem; }
-    thead th { color:#2a4a6a; font-size:0.62rem; text-transform:uppercase; padding:4px 8px; border-bottom:1px solid #122030; text-align:right; }
-    tbody tr { border-bottom:1px solid #0c1820; }
-    tbody td { padding:5px 8px; }
-    .badge-sell { background:#003a20; color:#00e676; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; }
+    table { width:100%; border-collapse:collapse; }
+    thead th { color:#1a3a5a; font-size:0.58rem; text-transform:uppercase; padding:3px 7px; border-bottom:1px solid #0f2030; text-align:right; }
+    tbody tr { border-bottom:1px solid #0a1820; }
+    tbody td { padding:4px 7px; font-size:0.72rem; }
+    .badge-sell { background:#003a20; color:#00e676; padding:1px 7px; border-radius:8px; font-size:0.68rem; font-weight:700; }
     .pp { color:#00e676; font-weight:600; }
 
-    /* ── RIGHT PANEL — GRID LEVELS ── */
+    /* ── RIGHT ── */
     .right {
       grid-column: 2;
-      background: #0a1118;
-      border-right: 1px solid #152535;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      background: #070d14; border-right:1px solid #0f2030;
+      display:flex; flex-direction:column; overflow:hidden;
     }
     .right-title {
-      padding: 10px 14px 8px;
-      font-size: 0.7rem;
-      color: #3a5a7a;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-bottom: 1px solid #122030;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-shrink: 0;
+      padding:7px 12px 6px;
+      font-size:0.62rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.8px;
+      border-bottom:1px solid #0f2030;
+      display:flex; justify-content:space-between; align-items:center;
+      flex-shrink:0;
     }
-    .legend { display:flex; gap:10px; font-size:0.6rem; }
-    .leg { display:flex; align-items:center; gap:4px; }
-    .dot-green  { width:7px;height:7px;background:#00e676;border-radius:50%; }
-    .dot-orange { width:7px;height:7px;background:#f7931a;border-radius:50%; }
-    .dot-gray   { width:7px;height:7px;background:#2a4060;border-radius:50%; }
-
+    .legend { display:flex; gap:8px; font-size:0.58rem; }
+    .leg { display:flex; align-items:center; gap:3px; }
+    .dot-green  { width:6px;height:6px;background:#00e676;border-radius:50%; }
+    .dot-orange { width:6px;height:6px;background:#f7931a;border-radius:50%; }
+    .dot-gray   { width:6px;height:6px;background:#1a3060;border-radius:50%; }
     .levels-scroll { flex:1; overflow-y:auto; }
-    .lvl-table { width:100%; border-collapse:collapse; font-size:0.75rem; }
+    .lvl-table { width:100%; border-collapse:collapse; font-size:0.72rem; }
     .lvl-table thead th {
-      position:sticky; top:0;
-      background:#0a1118; z-index:1;
-      color:#2a4a6a; font-size:0.6rem;
-      text-transform:uppercase;
-      padding:5px 8px;
-      border-bottom:1px solid #122030;
-      text-align:right;
+      position:sticky; top:0; background:#070d14; z-index:1;
+      color:#1a3a5a; font-size:0.58rem; text-transform:uppercase;
+      padding:4px 7px; border-bottom:1px solid #0f2030; text-align:right;
     }
-    .lvl-table tbody tr { border-bottom:1px solid #0c1520; }
-    .lvl-table tbody td { padding:4px 8px; }
-    .lvl-filled  { background:#001a10; }
-    .lvl-current { background:#1a0e00; }
+    .lvl-table tbody tr { border-bottom:1px solid #0a1520; }
+    .lvl-table tbody td { padding:3px 7px; }
+    .lvl-filled  { background:#001a0e; }
+    .lvl-current { background:#180d00; }
 
-    /* status */
+    /* ── STATUS ── */
     .status {
       grid-column: 1 / -1;
-      background: #091018;
-      border-top: 1px solid #122030;
-      padding: 4px 16px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.65rem;
-      color: #2a4a6a;
-      flex-shrink: 0;
+      background:#050b12; border-top:1px solid #0f2030;
+      padding:3px 14px;
+      display:flex; justify-content:space-between;
+      font-size:0.6rem; color:#1a3a5a;
     }
-    .dot-live { width:6px;height:6px;background:#00e676;border-radius:50%;display:inline-block;margin-left:5px;animation:pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+    .dot-live { width:5px;height:5px;background:#00e676;border-radius:50%;display:inline-block;margin-left:4px;animation:pulse 2s infinite; }
 
-    ::-webkit-scrollbar { width:4px; }
+    ::-webkit-scrollbar { width:3px; }
     ::-webkit-scrollbar-track { background:#070d14; }
-    ::-webkit-scrollbar-thumb { background:#1a2f45; border-radius:2px; }
+    ::-webkit-scrollbar-thumb { background:#152535; border-radius:2px; }
   </style>
 </head>
 <body>
 <div class="root" id="root">
-  <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;color:#3a5a7a;font-size:1rem">
-    טוען...
-  </div>
+  <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;color:#2a4a6a">טוען...</div>
 </div>
 
 <script>
-const P_URL = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/portfolio.json';
-const S_URL = 'https://raw.githubusercontent.com/offir111/model-grid/master/data/grid_state.json';
-const B_URL = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+// Data URLs
+const BOTS = [
+  {
+    id:'grid', name:'Model GRID', icon:'⚡',
+    pUrl:'https://raw.githubusercontent.com/offir111/model-grid/master/data/portfolio.json',
+    sUrl:'https://raw.githubusercontent.com/offir111/model-grid/master/data/grid_state.json',
+    type:'grid'
+  },
+  {
+    id:'bit', name:'Model BIT', icon:'₿',
+    pUrl:'https://raw.githubusercontent.com/offir111/model-bit/master/data/portfolio.json',
+    type:'bit'
+  },
+  {
+    id:'w', name:'Model W', icon:'🌊',
+    pUrl:'https://raw.githubusercontent.com/offir111/model-w/master/data/performance_log.json',
+    type:'w'
+  },
+  {
+    id:'smc', name:'Model SMC', icon:'📊',
+    pUrl:'https://raw.githubusercontent.com/offir111/model-smc/master/data/portfolio.json',
+    type:'smc'
+  }
+];
 
+const BINANCE = 'https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
+
+let botData   = {};
 let countdown = 60, timer;
-
 const fmt  = (n,d=2) => n==null||isNaN(n)?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
-const fmtD = iso => { if(!iso) return '—'; const d=new Date(iso); return d.toLocaleDateString('he-IL')+' '+d.toTimeString().slice(0,5); };
+const fmtD = iso => { if(!iso)return'—'; const d=new Date(iso); return d.toLocaleDateString('he-IL')+' '+d.toTimeString().slice(0,5); };
 const days = iso => Math.max(0.001,(Date.now()-new Date(iso).getTime())/86400000);
 
-async function load() {
-  const [pr,sr,br] = await Promise.all([
-    fetch(P_URL+'?t='+Date.now()), fetch(S_URL+'?t='+Date.now()), fetch(B_URL)
-  ]);
-  const p  = await pr.json();
-  const s  = sr.ok ? await sr.json() : null;
-  const bt = parseFloat((await br.json()).price||0);
-  render(p,s,bt);
+// Parse each bot's portfolio into a unified summary
+function parseSummary(bot, raw) {
+  if (!raw) return null;
+  try {
+    if (bot.type === 'grid') {
+      return {
+        pnl:    raw.realized_pnl||0,
+        wins:   raw.total_cycles||0,
+        losses: 0,
+        total:  raw.total_cycles||0,
+        winRate:100,
+        apr:    raw.apr||0,
+        balance:(raw.investment||0)+(raw.realized_pnl||0),
+        label:  `APR ${fmt(raw.apr||0,1)}%`,
+        updated:raw.last_updated
+      };
+    }
+    if (bot.type === 'bit' || bot.type === 'smc') {
+      const s = raw.stats||{};
+      const bal = (raw.available||0)+(raw.in_trades||0);
+      const startBal = raw.starting_balance||1000;
+      return {
+        pnl:    raw.total_pnl||0,
+        wins:   s.wins||0,
+        losses: s.losses||0,
+        total:  s.total||0,
+        winRate:s.win_rate||0,
+        apr:    0,
+        balance:bal,
+        label:  `${fmt(s.win_rate||0,0)}% Win Rate`,
+        updated:raw.last_updated
+      };
+    }
+    if (bot.type === 'w') {
+      // performance_log.json is an array
+      const arr = Array.isArray(raw) ? raw : [];
+      const wins   = arr.filter(t=>t.result==='win').length;
+      const losses = arr.filter(t=>t.result==='loss').length;
+      const pnl    = arr.reduce((s,t)=>s+(t.pnl_usd||0),0);
+      const wr     = arr.length>0?wins/arr.length*100:0;
+      return {
+        pnl, wins, losses, total:arr.length,
+        winRate:wr, apr:0, balance:1000+pnl,
+        label:`${fmt(wr,0)}% Win Rate`,
+        updated: arr.length>0?arr[arr.length-1].close_time:null
+      };
+    }
+  } catch(e) { return null; }
+  return null;
 }
 
-function render(p,s,btc) {
-  const inv   = p.investment||0, pnl=p.realized_pnl||0;
-  const total = inv+pnl, apr=p.apr||0, cycles=p.total_cycles||0;
-  const dgt   = p.dgt_count||0, mdd=p.max_drawdown||0;
-  const d     = days(p.start_time);
-  const pnlPct= inv>0?pnl/inv*100:0;
+async function fetchBotData(bot) {
+  try {
+    const r   = await fetch(bot.pUrl+'?t='+Date.now());
+    const raw = await r.json();
+    botData[bot.id] = { raw, summary: parseSummary(bot, raw) };
+    if (bot.sUrl) {
+      const r2 = await fetch(bot.sUrl+'?t='+Date.now());
+      botData[bot.id].state = r2.ok ? await r2.json() : null;
+    }
+  } catch(e) {
+    botData[bot.id] = { raw:null, summary:null, state:null };
+  }
+}
 
-  const lower = s?s.lower:0, upper=s?s.upper:0, grids=s?s.grids:0, atr=s?s.atr14:0;
-  const filled= s?s.grid.filter(l=>l.filled).length:0, waiting=grids-filled;
-  const inPct = upper>lower&&btc>0?Math.max(0,Math.min(100,(btc-lower)/(upper-lower)*100)):0;
-  const mid   = s&&s.grid?s.grid[Math.floor(grids/2)]:null;
-  const ppc   = mid?mid.profit:0;
-  const perG  = grids>0?inv/grids:0;
-  const dcyc  = d>0?cycles/d:0;
+async function load() {
+  const [btcRes] = await Promise.all([
+    fetch(BINANCE),
+    ...BOTS.map(b => fetchBotData(b))
+  ]);
+  const btc = parseFloat((await btcRes.json()).price||0);
+  render(btc);
+}
 
-  const log   = (p.trade_log||[]).filter(t=>t.type==='SELL').slice(-8).reverse();
+function render(btc) {
+  const gData = botData['grid'];
+  const p = gData?.raw || {};
+  const s = gData?.state || null;
 
-  const pc = pnl>=0?'green':'red';
-  const ac = apr>=0?'green':'red';
+  const inv    = p.investment||0, pnl=p.realized_pnl||0;
+  const total  = inv+pnl, apr=p.apr||0, cycles=p.total_cycles||0;
+  const dgt    = p.dgt_count||0, mdd=p.max_drawdown||0;
+  const d      = p.start_time ? days(p.start_time) : 0.8;
+  const lower  = s?s.lower:0, upper=s?s.upper:0, grids=s?s.grids:0, atr=s?s.atr14:0;
+  const filled = s?s.grid.filter(l=>l.filled).length:0;
+  const waiting= grids-filled;
+  const inPct  = upper>lower&&btc>0?Math.max(0,Math.min(100,(btc-lower)/(upper-lower)*100)):0;
+  const mid    = s&&s.grid?s.grid[Math.floor(grids/2)]:null;
+  const ppc    = mid?mid.profit:0;
+  const perG   = grids>0?inv/grids:0;
+  const dcyc   = d>0?cycles/d:0;
+  const pc     = pnl>=0?'green':'red';
+  const ac     = apr>=0?'green':'red';
+  const log    = (p.trade_log||[]).filter(t=>t.type==='SELL').slice(-8).reverse();
 
-  // grid levels HTML
+  // Grid levels
   const lvlRows = s&&s.grid ? [...s.grid].reverse().map((lv,i)=>{
-    const idx = grids-i;
-    const isFilled = lv.filled;
-    const isHere   = !lv.filled && btc>=lv.buy && btc<lv.sell;
+    const idx=grids-i, isFilled=lv.filled;
+    const isHere=!lv.filled&&btc>=lv.buy&&btc<lv.sell;
     let cls='', badge='';
-    if(isFilled){ cls='lvl-filled'; badge=`<span style="color:#00e676;font-weight:700">✅ קנוי</span>`; }
-    else if(isHere){ cls='lvl-current'; badge=`<span style="color:#f7931a;font-weight:700">← כאן</span>`; }
-    else badge=`<span style="color:#2a4060">⏳</span>`;
-    return `<tr class="${cls}">
-      <td style="color:#2a4060;text-align:center">${idx}</td>
-      <td style="font-weight:600;color:#9ab8d0">$${fmt(lv.buy,0)}</td>
-      <td style="color:#3a5a7a">$${fmt(lv.sell,0)}</td>
-      <td style="color:#00e676;font-size:0.7rem">+$${fmt(lv.profit,4)}</td>
-      <td>${badge}</td>
-    </tr>`;
-  }).join('') : '<tr><td colspan="5" style="color:#2a4060;padding:20px;text-align:center">טוען רמות...</td></tr>';
+    if(isFilled){ cls='lvl-filled'; badge=`<span style="color:#00e676;font-weight:700;font-size:0.7rem">✅ קנוי</span>`; }
+    else if(isHere){ cls='lvl-current'; badge=`<span style="color:#f7931a;font-weight:700;font-size:0.7rem">← כאן</span>`; }
+    else badge=`<span style="color:#1a3060;font-size:0.7rem">⏳</span>`;
+    return `<tr class="${cls}"><td style="color:#1a3060;text-align:center">${idx}</td>
+      <td style="font-weight:600;color:#8ab0c8">$${fmt(lv.buy,0)}</td>
+      <td style="color:#2a4a6a">$${fmt(lv.sell,0)}</td>
+      <td style="color:#00e676;font-size:0.68rem">+$${fmt(lv.profit,4)}</td>
+      <td>${badge}</td></tr>`;
+  }).join('') : '';
+
+  // Bot bar cards
+  const botCards = BOTS.map(bot => {
+    const sm   = botData[bot.id]?.summary;
+    const isActive = bot.id === 'grid';
+    if (!sm) return `
+      <div class="bot-card loading ${isActive?'active':''}">
+        <div class="bc-icon">${bot.icon}</div>
+        <div class="bc-right">
+          <div class="bc-name">${bot.name}</div>
+          <div class="bc-stats"><span style="color:#1a3a5a;font-size:0.65rem">טוען...</span></div>
+        </div>
+      </div>`;
+    const pnlColor = sm.pnl>=0?'#00e676':'#ff5252';
+    const pnlSign  = sm.pnl>=0?'+':'';
+    return `
+      <div class="bot-card ${isActive?'active':''}" onclick="switchBot('${bot.id}')">
+        <div class="bc-dot"></div>
+        <div class="bc-icon">${bot.icon}</div>
+        <div class="bc-right">
+          <div class="bc-name">${bot.name}</div>
+          <div class="bc-stats">
+            <span class="bc-pnl" style="color:${pnlColor}">${pnlSign}$${fmt(sm.pnl,3)}</span>
+            <span class="bc-wl" style="color:#00a050">✅${sm.wins}</span>
+            <span class="bc-wl" style="color:#aa3030">❌${sm.losses}</span>
+            <span class="bc-rate" style="color:#4a7a9a">${sm.label}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 
   document.getElementById('root').innerHTML = `
 
     <!-- HEADER -->
     <div class="header">
       <div>
-        <div class="header-title">⚡ MODEL GRID</div>
+        <div class="header-title">⚡ MODEL GRID &nbsp;<span style="font-size:0.65rem;color:#2a4a6a;font-weight:400">מרכז שליטה — 4 בוטים</span></div>
         <div class="header-sub">Pionex AI Grid Bot 2.0 | BTC/USDT | סימולציה</div>
       </div>
       <div class="header-mid">
-        <div class="hm-item">
-          <div class="hm-val blue">$${fmt(total)}</div>
-          <div class="hm-lbl">שווי כולל</div>
-        </div>
-        <div class="hm-item">
-          <div class="hm-val ${pc}">${pnl>=0?'+':''}$${fmt(pnl,4)}</div>
-          <div class="hm-lbl">רווח מצטבר</div>
-        </div>
-        <div class="hm-item">
-          <div class="hm-val ${ac}">${fmt(apr,1)}%</div>
-          <div class="hm-lbl">APR שנתי</div>
-        </div>
-        <div class="hm-item">
-          <div class="hm-val orange">${cycles}</div>
-          <div class="hm-lbl">סייקלים</div>
-        </div>
-        <div class="hm-item">
-          <div class="hm-val" style="color:#7a9ab0">${fmt(d,1)}</div>
-          <div class="hm-lbl">ימי פעילות</div>
-        </div>
+        <div class="hm-item"><div class="hm-val blue">$${fmt(total)}</div><div class="hm-lbl">שווי גריד</div></div>
+        <div class="hm-item"><div class="hm-val ${pc}">${pnl>=0?'+':''}$${fmt(pnl,4)}</div><div class="hm-lbl">רווח מצטבר</div></div>
+        <div class="hm-item"><div class="hm-val ${ac}">${fmt(apr,1)}%</div><div class="hm-lbl">APR שנתי</div></div>
+        <div class="hm-item"><div class="hm-val orange">${cycles}</div><div class="hm-lbl">סייקלים</div></div>
+        <div class="hm-item"><div class="hm-val gray">${fmt(d,1)}</div><div class="hm-lbl">ימים</div></div>
       </div>
       <div>
         <div class="btc-now">$${fmt(btc)}</div>
-        <div class="refresh-txt" id="ref">BTC מחיר עכשיו | מתרענן בעוד ${countdown}ש׳</div>
+        <div class="refresh-txt" id="ref">BTC עכשיו | מתרענן בעוד ${countdown}ש׳</div>
       </div>
     </div>
 
+    <!-- BOTS BAR -->
+    <div class="bots-bar">${botCards}</div>
+
     <!-- LEFT -->
     <div class="left">
-
-      <!-- row 1 -->
       <div class="row4">
-        <div class="card">
-          <div class="card-lbl">💰 השקעה</div>
-          <div class="card-val gray">$${fmt(inv)}</div>
-          <div class="card-sub">התחלה: $${fmt(p.starting_investment||inv)}</div>
-        </div>
-        <div class="card">
-          <div class="card-lbl">📈 רווח יומי</div>
-          <div class="card-val green">~$${fmt(dcyc*ppc,4)}</div>
-          <div class="card-sub">${fmt(dcyc,1)} cycles/יום × $${fmt(ppc,4)}</div>
-        </div>
-        <div class="card">
-          <div class="card-lbl">📉 MDD</div>
-          <div class="card-val" style="color:${mdd>10?'#ff5252':'#7a9ab0'}">${fmt(mdd,2)}%</div>
-          <div class="card-sub">ירידה מקסימלית</div>
-        </div>
-        <div class="card">
-          <div class="card-lbl">🔁 DGT איפוסים</div>
-          <div class="card-val gray">${dgt}</div>
-          <div class="card-sub">טווח אוטומטי</div>
-        </div>
+        <div class="card"><div class="card-lbl">💰 השקעה</div><div class="card-val gray">$${fmt(inv)}</div><div class="card-sub">התחלה: $${fmt(p.starting_investment||inv)}</div></div>
+        <div class="card"><div class="card-lbl">📈 רווח יומי</div><div class="card-val green">~$${fmt(dcyc*ppc,4)}</div><div class="card-sub">${fmt(dcyc,1)} cycles/יום</div></div>
+        <div class="card"><div class="card-lbl">📉 MDD</div><div class="card-val" style="color:${mdd>10?'#ff5252':'#7a9ab0'}">${fmt(mdd,2)}%</div><div class="card-sub">ירידה מקסימלית</div></div>
+        <div class="card"><div class="card-lbl">🔁 DGT</div><div class="card-val gray">${dgt}</div><div class="card-sub">איפוסי טווח</div></div>
       </div>
 
-      <!-- GRID VIZ -->
       <div class="grid-viz">
         <div class="viz-title">📐 מצב הגריד</div>
         <div class="range-labels">
@@ -328,39 +396,29 @@ function render(p,s,btc) {
         </div>
         <div class="range-bar">
           <div class="range-fill" style="width:${inPct}%"></div>
-          <div class="price-pin" style="left:${inPct}%">
-            <div class="pin-lbl">$${fmt(btc,0)}</div>
-          </div>
+          <div class="price-pin" style="left:${inPct}%"><div class="pin-lbl">$${fmt(btc,0)}</div></div>
         </div>
         <div class="grid-mini">
-          <div class="gm"><div class="gm-v">${grids}</div><div class="gm-l">סה"כ רמות</div></div>
+          <div class="gm"><div class="gm-v">${grids}</div><div class="gm-l">רמות</div></div>
           <div class="gm"><div class="gm-v" style="color:#00e676">${filled}</div><div class="gm-l">קנויות</div></div>
-          <div class="gm"><div class="gm-v" style="color:#3a5a7a">${waiting}</div><div class="gm-l">ממתינות</div></div>
+          <div class="gm"><div class="gm-v" style="color:#2a4a6a">${waiting}</div><div class="gm-l">ממתינות</div></div>
           <div class="gm"><div class="gm-v" style="color:#f7931a">$${fmt(atr,0)}</div><div class="gm-l">ATR-14</div></div>
         </div>
       </div>
 
-      <!-- FILLS -->
       <div class="fills-wrap">
-        <div class="fills-title">📋 עסקאות אחרונות (SELL)</div>
+        <div class="fills-title">📋 עסקאות אחרונות — GRID</div>
         <div class="fills-table">
           ${log.length===0
-            ? `<div style="text-align:center;padding:16px;color:#2a4060;font-size:0.82rem">⏳ אין עסקאות עדיין — הגריד ממתין לתנועת מחיר</div>`
-            : `<table>
-                <thead><tr>
-                  <th>סוג</th><th>מחיר</th><th>BTC</th><th>רווח</th><th>זמן</th>
-                </tr></thead>
-                <tbody>${log.map(t=>`
-                  <tr>
-                    <td><span class="badge-sell">SELL</span></td>
-                    <td style="font-weight:600">$${fmt(t.price,0)}</td>
-                    <td style="color:#3a5a7a">${t.qty?fmt(t.qty,5):'—'}</td>
-                    <td class="pp">+$${fmt(t.profit,4)}</td>
-                    <td style="color:#2a4060">${fmtD(t.time)}</td>
-                  </tr>`).join('')}
-                </tbody>
-               </table>`
-          }
+            ? `<div style="text-align:center;padding:14px;color:#1a3060;font-size:0.75rem">⏳ אין עסקאות עדיין — הגריד ממתין לתנועת מחיר</div>`
+            : `<table><thead><tr><th>סוג</th><th>מחיר</th><th>BTC</th><th>רווח</th><th>זמן</th></tr></thead>
+               <tbody>${log.map(t=>`<tr>
+                 <td><span class="badge-sell">SELL</span></td>
+                 <td style="font-weight:600">$${fmt(t.price,0)}</td>
+                 <td style="color:#1a3a5a">${t.qty?fmt(t.qty,5):'—'}</td>
+                 <td class="pp">+$${fmt(t.profit,4)}</td>
+                 <td style="color:#1a3060">${fmtD(t.time)}</td>
+               </tr>`).join('')}</tbody></table>`}
         </div>
       </div>
     </div>
@@ -368,22 +426,16 @@ function render(p,s,btc) {
     <!-- RIGHT — GRID LEVELS -->
     <div class="right">
       <div class="right-title">
-        <span>📊 כל ${grids} רמות הגריד</span>
+        <span>📊 ${grids} רמות גריד</span>
         <div class="legend">
           <div class="leg"><div class="dot-green"></div><span>קנוי</span></div>
-          <div class="leg"><div class="dot-orange"></div><span>מחיר כאן</span></div>
+          <div class="leg"><div class="dot-orange"></div><span>כאן</span></div>
           <div class="leg"><div class="dot-gray"></div><span>ממתין</span></div>
         </div>
       </div>
       <div class="levels-scroll">
         <table class="lvl-table">
-          <thead><tr>
-            <th style="width:32px">#</th>
-            <th>קנייה</th>
-            <th>מכירה</th>
-            <th>רווח</th>
-            <th>סטטוס</th>
-          </tr></thead>
+          <thead><tr><th style="width:28px">#</th><th>קנייה</th><th>מכירה</th><th>רווח</th><th>סטטוס</th></tr></thead>
           <tbody>${lvlRows}</tbody>
         </table>
       </div>
@@ -392,8 +444,8 @@ function render(p,s,btc) {
     <!-- STATUS -->
     <div class="status">
       <div><span class="dot-live"></span> פעיל — GitHub Actions כל 15 דקות</div>
-      <div>עדכון אחרון: ${fmtD(p.last_updated)}</div>
-      <div>$${fmt(perG,2)} לרמה | ~$${fmt(ppc,5)} רווח/cycle</div>
+      <div>עדכון GRID: ${fmtD(p.last_updated)}</div>
+      <div>$${fmt(perG,2)}/רמה | ~$${fmt(ppc,5)}/cycle</div>
       <div>התחלה: ${fmtD(p.start_time)}</div>
     </div>
   `;
@@ -401,12 +453,18 @@ function render(p,s,btc) {
   startCountdown();
 }
 
+function switchBot(id) {
+  // Flash effect — future: switch main panel to bot details
+  document.querySelectorAll('.bot-card').forEach(c=>c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
 function startCountdown(){
   clearInterval(timer); countdown=60;
   timer=setInterval(()=>{
     countdown--;
     const el=document.getElementById('ref');
-    if(el) el.textContent=`BTC מחיר עכשיו | מתרענן בעוד ${countdown}ש׳`;
+    if(el) el.textContent=`BTC עכשיו | מתרענן בעוד ${countdown}ש׳`;
     if(countdown<=0){ clearInterval(timer); load(); }
   },1000);
 }
