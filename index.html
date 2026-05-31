@@ -1179,7 +1179,7 @@ function drawGridLines(){
       color:            isFilled ? '#00ff88' : isCurrent ? '#ff9900' : '#ffffff',
       lineWidth:        isCurrent ? 3 : isFilled ? 2 : 1,
       lineStyle:        isFilled || isCurrent ? LightweightCharts.LineStyle.Solid : LightweightCharts.LineStyle.Dashed,
-      axisLabelVisible: isCurrent || isFilled,
+      axisLabelVisible: false,
       title:            '',
     }));
 
@@ -1190,7 +1190,7 @@ function drawGridLines(){
         color:            '#ff3333',
         lineWidth:        2,
         lineStyle:        LightweightCharts.LineStyle.Dashed,
-        axisLabelVisible: true,
+        axisLabelVisible: false,
         title:            '',
       }));
     }
