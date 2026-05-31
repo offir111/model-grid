@@ -194,6 +194,10 @@
     .ci-dot  { width:8px;height:8px;border-radius:50%; }
     .chart-wrap { flex:1; overflow:hidden; position:relative; }
     #tv-chart   { width:100%; height:100%; }
+    #grid-overlay {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      pointer-events:none; z-index:10;
+    }
 
     /* ── RIGHT — LEVELS (visual) ── */
     .right {
@@ -625,7 +629,10 @@ function render(btc){
           <span style="color:#cccccc">TradingView | זמן אמת</span>
         </div>
       </div>
-      <div class="chart-wrap"><div id="tv-chart"></div></div>
+      <div class="chart-wrap">
+        <div id="tv-chart"></div>
+        <canvas id="grid-overlay"></canvas>
+      </div>
 
       <!-- ══ GRID TARGETS PANEL ══ -->
       <div style="padding:6px 10px;background:#060c14;border-top:1px solid #0f2030;flex-shrink:0;">
@@ -1047,6 +1054,8 @@ function loadTVChart(){
       ],
     });
     tvWidgetLoaded=true;
+    // Draw grid lines after chart loads
+    setTimeout(drawOverlayGridLines, 2000);
   };
   document.head.appendChild(s);
 
@@ -1167,6 +1176,88 @@ function drawGridLines(){
     axisLabelVisible: true,
     title:            '',
   }));
+}
+
+// ── Draw grid lines on overlay canvas ─────────────────────────
+function drawOverlayGridLines() {
+  const canvas = document.getElementById('grid-overlay');
+  if (!canvas) return;
+  const s = botData['grid']?.state;
+  if (!s || !s.grid) return;
+
+  const W = canvas.offsetWidth;
+  const H = canvas.offsetHeight;
+  canvas.width  = W;
+  canvas.height = H;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  const btc = parseFloat(document.querySelector('.btc-now')?.textContent?.replace(/[$,]/g,'') || 0);
+  if (!btc) return;
+
+  // מחיר גבוה ונמוך נראה בגרף — נאמוד לפי ATR
+  const atr   = s.atr14 || 1000;
+  const upper = s.upper || (btc + atr * 3);
+  const lower = s.lower || (btc - atr * 3);
+
+  // הצג רק רמות שנמצאות בטווח הנראה
+  const visibleLevels = s.grid.filter(lv => lv.buy >= lower * 0.98 && lv.buy <= upper * 1.02);
+
+  const priceToY = (price) => {
+    return H - ((price - lower) / (upper - lower)) * H;
+  };
+
+  visibleLevels.forEach(lv => {
+    const isFilled = lv.filled;
+    const isCurrent = btc >= lv.buy && btc < lv.sell;
+    const buyY  = priceToY(lv.buy);
+    const sellY = priceToY(lv.sell);
+
+    // קו קנייה — לבן מואר
+    ctx.beginPath();
+    ctx.strokeStyle = isFilled ? '#00ff88' : isCurrent ? '#ff9900' : '#ffffff';
+    ctx.lineWidth   = isCurrent ? 3 : 2;
+    ctx.globalAlpha = 1.0;
+    ctx.shadowColor = isFilled ? '#00ff88' : isCurrent ? '#ff9900' : '#ffffff';
+    ctx.shadowBlur  = 8;
+    ctx.setLineDash(isFilled ? [] : [6, 3]);
+    ctx.moveTo(0, buyY);
+    ctx.lineTo(W, buyY);
+    ctx.stroke();
+
+    // תווית מחיר קנייה
+    ctx.shadowBlur = 0;
+    ctx.setLineDash([]);
+    ctx.font = 'bold 11px monospace';
+    ctx.fillStyle = isFilled ? '#00ff88' : isCurrent ? '#ff9900' : '#ffffff';
+    ctx.globalAlpha = 1.0;
+    const label = isFilled ? `✅ BUY $${Math.round(lv.buy).toLocaleString()}` :
+                  isCurrent ? `◉ $${Math.round(lv.buy).toLocaleString()}` :
+                  `↓ BUY $${Math.round(lv.buy).toLocaleString()}`;
+    ctx.fillText(label, 6, buyY - 3);
+
+    // קו מכירה — אדום מואר
+    if (isFilled) {
+      ctx.beginPath();
+      ctx.strokeStyle = '#ff4444';
+      ctx.lineWidth   = 2;
+      ctx.shadowColor = '#ff4444';
+      ctx.shadowBlur  = 8;
+      ctx.setLineDash([4, 4]);
+      ctx.moveTo(0, sellY);
+      ctx.lineTo(W, sellY);
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#ff4444';
+      ctx.fillText(`↑ SELL $${Math.round(lv.sell).toLocaleString()}`, 6, sellY - 3);
+    }
+  });
+
+  ctx.globalAlpha = 1.0;
+  ctx.shadowBlur  = 0;
 }
 
 function switchBot(id,e){
