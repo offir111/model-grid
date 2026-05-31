@@ -206,6 +206,22 @@ def save_portfolio(p):
 # DGT — Dynamic Grid Trading auto-reset
 # ─────────────────────────────────────────────────────────────────
 
+def check_support_distance(current_price, hourly_candles, lookback=24, min_pct=3.0):
+    """
+    Volsight-inspired: בודק שהמחיר לא קרוב מדי לתמיכה חזקה.
+    מחזיר (True, pct) אם בטוח לפתוח גריד, (False, pct) אם קרוב מדי.
+    lookback  = כמה נרות שעתיים לבדוק (ברירת מחדל: 24 = יום אחד)
+    min_pct   = מרחק מינימלי מתמיכה באחוזים (ברירת מחדל: 3%)
+    """
+    if len(hourly_candles) < lookback:
+        return True, 100.0  # אין מספיק נתונים — מאפשר
+    recent = hourly_candles[-lookback:]
+    support = min(c["low"] for c in recent)
+    distance_pct = (current_price - support) / current_price * 100
+    is_safe = distance_pct >= min_pct
+    return is_safe, round(distance_pct, 2)
+
+
 def check_and_apply_dgt(state, current_price, portfolio, hourly_candles):
     upper = state["upper"]
     lower = state["lower"]
@@ -215,6 +231,14 @@ def check_and_apply_dgt(state, current_price, portfolio, hourly_candles):
     direction = "above" if current_price > upper else "below"
     print(f"  DGT triggered! BTC=${current_price:,.2f} is {direction} range "
           f"[${lower:,.2f} -- ${upper:,.2f}]")
+
+    # ── Volsight-inspired: Support Distance Check ──────────────────
+    is_safe, support_dist = check_support_distance(current_price, hourly_candles)
+    if not is_safe:
+        print(f"  ⚠️  Support Distance: {support_dist:.1f}% — קרוב מדי לתמיכה! "
+              f"DGT נדחה (מינימום 3%)")
+        return False
+    print(f"  ✅ Support Distance: {support_dist:.1f}% — בטוח לאפס גריד")
 
     reinvested_total = portfolio.get("reinvested_total", 0.0)
     uncompounded     = portfolio["realized_pnl"] - reinvested_total

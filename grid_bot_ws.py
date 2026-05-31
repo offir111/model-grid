@@ -21,7 +21,7 @@ import websocket
 # ── Import core logic from existing simulator ──────────────────────
 from grid_simulator import (
     calc_ai_params, build_grid, simulate_fills,
-    check_and_apply_dgt,
+    check_and_apply_dgt, check_support_distance,
     load_state, save_state,
     load_portfolio, init_portfolio, save_portfolio,
     DATA_DIR, DGT_ENABLED, AI_HOURS
@@ -192,9 +192,12 @@ def process_candle(candle):
             f"APR: {portfolio.get('apr',0):.1f}%")
     else:
         filled = sum(1 for l in bot_state["grid"] if l["filled"])
+        _, sup_dist = check_support_distance(candle["close"], hourly_cache)
+        safety = "✅" if sup_dist >= 3.0 else "⚠️"
         log(f"  ${candle['low']:,.0f}–${candle['high']:,.0f} | "
             f"filled: {filled}/{bot_state['grids']} | "
-            f"P&L: ${portfolio['realized_pnl']:+.4f}")
+            f"P&L: ${portfolio['realized_pnl']:+.4f} | "
+            f"Support: {safety}{sup_dist:.1f}%")
 
     bot_state["last_run_time"] = datetime.now().isoformat()
     save_state(bot_state)
