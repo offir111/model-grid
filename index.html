@@ -815,46 +815,49 @@ function buildLiveTiles(s, btc, tradeLog) {
     const isWin = profit >= 0;
     const pct = sell.qty > 0 ? (profit / (sell.price * sell.qty) * 100) : 0;
     html += `<div class="tile ${isWin?'sold-win':'sold-los'}">
-      <div class="tile-lbl">${isWin?'✅ רווח':'❌ הפסד'}</div>
-      <div class="tile-price">$${fmt(sell.price,0)}</div>
-      <div class="tile-pct" style="color:${isWin?'#00e676':'#ff4444'}">${isWin?'+':''}${fmt(pct,2)}%</div>
-      <div class="tile-sub">+$${fmt(profit,4)}</div>
+      <div class="tile-lbl" style="color:#fff">${isWin?'✅ רווח':'❌ הפסד'}</div>
+      <div class="tile-price" style="color:#fff">$${fmt(sell.price,0)}</div>
+      <div class="tile-pct" style="color:#fff">${isWin?'+':''}${fmt(pct,2)}%</div>
+      <div class="tile-sub" style="color:#fff">+$${fmt(profit,4)}</div>
     </div>`;
   });
 
-  // 2. פוזיציות פתוחות (קנויות, ממתינות למכירה)
+  // 2. פוזיציות פתוחות — זוג בחלונית אחת
   const filledLevels = s.grid.filter(l => l.filled);
   filledLevels.forEach(lv => {
     const unrealPct = btc > 0 ? ((btc - lv.buy) / lv.buy * 100) : 0;
     const isProfit = unrealPct >= 0;
-    html += `<div class="tile-pair">
-      <div class="tile bought">
-        <div class="tile-lbl">✅ קנוי</div>
-        <div class="tile-price">$${fmt(lv.buy,0)}</div>
-        <div class="tile-pct" style="color:${isProfit?'#00e676':'#ff4444'}">${isProfit?'+':''}${fmt(unrealPct,2)}%</div>
-        <div class="tile-sub">צף</div>
+    html += `<div style="flex-shrink:0;background:#0d1820;border:2px solid #00e676;border-radius:9px;padding:5px 8px;min-width:130px;display:flex;gap:6px;align-items:stretch;">
+      <!-- קנייה -->
+      <div style="flex:1;text-align:center;border-right:1px solid #1e3a2a;padding-right:6px;">
+        <div style="font-size:.48rem;color:#fff;margin-bottom:2px;">✅ קנוי</div>
+        <div style="font-size:.72rem;font-weight:700;color:#fff;">$${fmt(lv.buy,0)}</div>
+        <div style="font-size:.58rem;font-weight:700;color:#fff;">${isProfit?'+':''}${fmt(unrealPct,2)}%</div>
+        <div style="font-size:.48rem;color:#fff;margin-top:1px;">צף</div>
       </div>
-      <div class="tile-arrow">›</div>
-      <div class="tile" style="border-color:#ffd700;border-style:dashed;">
-        <div class="tile-lbl">🎯 יעד</div>
-        <div class="tile-price" style="color:#ffd700;">$${fmt(lv.sell,0)}</div>
-        <div class="tile-pct" style="color:#ffd700;">+$${fmt(lv.profit,4)}</div>
-        <div class="tile-sub">מכירה</div>
+      <!-- חץ -->
+      <div style="display:flex;align-items:center;color:#fff;font-size:.9rem;">→</div>
+      <!-- יעד מכירה -->
+      <div style="flex:1;text-align:center;padding-left:2px;">
+        <div style="font-size:.48rem;color:#fff;margin-bottom:2px;">🎯 יעד</div>
+        <div style="font-size:.72rem;font-weight:700;color:#fff;">$${fmt(lv.sell,0)}</div>
+        <div style="font-size:.58rem;font-weight:700;color:#fff;">+$${fmt(lv.profit,4)}</div>
+        <div style="font-size:.48rem;color:#fff;margin-top:1px;">מכירה</div>
       </div>
     </div>`;
   });
 
-  // 3. רמות ממתינות קרובות (±4 מהמחיר הנוכחי)
+  // 3. רמות ממתינות קרובות
   const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
   const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
   const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-2 && i <= base+2);
   waiting.forEach(lv => {
     const isCur = btc >= lv.buy && btc < lv.sell;
     html += `<div class="tile waiting" style="${isCur?'border-color:#f7931a;':''}">
-      <div class="tile-lbl">${isCur?'◉ כאן':'⏳ ממתין'}</div>
-      <div class="tile-price">$${fmt(lv.buy,0)}</div>
-      <div class="tile-pct" style="color:#aaaaaa;">→$${fmt(lv.sell,0)}</div>
-      <div class="tile-sub">+$${fmt(lv.profit,4)}</div>
+      <div class="tile-lbl" style="color:#fff">${isCur?'◉ כאן':'⏳ ממתין'}</div>
+      <div class="tile-price" style="color:#fff">$${fmt(lv.buy,0)}</div>
+      <div class="tile-pct" style="color:#fff">→$${fmt(lv.sell,0)}</div>
+      <div class="tile-sub" style="color:#fff">+$${fmt(lv.profit,4)}</div>
     </div>`;
   });
 
