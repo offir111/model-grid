@@ -999,8 +999,8 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
 });
 
 let tvWidgetLoaded=false, chartWs=null;
-// Lightweight Charts vars (unused — kept for compat)
 let lwChart=null, candleSeries=null, priceLabelSeries=null, priceLines=[];
+const LW_ENABLED = true; // השתמש ב-Lightweight Charts במקום TradingView
 
 // Real-time BTC price via WebSocket (header only)
 function connectPriceWs(){
@@ -1022,44 +1022,41 @@ function loadTVChart(){
   const el=document.getElementById('tv-chart');
   if(!el) return;
 
-  // Already loaded — don't reload iframe
+  if(LW_ENABLED){
+    // השתמש ב-Lightweight Charts — תומך קווי גריד אמיתיים
+    if(lwChart) return; // כבר טעון
+    loadLWScript(el);
+    return;
+  }
+
+  // TradingView Widget (fallback)
   if(tvWidgetLoaded && el.querySelector('iframe')) return;
-
-  el.innerHTML='';
-  tvWidgetLoaded=false;
-
+  el.innerHTML=''; tvWidgetLoaded=false;
   const s=document.createElement('script');
   s.src='https://s3.tradingview.com/tv.js';
   s.onload=()=>{
     new TradingView.widget({
-      container_id:     'tv-chart',
-      width:            '100%',
-      height:           '100%',
-      symbol:           'BINANCE:BTCUSDT',
-      interval:         '15',
-      timezone:         'Asia/Jerusalem',
-      theme:            'dark',
-      style:            '1',
-      locale:           'he_IL',
-      toolbar_bg:       '#070d14',
-      enable_publishing: false,
-      hide_top_toolbar:  false,
-      hide_legend:       false,
-      save_image:        false,
-      backgroundColor:  '#070d14',
-      gridColor:        '#0d1820',
-      studies: [
-        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:50 },  overrides:{ "Plot.color":"#ffd700", "Plot.linewidth":2, "Plot.title":"MA 50"  } },
-        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:200 }, overrides:{ "Plot.color":"#ff5252", "Plot.linewidth":2, "Plot.title":"MA 200" } }
+      container_id:'tv-chart', width:'100%', height:'100%',
+      symbol:'BINANCE:BTCUSDT', interval:'15', timezone:'Asia/Jerusalem',
+      theme:'dark', style:'1', locale:'he_IL', toolbar_bg:'#070d14',
+      enable_publishing:false, hide_top_toolbar:false,
+      backgroundColor:'#070d14', gridColor:'#0d1820',
+      studies:[
+        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:50 },  overrides:{ "Plot.color":"#ffd700", "Plot.linewidth":2 } },
+        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:200 }, overrides:{ "Plot.color":"#ff5252", "Plot.linewidth":2 } }
       ],
     });
     tvWidgetLoaded=true;
-    // Draw grid lines after chart loads
-    setTimeout(drawOverlayGridLines, 2000);
   };
   document.head.appendChild(s);
+  connectPriceWs();
+}
 
-  // Real-time price in header via WebSocket
+function loadLWScript(el){
+  const s=document.createElement('script');
+  s.src='https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js';
+  s.onload=()=>{ buildLWChart(el); };
+  document.head.appendChild(s);
   connectPriceWs();
 }
 
@@ -1140,42 +1137,44 @@ function clearGridLines(){
 function drawGridLines(){
   const s=botData['grid']?.state;
   if(!candleSeries||!s||!s.grid) return;
-
   clearGridLines();
 
   const btc=parseFloat(document.querySelector('.btc-now')?.textContent?.replace(/[$,]/g,'')||0);
+  if(!btc) return;
 
-  // Find the one current level where BTC is right now
-  const currentLv = s.grid.find(lv => btc >= lv.buy && btc < lv.sell)
-                 || s.grid.reduce((a,b) => Math.abs(b.buy-btc) < Math.abs(a.buy-btc) ? b : a);
+  // ציור כל רמות הגריד
+  s.grid.forEach(lv => {
+    const isFilled  = lv.filled;
+    const isCurrent = btc >= lv.buy && btc < lv.sell;
 
-  if(!currentLv) return;
+    // קו קנייה
+    priceLines.push(candleSeries.createPriceLine({
+      price:            lv.buy,
+      color:            isFilled ? '#00ff88' : isCurrent ? '#ff9900' : '#ffffff',
+      lineWidth:        isCurrent ? 3 : isFilled ? 2 : 1,
+      lineStyle:        isFilled || isCurrent ? LightweightCharts.LineStyle.Solid : LightweightCharts.LineStyle.Dashed,
+      axisLabelVisible: isCurrent || isFilled,
+      title:            isCurrent ? '◉ כאן' : isFilled ? '✅ קנוי' : '',
+    }));
 
-  // Feed current price into the white-label series
+    // קו מכירה — רק לרמות קנויות
+    if(isFilled){
+      priceLines.push(candleSeries.createPriceLine({
+        price:            lv.sell,
+        color:            '#ff3333',
+        lineWidth:        2,
+        lineStyle:        LightweightCharts.LineStyle.Dashed,
+        axisLabelVisible: true,
+        title:            '🎯 SELL',
+      }));
+    }
+  });
+
+  // עדכון מחיר נוכחי
   if(btc>0 && priceLabelSeries){
     const now = Math.floor(Date.now()/1000);
-    priceLabelSeries.setData([{ time: now - 1, value: btc }, { time: now, value: btc }]);
+    priceLabelSeries.setData([{ time: now-1, value: btc }, { time: now, value: btc }]);
   }
-
-  // ONE green line — buy price
-  priceLines.push(candleSeries.createPriceLine({
-    price:            currentLv.buy,
-    color:            '#00e67688',
-    lineWidth:        1,
-    lineStyle:        LightweightCharts.LineStyle.Dashed,
-    axisLabelVisible: true,
-    title:            '',
-  }));
-
-  // ONE red line — sell price
-  priceLines.push(candleSeries.createPriceLine({
-    price:            currentLv.sell,
-    color:            '#ff525288',
-    lineWidth:        1,
-    lineStyle:        LightweightCharts.LineStyle.Dashed,
-    axisLabelVisible: true,
-    title:            '',
-  }));
 }
 
 // ── Draw grid lines on overlay canvas ─────────────────────────
