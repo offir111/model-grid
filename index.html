@@ -327,6 +327,33 @@
     .wiz-btn.gray    { background:#0a1520; border-color:#152535; color:#ffffff; }
 
     ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#070d14} ::-webkit-scrollbar-thumb{background:#152535;border-radius:2px}
+
+    /* ══ LIVE TILES ══ */
+    .tile {
+      flex-shrink:0; width:72px; border-radius:7px; padding:5px 6px;
+      background:#0d1820; border:2px solid #f7931a;
+      text-align:center; position:relative; cursor:default;
+      transition:border-color .3s;
+    }
+    .tile.waiting  { border-color:#f7931a; }
+    .tile.bought   { border-color:#00e676; }
+    .tile.loss     { border-color:#ff4444; }
+    .tile.sold-win { border-color:#00e676; background:#001a0e; }
+    .tile.sold-los { border-color:#ff4444; background:#1a0000; }
+    .tile-lbl  { font-size:.48rem; color:#aaaaaa; margin-bottom:2px; }
+    .tile-price{ font-size:.72rem; font-weight:700; color:#ffffff; }
+    .tile-pct  { font-size:.58rem; font-weight:700; margin-top:2px; }
+    .tile-sub  { font-size:.48rem; color:#aaaaaa; margin-top:1px; }
+    .tile-pair { display:flex; gap:3px; }
+    .tile-arrow{ display:flex;align-items:center;color:#555;font-size:.8rem;}
+
+    /* History calendar */
+    .hist-day {
+      font-size:.55rem; padding:2px 5px; border-radius:4px; cursor:pointer;
+      background:#0a1520; border:1px solid #152535; color:#aaaaaa;
+    }
+    .hist-day:hover { border-color:#ffd700; color:#ffd700; }
+    .hist-day.active { border-color:#ffd700; color:#ffd700; background:#0d1e30; }
   </style>
 </head>
 <body>
@@ -639,11 +666,18 @@ function render(btc){
         <canvas id="grid-overlay"></canvas>
       </div>
 
-      <!-- ══ GRID TARGETS PANEL ══ -->
+      <!-- ══ GRID LIVE TILES PANEL ══ -->
       <div style="padding:6px 10px;background:#060c14;border-top:1px solid #0f2030;flex-shrink:0;">
-        <div style="font-size:.58rem;color:#ffffff;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">🎯 יעדי הבוט — רמות קנייה ומכירה קרובות למחיר</div>
-        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;">
-          ${buildTargetLevels(s, btc)}
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <div style="font-size:.58rem;color:#ffffff;text-transform:uppercase;letter-spacing:.6px;">🎯 פוזיציות גריד — היום</div>
+          <div style="display:flex;gap:4px;align-items:center;">
+            <button id="hist-btn" onclick="toggleHistory()" style="font-size:.55rem;padding:2px 7px;background:#0a1520;border:1px solid #ffd700;border-radius:5px;color:#ffd700;cursor:pointer;">📅 היסטוריה</button>
+            <span id="hist-date" style="font-size:.55rem;color:#aaaaaa;"></span>
+          </div>
+        </div>
+        <div id="hist-cal" class="hidden" style="display:none;flex-wrap:wrap;gap:3px;margin-bottom:6px;"></div>
+        <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;" id="tiles-row">
+          ${buildLiveTiles(s, btc, tradeLog)}
         </div>
       </div>
     </div>
@@ -754,6 +788,154 @@ function drawProfitCurve(tradeLog, totalPnl) {
   ctx.textAlign = 'left';
   ctx.fillText(`+$${totalPnl.toFixed(2)}`, 4, 10);
 }
+
+// ── Live Tiles Panel ────────────────────────────────────────────
+let historyMode = false;
+let historyDate = null;
+
+function buildLiveTiles(s, btc, tradeLog) {
+  if (!s || !s.grid) return '';
+  const today = new Date().toDateString();
+
+  // עסקאות של היום
+  const todaySells = (tradeLog||[]).filter(t => {
+    if(t.type !== 'SELL') return false;
+    return new Date(t.time).toDateString() === today;
+  });
+  const todayBuys = (tradeLog||[]).filter(t => {
+    if(t.type !== 'BUY') return false;
+    return new Date(t.time).toDateString() === today;
+  });
+
+  let html = '';
+
+  // 1. עסקאות שהסתיימו היום (נמכרו)
+  todaySells.forEach(sell => {
+    const profit = sell.profit || 0;
+    const isWin = profit >= 0;
+    const pct = sell.qty > 0 ? (profit / (sell.price * sell.qty) * 100) : 0;
+    html += `<div class="tile ${isWin?'sold-win':'sold-los'}">
+      <div class="tile-lbl">${isWin?'✅ רווח':'❌ הפסד'}</div>
+      <div class="tile-price">$${fmt(sell.price,0)}</div>
+      <div class="tile-pct" style="color:${isWin?'#00e676':'#ff4444'}">${isWin?'+':''}${fmt(pct,2)}%</div>
+      <div class="tile-sub">+$${fmt(profit,4)}</div>
+    </div>`;
+  });
+
+  // 2. פוזיציות פתוחות (קנויות, ממתינות למכירה)
+  const filledLevels = s.grid.filter(l => l.filled);
+  filledLevels.forEach(lv => {
+    const unrealPct = btc > 0 ? ((btc - lv.buy) / lv.buy * 100) : 0;
+    const isProfit = unrealPct >= 0;
+    html += `<div class="tile-pair">
+      <div class="tile bought">
+        <div class="tile-lbl">✅ קנוי</div>
+        <div class="tile-price">$${fmt(lv.buy,0)}</div>
+        <div class="tile-pct" style="color:${isProfit?'#00e676':'#ff4444'}">${isProfit?'+':''}${fmt(unrealPct,2)}%</div>
+        <div class="tile-sub">צף</div>
+      </div>
+      <div class="tile-arrow">›</div>
+      <div class="tile" style="border-color:#ffd700;border-style:dashed;">
+        <div class="tile-lbl">🎯 יעד</div>
+        <div class="tile-price" style="color:#ffd700;">$${fmt(lv.sell,0)}</div>
+        <div class="tile-pct" style="color:#ffd700;">+$${fmt(lv.profit,4)}</div>
+        <div class="tile-sub">מכירה</div>
+      </div>
+    </div>`;
+  });
+
+  // 3. רמות ממתינות קרובות (±4 מהמחיר הנוכחי)
+  const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
+  const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
+  const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-2 && i <= base+2);
+  waiting.forEach(lv => {
+    const isCur = btc >= lv.buy && btc < lv.sell;
+    html += `<div class="tile waiting" style="${isCur?'border-color:#f7931a;':''}">
+      <div class="tile-lbl">${isCur?'◉ כאן':'⏳ ממתין'}</div>
+      <div class="tile-price">$${fmt(lv.buy,0)}</div>
+      <div class="tile-pct" style="color:#aaaaaa;">→$${fmt(lv.sell,0)}</div>
+      <div class="tile-sub">+$${fmt(lv.profit,4)}</div>
+    </div>`;
+  });
+
+  return html || '<span style="color:#aaa;font-size:.6rem">אין פעילות היום</span>';
+}
+
+function toggleHistory() {
+  const cal = document.getElementById('hist-cal');
+  if (!cal) return;
+  historyMode = !historyMode;
+  if (historyMode) {
+    // בנה לוח שנה 30 יום
+    const gD = botData['grid'];
+    const tradeLog = gD?.raw?.trade_log || [];
+    // קבץ לפי תאריך
+    const days = {};
+    tradeLog.forEach(t => {
+      const d = new Date(t.time).toLocaleDateString('he-IL');
+      if (!days[d]) days[d] = [];
+      days[d].push(t);
+    });
+    const sorted = Object.keys(days).sort((a,b)=>new Date(b)-new Date(a)).slice(0,30);
+    cal.innerHTML = sorted.map(d => {
+      const sells = days[d].filter(t=>t.type==='SELL');
+      const profit = sells.reduce((s,t)=>s+(t.profit||0),0);
+      const color = profit>=0?'#00e676':'#ff4444';
+      return `<div class="hist-day" onclick="showHistoryDay('${d}')" style="border-color:${color};color:${color};">
+        ${d}<br><span style="font-size:.5rem;">${profit>=0?'+':''}$${fmt(profit,2)}</span>
+      </div>`;
+    }).join('');
+    cal.style.display = 'flex';
+  } else {
+    cal.style.display = 'none';
+    historyDate = null;
+    document.getElementById('hist-date').textContent = '';
+    const s = botData['grid']?.state;
+    const gD = botData['grid'];
+    const btc = parseFloat(document.querySelector('.btc-now')?.textContent?.replace(/[$,]/g,'')||0);
+    const tiles = document.getElementById('tiles-row');
+    if(tiles) tiles.innerHTML = buildLiveTiles(s, btc, gD?.raw?.trade_log||[]);
+  }
+}
+
+function showHistoryDay(dateStr) {
+  historyDate = dateStr;
+  document.getElementById('hist-date').textContent = dateStr;
+  document.querySelectorAll('.hist-day').forEach(el => {
+    el.classList.toggle('active', el.textContent.includes(dateStr.split('/')[0]));
+  });
+  const gD = botData['grid'];
+  const tradeLog = gD?.raw?.trade_log || [];
+  const dayTrades = tradeLog.filter(t => new Date(t.time).toLocaleDateString('he-IL') === dateStr);
+  const s = gD?.state;
+  const btc = parseFloat(document.querySelector('.btc-now')?.textContent?.replace(/[$,]/g,'')||0);
+  const tiles = document.getElementById('tiles-row');
+  if (!tiles) return;
+
+  // הצג רק עסקאות של אותו יום
+  const sells = dayTrades.filter(t=>t.type==='SELL');
+  const buys  = dayTrades.filter(t=>t.type==='BUY');
+  let html = '';
+  sells.forEach(sell => {
+    const profit = sell.profit || 0;
+    const isWin = profit >= 0;
+    html += `<div class="tile ${isWin?'sold-win':'sold-los'}">
+      <div class="tile-lbl">${isWin?'✅ רווח':'❌ הפסד'}</div>
+      <div class="tile-price">$${fmt(sell.price,0)}</div>
+      <div class="tile-pct" style="color:${isWin?'#00e676':'#ff4444'}">${isWin?'+':''}$${fmt(profit,4)}</div>
+      <div class="tile-sub">${fmtT(sell.time)}</div>
+    </div>`;
+  });
+  buys.forEach(buy => {
+    html += `<div class="tile" style="border-color:#8ab0c8;">
+      <div class="tile-lbl">🟡 קניה</div>
+      <div class="tile-price">$${fmt(buy.price,0)}</div>
+      <div class="tile-sub">${fmtT(buy.time)}</div>
+    </div>`;
+  });
+  tiles.innerHTML = html || `<span style="color:#aaa;font-size:.6rem">אין עסקאות ב-${dateStr}</span>`;
+}
+
 
 // ── Grid Target Levels Panel ───────────────────────────────────
 function buildTargetLevels(s, btc) {
