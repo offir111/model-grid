@@ -1053,8 +1053,11 @@ function loadTVChart(){
 }
 
 function loadLWScript(el){
-  el.innerHTML=''; // נקה iframe של TradingView אם קיים
-  // אם הסקריפט כבר נטען
+  // אם הגרף כבר קיים ב-DOM — לא נגע בו
+  if(lwChart && el.querySelector('canvas')) return;
+  // גרף נהרס ברענון — נאפס ונבנה מחדש
+  lwChart=null; candleSeries=null; priceLabelSeries=null; priceLines=[];
+  el.innerHTML='';
   if(window.LightweightCharts){ buildLWChart(el); connectPriceWs(); return; }
   const s=document.createElement('script');
   s.src='https://unpkg.com/lightweight-charts@4.1.0/dist/lightweight-charts.standalone.production.js';
