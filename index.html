@@ -986,7 +986,10 @@ function loadTVChart(){
       save_image:        false,
       backgroundColor:  '#070d14',
       gridColor:        '#0d1820',
-      studies:          [],
+      studies: [
+        { id: "MASimple@tv-basicstudies", inputs: { length: 50  } },
+        { id: "MASimple@tv-basicstudies", inputs: { length: 200 } },
+      ],
     });
     tvWidgetLoaded=true;
   };
