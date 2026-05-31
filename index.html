@@ -511,6 +511,11 @@ function render(btc){
   // ── Activity log HTML
   const logHtml=buildLogHtml(tradeLog,currentLogFilter);
 
+  // ── שמור את הגרף לפני rebuild ─────────────────────────────────
+  const savedChart = document.getElementById('tv-chart');
+  const savedChartHTML = savedChart ? savedChart.innerHTML : '';
+  const chartAlreadyLoaded = lwChart && savedChart && savedChart.querySelector('canvas');
+
   document.getElementById('root').innerHTML=`
     <div class="header">
       <div>
@@ -672,7 +677,18 @@ function render(btc){
   // Draw Profit Curve
   drawProfitCurve(tradeLog, pnl);
 
-  loadTVChart();
+  // ── אם הגרף כבר טעון — החזר אותו במקום לבנות מחדש ────────────
+  if(chartAlreadyLoaded){
+    const newChartEl = document.getElementById('tv-chart');
+    if(newChartEl && savedChartHTML){
+      newChartEl.innerHTML = savedChartHTML;
+      // עדכן רק קווי גריד (ללא fetch מחדש)
+      setTimeout(()=>{ drawGridLines(); }, 100);
+    }
+  } else {
+    loadTVChart();
+  }
+
   startCountdown();
 }
 
