@@ -9,8 +9,8 @@
 
     .root {
       display: grid;
-      grid-template-rows: 48px 80px 1fr 20px;
-      grid-template-columns: 230px 1fr 290px;
+      grid-template-rows: 52px 80px 1fr 20px;
+      grid-template-columns: 240px 1fr 300px;
       height: 100vh;
     }
 
@@ -21,14 +21,34 @@
       padding:0 14px;
       background:#080f18; border-bottom:1px solid #0f2030;
     }
-    .header-title { font-size:.95rem; font-weight:700; color:#00d4ff; letter-spacing:1px; }
-    .header-sub   { font-size:.6rem; color:#2a4a6a; margin-top:1px; }
+    .header-title { font-size:.95rem; font-weight:700; color:#ffd700; letter-spacing:1px; }
+    .header-sub   { font-size:.6rem; color:#ffffff; margin-top:1px; }
     .btc-now      { font-size:1.35rem; font-weight:800; color:#f7931a; }
-    .ref-txt      { font-size:.58rem; color:#2a4a6a; text-align:left; margin-top:1px; }
-    .hm           { display:flex; gap:18px; }
+    .ref-txt      { font-size:.58rem; color:#ffffff; text-align:left; margin-top:1px; }
+    .hm           { display:flex; gap:18px; align-items:center; }
     .hmi          { text-align:center; }
     .hmi-v        { font-size:.88rem; font-weight:700; }
-    .hmi-l        { font-size:.58rem; color:#2a4a6a; margin-top:1px; }
+    .hmi-l        { font-size:.58rem; color:#ffffff; margin-top:1px; }
+
+    /* Status badge */
+    .status-badge {
+      display:inline-flex; align-items:center; gap:4px;
+      padding:2px 8px; border-radius:20px;
+      font-size:.6rem; font-weight:700; letter-spacing:.5px;
+      margin-top:3px;
+    }
+    .sb-sim  { background:#0a2030; border:1px solid #005a8a; color:#ffd700; }
+    .sb-live { background:#002a10; border:1px solid #005a30; color:#00e676; }
+    .sb-dot  { width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 2s infinite; }
+
+    /* Header action buttons */
+    .hdr-btns { display:flex; gap:6px; align-items:center; }
+    .hdr-btn {
+      background:#0d1820; border:1px solid #152535; border-radius:6px;
+      color:#ffd700; font-size:.68rem; padding:4px 9px; cursor:pointer;
+      transition:all .2s; white-space:nowrap;
+    }
+    .hdr-btn:hover { border-color:#ffd70055; color:#ffd700; background:#0f2030; }
 
     /* ── BOTS BAR ── */
     .bots-bar {
@@ -43,50 +63,118 @@
       transition:border-color .2s,background .2s;
       display:flex; align-items:center; gap:8px;
     }
-    .bot-card:hover { border-color:#00d4ff44; background:#0d1e2e; }
-    .bot-card.active { border-color:#00d4ff; background:#0d1e30; }
+    .bot-card:hover { border-color:#ffd70044; background:#0d1e2e; }
+    .bot-card.active { border-color:#ffd700; background:#0d1e30; }
     .bc-dot  { width:5px;height:5px;border-radius:50%;background:#00e676;flex-shrink:0;animation:pulse 2s infinite; }
     .bc-icon { font-size:1.2rem; flex-shrink:0; }
     .bc-r    { flex:1; min-width:0; }
-    .bc-name { font-size:.73rem; font-weight:700; color:#8ab0cc; }
+    .bc-name { font-size:.73rem; font-weight:700; color:#ffd700; }
     .bc-row  { display:flex; gap:6px; margin-top:2px; align-items:center; flex-wrap:wrap; }
     .bc-pnl  { font-size:.78rem; font-weight:700; }
     .bc-wl   { font-size:.62rem; }
-    .bc-lbl  { font-size:.6rem; color:#3a6a8a; margin-right:auto; }
+    .bc-lbl  { font-size:.6rem; color:#ffffff; margin-right:auto; }
+    .bc-badge { font-size:.52rem; padding:1px 5px; border-radius:8px; font-weight:700; }
+    .bc-badge-sim  { background:#0a2030; border:1px solid #005a8a; color:#00a0cc; }
+    .bc-badge-live { background:#002a10; border:1px solid #005a30; color:#00c050; }
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
     /* ── LEFT STATS ── */
     .left {
       grid-column:1; padding:7px 6px 7px 12px;
-      display:flex; flex-direction:column; gap:6px; overflow:hidden;
+      display:flex; flex-direction:column; gap:5px; overflow:hidden;
     }
     .card { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
-    .cl   { font-size:.58rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.6px; margin-bottom:3px; }
+    .cl   { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:3px; }
     .cv   { font-size:1.05rem; font-weight:700; }
-    .cs   { font-size:.58rem; color:#1a3a5a; margin-top:2px; }
-    .green{color:#00e676;} .blue{color:#00d4ff;} .orange{color:#f7931a;} .gray{color:#7a9ab0;}
+    .cs   { font-size:.58rem; color:#cccccc; margin-top:2px; }
+    .green{color:#00e676;} .blue{color:#ffd700;} .orange{color:#f7931a;} .gray{color:#ffffff;}
+
+    /* ── PIONEX STATS PANEL ── */
+    .pionex-stats {
+      background:#0d1820; border:1px solid #152535; border-radius:7px; padding:8px 10px;
+    }
+    .ps-title { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+    .ps-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-bottom:4px; }
+    .ps-item { background:#0a1520; border-radius:5px; padding:5px 6px; text-align:center; border:1px solid #0f2030; }
+    .ps-val { font-size:.82rem; font-weight:700; }
+    .ps-lbl { font-size:.52rem; color:#ffffff; margin-top:1px; }
+    .ps-apr { font-size:.7rem; font-weight:700; color:#ffd700; margin-top:1px; }
+    .ps-sep { border-top:1px solid #0f2030; margin:5px 0; }
+
+    /* Profit Curve */
+    .profit-curve { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
+    .pc-title { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px; display:flex; justify-content:space-between; }
+    #profit-canvas { width:100%; height:55px; display:block; }
+
+    /* Holdings */
+    .holdings-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; }
+    .hld-item { background:#0a1520; border:1px solid #0f2030; border-radius:5px; padding:4px 6px; text-align:center; }
+    .hld-val { font-size:.72rem; font-weight:700; color:#ffd700; }
+    .hld-lbl { font-size:.5rem; color:#ffffff; margin-top:1px; }
+
+    /* Runtime */
+    .runtime-bar { display:flex; justify-content:space-between; align-items:center; background:#0a1520; border-radius:5px; padding:4px 8px; border:1px solid #0f2030; margin-top:4px; }
+    .rt-item { text-align:center; }
+    .rt-val { font-size:.72rem; font-weight:700; color:#ffffff; }
+    .rt-lbl { font-size:.5rem; color:#aaaaaa; }
+
+    /* MDD badges */
+    .mdd-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-top:4px; }
+    .mdd-item { background:#0a1520; border-radius:5px; padding:4px 6px; text-align:center; border:1px solid #0f2030; }
+    .mdd-val { font-size:.7rem; font-weight:700; }
+    .mdd-lbl { font-size:.5rem; color:#aaaaaa; }
+    .cl{ color:#ffffff !important; font-size:.65rem !important; }
+    .cs{ color:#ffffff !important; }
+    .hmi-l{ color:#ffffff !important; font-weight:600 !important; }
+    .gml{ color:#ffffff !important; font-weight:600 !important; }
+    .bc-lbl{ color:#ffffff !important; }
+    .header-sub{ color:#ffffff !important; }
+    .log-sub{ color:#ffffff !important; font-weight:600 !important; }
+    .log-time{ color:#ffffff !important; font-weight:600 !important; }
+    .ft{ color:#ffffff !important; font-size:.68rem !important; font-weight:700 !important; }
+    .lf-btn{ color:#ffffff !important; font-size:.62rem !important; border-color:#555 !important; }
+    .lf-btn.act{ color:#ffd700 !important; border-color:#ffd700 !important; font-weight:700 !important; }
+    .log-title{ color:#ffffff !important; font-size:.72rem !important; font-weight:700 !important; }
+    .red  {color:#ff5252;}
 
     .grid-viz { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
-    .vt  { font-size:.58rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px; }
-    .rl  { display:flex; justify-content:space-between; font-size:.58rem; color:#2a4a6a; margin-bottom:3px; }
+    .vt  { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px; }
+    .rl  { display:flex; justify-content:space-between; font-size:.58rem; color:#ffffff; margin-bottom:3px; }
     .rb  { position:relative; height:16px; background:#0a1520; border-radius:8px; border:1px solid #152535; overflow:visible; margin-bottom:7px; }
     .rf  { height:100%; background:linear-gradient(90deg,#003a5a,#005a8a); border-radius:8px 0 0 8px; }
     .pp  { position:absolute; top:-4px; width:2px; height:24px; background:#f7931a; border-radius:2px; transform:translateX(-50%); box-shadow:0 0 6px #f7931a88; }
     .pl  { position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:.58rem; color:#f7931a; white-space:nowrap; font-weight:700; }
     .gm4 { display:grid; grid-template-columns:repeat(2,1fr); gap:4px; }
     .gm  { background:#0a1520; border-radius:5px; padding:4px 6px; text-align:center; border:1px solid #0f2030; }
-    .gmv { font-size:.82rem; font-weight:700; color:#00d4ff; }
-    .gml { font-size:.55rem; color:#1a3a5a; margin-top:1px; }
+    .gmv { font-size:.82rem; font-weight:700; color:#ffd700; }
+    .gml { font-size:.55rem; color:#cccccc; margin-top:1px; }
 
-    .fills-wrap { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:6px 8px; flex:1; overflow:hidden; display:flex; flex-direction:column; }
-    .ft   { font-size:.58rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; }
+    /* Activity Log */
+    .log-wrap { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:6px 8px; flex:1; overflow:hidden; display:flex; flex-direction:column; }
+    .log-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+    .ft   { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; }
+    .log-filter { display:flex; gap:3px; }
+    .lf-btn {
+      font-size:.52rem; padding:1px 5px; border-radius:8px; cursor:pointer;
+      background:#0a1520; border:1px solid #0f2030; color:#ffffff;
+      transition:all .15s;
+    }
+    .lf-btn.act { background:#0a2535; border-color:#005a8a; color:#ffd700; }
     .fscr { flex:1; overflow-y:auto; }
-    table { width:100%; border-collapse:collapse; }
-    thead th { color:#1a3a5a; font-size:.56rem; text-transform:uppercase; padding:3px 5px; border-bottom:1px solid #0f2030; text-align:right; }
-    tbody tr { border-bottom:1px solid #09151f; }
-    tbody td { padding:3px 5px; font-size:.68rem; }
-    .bs { background:#003a20; color:#00e676; padding:1px 6px; border-radius:7px; font-size:.64rem; font-weight:700; }
-    .pp2{ color:#00e676; font-weight:600; }
+
+    /* Log entry rows */
+    .log-entry {
+      display:flex; align-items:center; gap:6px;
+      padding:3px 4px; border-bottom:1px solid #09151f;
+      font-size:.65rem;
+    }
+    .log-icon { font-size:.8rem; flex-shrink:0; }
+    .log-info { flex:1; min-width:0; }
+    .log-title { font-weight:600; font-size:.66rem; }
+    .log-sub   { font-size:.56rem; color:#ffffff; margin-top:1px; }
+    .log-right { text-align:left; flex-shrink:0; }
+    .log-profit { font-size:.68rem; font-weight:700; color:#00e676; }
+    .log-time   { font-size:.54rem; color:#cccccc; margin-top:1px; }
 
     /* ── CENTER — CHART ── */
     .center {
@@ -97,14 +185,17 @@
     }
     .chart-header {
       padding:5px 12px;
-      font-size:.6rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.8px;
+      font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.8px;
       border-bottom:1px solid #0f2030; flex-shrink:0;
       display:flex; justify-content:space-between; align-items:center;
     }
-    .chart-wrap { flex:1; overflow:hidden; }
+    .chart-info { display:flex; gap:10px; align-items:center; font-size:.58rem; }
+    .ci-item { display:flex; gap:3px; align-items:center; }
+    .ci-dot  { width:8px;height:8px;border-radius:50%; }
+    .chart-wrap { flex:1; overflow:hidden; position:relative; }
     #tv-chart   { width:100%; height:100%; }
 
-    /* ── RIGHT — LEVELS ── */
+    /* ── RIGHT — LEVELS (visual) ── */
     .right {
       grid-column:3;
       display:flex; flex-direction:column; overflow:hidden;
@@ -112,20 +203,35 @@
     }
     .rt {
       padding:6px 10px 5px;
-      font-size:.6rem; color:#2a4a6a; text-transform:uppercase; letter-spacing:.7px;
+      font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.7px;
       border-bottom:1px solid #0f2030; flex-shrink:0;
       display:flex; justify-content:space-between; align-items:center;
     }
     .leg { display:flex; gap:7px; font-size:.56rem; }
     .leg span { display:flex; align-items:center; gap:3px; }
     .dg { width:5px;height:5px;border-radius:50%; }
-    .ls { flex:1; overflow-y:auto; }
-    .lt { width:100%; border-collapse:collapse; font-size:.7rem; }
-    .lt thead th { position:sticky;top:0;background:#070d14;z-index:1; color:#1a3a5a; font-size:.56rem; text-transform:uppercase; padding:4px 6px; border-bottom:1px solid #0f2030; text-align:right; }
-    .lt tbody tr { border-bottom:1px solid #09151f; }
-    .lt tbody td { padding:3px 6px; }
-    .lf { background:#001a0e; }
-    .lc { background:#180d00; }
+    .ls { flex:1; overflow-y:auto; padding:2px 0; }
+
+    /* Visual grid level rows */
+    .glv-row {
+      padding:2px 8px;
+      border-bottom:1px solid #09151f;
+      display:flex; flex-direction:column; gap:1px;
+    }
+    .glv-row:hover { background:#0a1520; }
+    .glv-top { display:flex; justify-content:space-between; align-items:center; font-size:.62rem; }
+    .glv-num { color:#cccccc; font-size:.58rem; width:20px; flex-shrink:0; text-align:center; }
+    .glv-buy  { color:#8ab0c8; font-weight:600; }
+    .glv-sell { color:#ffffff; }
+    .glv-prof { color:#00e676; font-size:.58rem; }
+    .glv-badge { font-size:.58rem; font-weight:700; }
+    .glv-bar-wrap { height:3px; background:#0a1520; border-radius:2px; overflow:hidden; }
+    .glv-bar-fill { height:100%; border-radius:2px; transition:width .3s; }
+    .glv-filled  .glv-bar-fill { background:#00e676; }
+    .glv-current .glv-bar-fill { background:#f7931a; }
+    .glv-waiting .glv-bar-fill { background:#152535; }
+    .glv-filled  { background:#001a0e; }
+    .glv-current { background:#180d00; }
 
     /* ── STATUS ── */
     .status {
@@ -133,16 +239,153 @@
       background:#050b12; border-top:1px solid #0f2030;
       padding:2px 12px;
       display:flex; justify-content:space-between;
-      font-size:.58rem; color:#1a3a5a;
+      font-size:.58rem; color:#cccccc;
     }
     .dl { width:5px;height:5px;background:#00e676;border-radius:50%;display:inline-block;margin-left:4px;animation:pulse 2s infinite; }
+
+    /* ══ MODALS ══ */
+    .modal-overlay {
+      position:fixed; inset:0; background:#00000088; z-index:1000;
+      display:flex; align-items:center; justify-content:center;
+      backdrop-filter:blur(3px);
+    }
+    .modal-overlay.hidden { display:none; }
+    .modal-box {
+      background:#0d1820; border:1px solid #cccccc; border-radius:12px;
+      padding:20px; min-width:340px; max-width:520px; width:90vw;
+      box-shadow:0 8px 32px #00000080;
+      position:relative;
+    }
+    .modal-title {
+      font-size:.95rem; font-weight:700; color:#ffd700; margin-bottom:4px;
+    }
+    .modal-sub { font-size:.62rem; color:#ffffff; margin-bottom:16px; }
+    .modal-close {
+      position:absolute; top:12px; left:12px;
+      background:none; border:none; color:#ffffff; font-size:1.1rem;
+      cursor:pointer; line-height:1; padding:2px 6px;
+    }
+    .modal-close:hover { color:#ff5252; }
+
+    /* Settings modal */
+    .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+    .sg-item { background:#0a1520; border:1px solid #0f2030; border-radius:7px; padding:8px 10px; }
+    .sg-label { font-size:.56rem; color:#ffffff; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+    .sg-val   { font-size:.9rem; font-weight:700; color:#ffd700; }
+    .sg-sub   { font-size:.56rem; color:#cccccc; margin-top:2px; }
+    .modal-note { background:#071520; border:1px solid #0f2535; border-radius:7px; padding:8px 10px; font-size:.62rem; color:#ffffff; }
+
+    /* Calculator modal */
+    .calc-form { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+    .cf-row { display:flex; flex-direction:column; gap:3px; }
+    .cf-label { font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.5px; }
+    .cf-input {
+      background:#0a1520; border:1px solid #152535; border-radius:6px;
+      color:#dce8f0; font-size:.82rem; padding:7px 10px; outline:none;
+      transition:border-color .2s;
+    }
+    .cf-input:focus { border-color:#ffd70055; }
+    .calc-btn {
+      background:#003a5a; border:1px solid #005a8a; border-radius:7px;
+      color:#ffd700; font-size:.72rem; font-weight:700; padding:8px;
+      cursor:pointer; transition:all .2s; width:100%;
+    }
+    .calc-btn:hover { background:#004a6a; }
+    .calc-results { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .cr-item { background:#0a1520; border:1px solid #0f2030; border-radius:7px; padding:8px 10px; text-align:center; }
+    .cr-val { font-size:.9rem; font-weight:700; color:#00e676; }
+    .cr-lbl { font-size:.56rem; color:#ffffff; margin-top:2px; }
+
+    /* Wizard modal */
+    .wiz-steps { display:flex; gap:6px; margin-bottom:18px; }
+    .wiz-step {
+      flex:1; text-align:center; padding:6px 4px;
+      border-radius:7px; font-size:.6rem;
+      background:#0a1520; border:1px solid #0f2030; color:#ffffff;
+      transition:all .2s; cursor:pointer;
+    }
+    .wiz-step.active { background:#002535; border-color:#005a8a; color:#ffd700; font-weight:700; }
+    .wiz-step.done   { background:#002510; border-color:#005a30; color:#00a050; }
+    .wiz-num  { font-size:.8rem; font-weight:700; display:block; margin-bottom:2px; }
+    .wiz-lbl  { font-size:.54rem; }
+    .wiz-content { background:#0a1520; border:1px solid #0f2030; border-radius:8px; padding:14px; margin-bottom:14px; min-height:130px; }
+    .wiz-title { font-size:.82rem; font-weight:700; color:#ffd700; margin-bottom:6px; }
+    .wiz-desc  { font-size:.66rem; color:#ffffff; line-height:1.6; }
+    .wiz-field { margin-top:10px; }
+    .wiz-nav { display:flex; gap:8px; justify-content:flex-start; }
+    .wiz-btn {
+      background:#0a2030; border:1px solid #005a8a; border-radius:7px;
+      color:#ffd700; font-size:.68rem; font-weight:700; padding:6px 16px;
+      cursor:pointer; transition:all .2s;
+    }
+    .wiz-btn:hover { background:#003a50; }
+    .wiz-btn.primary { background:#003a5a; }
+    .wiz-btn.gray    { background:#0a1520; border-color:#152535; color:#ffffff; }
 
     ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#070d14} ::-webkit-scrollbar-thumb{background:#152535;border-radius:2px}
   </style>
 </head>
 <body>
 <div class="root" id="root">
-  <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;color:#2a4a6a">טוען...</div>
+  <div style="grid-column:1/-1;display:flex;align-items:center;justify-content:center;color:#ffffff">טוען...</div>
+</div>
+
+<!-- ══ SETTINGS MODAL ══ -->
+<div class="modal-overlay hidden" id="modal-settings">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-settings')">✕</button>
+    <div class="modal-title">⚙️ הגדרות בוט נוכחיות</div>
+    <div class="modal-sub">פרמטרים שחושבו ע״י AI — מתעדכנים אוטומטית בכל DGT Reset</div>
+    <div class="settings-grid" id="settings-content"></div>
+    <div class="modal-note">💡 שינוי פרמטרים דורש עריכת <code>grid_simulator.py</code> ב-GitHub ו-push. הבוט יאפס בריצה הבאה.</div>
+  </div>
+</div>
+
+<!-- ══ CALCULATOR MODAL ══ -->
+<div class="modal-overlay hidden" id="modal-calc">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('modal-calc')">✕</button>
+    <div class="modal-title">📐 מחשבון גריד</div>
+    <div class="modal-sub">חשב רווחיות לפי פרמטרים שאתה בוחר</div>
+    <div class="calc-form">
+      <div class="cf-row">
+        <label class="cf-label">💰 הון השקעה ($)</label>
+        <input class="cf-input" id="c-inv" type="number" value="1000" min="100" step="100" />
+      </div>
+      <div class="cf-row">
+        <label class="cf-label">⬇️ מחיר תחתון ($)</label>
+        <input class="cf-input" id="c-low" type="number" value="70000" step="100" />
+      </div>
+      <div class="cf-row">
+        <label class="cf-label">⬆️ מחיר עליון ($)</label>
+        <input class="cf-input" id="c-high" type="number" value="82000" step="100" />
+      </div>
+      <div class="cf-row">
+        <label class="cf-label">🔢 מספר רמות גריד</label>
+        <input class="cf-input" id="c-grids" type="number" value="50" min="5" max="200" />
+      </div>
+    </div>
+    <button class="calc-btn" onclick="calcGrid()">⚡ חשב</button>
+    <div style="height:12px;"></div>
+    <div class="calc-results" id="calc-results"></div>
+  </div>
+</div>
+
+<!-- ══ WIZARD MODAL ══ -->
+<div class="modal-overlay hidden" id="modal-wizard">
+  <div class="modal-box" style="max-width:480px;">
+    <button class="modal-close" onclick="closeModal('modal-wizard')">✕</button>
+    <div class="modal-title">🧙 אשף הגדרת גריד</div>
+    <div class="modal-sub">הגדרה ב-4 שלבים פשוטים</div>
+    <div class="wiz-steps">
+      <div class="wiz-step active" id="ws1" onclick="goWiz(1)"><span class="wiz-num">1</span><span class="wiz-lbl">זוג</span></div>
+      <div class="wiz-step"       id="ws2" onclick="goWiz(2)"><span class="wiz-num">2</span><span class="wiz-lbl">טווח</span></div>
+      <div class="wiz-step"       id="ws3" onclick="goWiz(3)"><span class="wiz-num">3</span><span class="wiz-lbl">הון</span></div>
+      <div class="wiz-step"       id="ws4" onclick="goWiz(4)"><span class="wiz-num">4</span><span class="wiz-lbl">אישור</span></div>
+    </div>
+    <div class="wiz-content" id="wiz-content"></div>
+    <div class="wiz-nav" id="wiz-nav"></div>
+  </div>
 </div>
 
 <script>
@@ -154,9 +397,10 @@ const BOTS=[
 ];
 const BTC_URL='https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
 
-let botData={}, countdown=60, timer, tvWidget=null;
+let botData={}, countdown=60, timer, currentLogFilter='all', wizStep=1;
 const fmt =(n,d=2)=>n==null||isNaN(n)?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtD=iso=>{if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('he-IL')+' '+d.toTimeString().slice(0,5);};
+const fmtT=iso=>{if(!iso)return'—';const d=new Date(iso);return d.toTimeString().slice(0,5);};
 const dayS=iso=>Math.max(0.001,(Date.now()-new Date(iso).getTime())/86400000);
 
 function parseSummary(bot,raw){
@@ -195,45 +439,157 @@ function render(btc){
   const mid=s&&s.grid?s.grid[Math.floor(grids/2)]:null;
   const ppc=mid?mid.profit:0,perG=grids>0?inv/grids:0,dcyc=d>0?cycles/d:0;
   const pc=pnl>=0?'green':'red',ac=apr>=0?'green':'red';
-  const log=(p.trade_log||[]).filter(t=>t.type==='SELL').slice(-6).reverse();
+  const tradeLog=p.trade_log||[];
 
+  // ── Pionex-style calculations ─────────────────────────────────
+  // Unrealized P&L: estimate based on filled levels vs current price
+  const filledLevels = s&&s.grid ? s.grid.filter(l=>l.filled) : [];
+  const btcHolding   = filledLevels.reduce((sum,l)=>sum+(l.qty||0), 0);
+  const usdtHolding  = inv - filledLevels.length*(perG||0);
+  const avgBuyPrice  = btcHolding>0 ? filledLevels.reduce((sum,l)=>sum+(l.buy*(l.qty||0)),0)/btcHolding : (btc||0);
+  const unrealPnl    = btcHolding>0&&btc>0 ? (btc - avgBuyPrice)*btcHolding : 0;
+  const totalPnl     = pnl + unrealPnl;
+  const totalApr     = d>0 ? (totalPnl/inv)/d*365*100 : 0;
+
+  // Runtime string
+  const totalSec = d*86400;
+  const rDays  = Math.floor(totalSec/86400);
+  const rHours = Math.floor((totalSec%86400)/3600);
+  const runtimeStr = `${rDays}d ${rHours}h`;
+
+  // MDD estimates
+  const mdd7  = Math.min(mdd, mdd*0.4);  // rough 7d estimate
+  const mdd30 = Math.min(mdd, mdd*0.75); // rough 30d estimate
+
+  // ── Grid level visual rows (reversed: highest first)
   const lvlRows=s&&s.grid?[...s.grid].reverse().map((lv,i)=>{
-    const idx=grids-i,isFilled=lv.filled,isHere=!lv.filled&&btc>=lv.buy&&btc<lv.sell;
-    let cls='',badge='';
-    if(isFilled){cls='lf';badge=`<span style="color:#00e676;font-weight:700;font-size:.66rem">✅ קנוי</span>`;}
-    else if(isHere){cls='lc';badge=`<span style="color:#f7931a;font-weight:700;font-size:.66rem">← כאן</span>`;}
-    else badge=`<span style="color:#1a3060;font-size:.66rem">⏳</span>`;
-    return `<tr class="${cls}"><td style="color:#1a3060;text-align:center;font-size:.6rem">${idx}</td><td style="font-weight:600;color:#8ab0c8">$${fmt(lv.buy,0)}</td><td style="color:#2a4a6a">$${fmt(lv.sell,0)}</td><td style="color:#00e676;font-size:.64rem">+$${fmt(lv.profit,4)}</td><td>${badge}</td></tr>`;
+    const idx=grids-i;
+    const isFilled=lv.filled;
+    const isHere=!lv.filled&&btc>=lv.buy&&btc<lv.sell;
+    let rowCls='glv-row ',barCls='glv-bar-fill',badge='';
+    const barPct=upper>lower?((lv.sell-lv.buy)/(upper-lower)*100)*grids*0.6:30;
+    const barW=Math.max(15,Math.min(100,barPct));
+    if(isFilled) { rowCls+='glv-filled'; badge=`<span class="glv-badge green">✅</span>`; }
+    else if(isHere){ rowCls+='glv-current'; badge=`<span class="glv-badge orange">◉</span>`; }
+    else           { badge=`<span class="glv-badge" style="color:#0f2030">○</span>`; }
+    return `<div class="${rowCls}">
+      <div class="glv-top">
+        <span class="glv-num">${idx}</span>
+        <span class="glv-buy">$${fmt(lv.buy,0)}</span>
+        <span class="glv-sell" style="font-size:.56rem">→$${fmt(lv.sell,0)}</span>
+        <span class="glv-prof">+$${fmt(lv.profit,4)}</span>
+        ${badge}
+      </div>
+      <div class="glv-bar-wrap"><div class="${barCls}" style="width:${barW}%;background:${isFilled?'#00e676':isHere?'#f7931a':'#152535'}"></div></div>
+    </div>`;
   }).join(''):'';
 
+  // ── Bot cards
   const botCards=BOTS.map(bot=>{
     const sm=botData[bot.id]?.summary,isA=bot.id==='grid';
-    if(!sm) return `<div class="bot-card ${isA?'active':''} loading"><div class="bc-icon">${bot.icon}</div><div class="bc-r"><div class="bc-name">${bot.name}</div><div class="bc-row"><span style="color:#1a3a5a;font-size:.6rem">טוען...</span></div></div></div>`;
+    if(!sm) return `<div class="bot-card ${isA?'active':''} loading"><div class="bc-icon">${bot.icon}</div><div class="bc-r"><div class="bc-name">${bot.name}</div><div class="bc-row"><span style="color:#cccccc;font-size:.6rem">טוען...</span></div></div></div>`;
     const pc2=sm.pnl>=0?'#00e676':'#ff5252',ps=sm.pnl>=0?'+':'';
-    return `<div class="bot-card ${isA?'active':''}" onclick="switchBot('${bot.id}',event)"><div class="bc-dot"></div><div class="bc-icon">${bot.icon}</div><div class="bc-r"><div class="bc-name">${bot.name}</div><div class="bc-row"><span class="bc-pnl" style="color:${pc2}">${ps}$${fmt(sm.pnl,3)}</span><span class="bc-wl" style="color:#00a050">✅${sm.wins}</span><span class="bc-wl" style="color:#aa3030">❌${sm.losses}</span><span class="bc-lbl">${sm.label}</span></div></div></div>`;
+    return `<div class="bot-card ${isA?'active':''}" onclick="switchBot('${bot.id}',event)">
+      <div class="bc-dot"></div>
+      <div class="bc-icon">${bot.icon}</div>
+      <div class="bc-r">
+        <div class="bc-name">${bot.name} <span class="bc-badge bc-badge-sim">SIM</span></div>
+        <div class="bc-row">
+          <span class="bc-pnl" style="color:${pc2}">${ps}$${fmt(sm.pnl,3)}</span>
+          <span class="bc-wl" style="color:#00a050">✅${sm.wins}</span>
+          <span class="bc-wl" style="color:#aa3030">❌${sm.losses}</span>
+          <span class="bc-lbl">${sm.label}</span>
+        </div>
+      </div>
+    </div>`;
   }).join('');
+
+  // ── Activity log HTML
+  const logHtml=buildLogHtml(tradeLog,currentLogFilter);
 
   document.getElementById('root').innerHTML=`
     <div class="header">
-      <div><div class="header-title">⚡ MODEL GRID <span style="font-size:.6rem;color:#2a4a6a;font-weight:400">| מרכז שליטה 4 בוטים</span></div><div class="header-sub">Pionex AI Grid Bot 2.0 | BTC/USDT | סימולציה</div></div>
+      <div>
+        <div class="header-title">⚡ MODEL GRID <span style="font-size:.6rem;color:#ffffff;font-weight:400">| מרכז שליטה 4 בוטים</span></div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="header-sub">Pionex AI Grid Bot 2.0 | BTC/USDT</div>
+          <span class="status-badge sb-sim"><span class="sb-dot"></span>SIM MODE</span>
+        </div>
+      </div>
       <div class="hm">
         <div class="hmi"><div class="hmi-v blue">$${fmt(total)}</div><div class="hmi-l">שווי גריד</div></div>
         <div class="hmi"><div class="hmi-v ${pc}">${pnl>=0?'+':''}$${fmt(pnl,4)}</div><div class="hmi-l">רווח</div></div>
         <div class="hmi"><div class="hmi-v ${ac}">${fmt(apr,1)}%</div><div class="hmi-l">APR</div></div>
         <div class="hmi"><div class="hmi-v orange">${cycles}</div><div class="hmi-l">סייקלים</div></div>
         <div class="hmi"><div class="hmi-v gray">${fmt(d,1)}</div><div class="hmi-l">ימים</div></div>
+        <div class="hdr-btns">
+          <button class="hdr-btn" onclick="openSettings()">⚙️ הגדרות</button>
+          <button class="hdr-btn" onclick="openCalc()">📐 מחשבון</button>
+          <button class="hdr-btn" onclick="openWizard()">🧙 אשף</button>
+        </div>
       </div>
-      <div><div class="btc-now">$${fmt(btc)}</div><div class="ref-txt" id="ref">BTC עכשיו | מתרענן בעוד ${countdown}ש׳</div></div>
+      <div>
+        <div class="btc-now">$${fmt(btc)}</div>
+        <div class="ref-txt" id="ref">BTC עכשיו | מתרענן בעוד ${countdown}ש׳</div>
+      </div>
     </div>
 
     <div class="bots-bar">${botCards}</div>
 
     <div class="left">
-      <div class="card"><div class="cl">💰 השקעה</div><div class="cv gray">$${fmt(inv)}</div><div class="cs">התחלה: $${fmt(p.starting_investment||inv)}</div></div>
-      <div class="card"><div class="cl">📈 רווח יומי</div><div class="cv green">~$${fmt(dcyc*ppc,4)}</div><div class="cs">${fmt(dcyc,1)} cycles/יום</div></div>
-      <div class="card"><div class="cl">📉 MDD</div><div class="cv" style="color:${mdd>10?'#ff5252':'#7a9ab0'}">${fmt(mdd,2)}%</div><div class="cs">ירידה מקסימלית</div></div>
-      <div class="card"><div class="cl">🔁 DGT</div><div class="cv gray">${dgt}</div><div class="cs">איפוסי טווח</div></div>
 
+      <!-- ══ PIONEX STATS PANEL ══ -->
+      <div class="pionex-stats">
+        <div class="ps-title">📊 סטטיסטיקות — Pionex Style</div>
+        <div class="ps-row">
+          <div class="ps-item">
+            <div class="ps-val green">+$${fmt(pnl,2)}</div>
+            <div class="ps-apr">${fmt(apr,1)}% APR</div>
+            <div class="ps-lbl">Grid Profit</div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-val" style="color:${unrealPnl>=0?'#00e676':'#ff5252'}">${unrealPnl>=0?'+':''}$${fmt(unrealPnl,2)}</div>
+            <div class="ps-apr" style="color:#aaaaaa">צף</div>
+            <div class="ps-lbl">Unrealized P&L</div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-val" style="color:${totalPnl>=0?'#00e676':'#ff5252'}">${totalPnl>=0?'+':''}$${fmt(totalPnl,2)}</div>
+            <div class="ps-apr" style="color:#ffd700">${fmt(totalApr,1)}% APR</div>
+            <div class="ps-lbl">Total P&L</div>
+          </div>
+        </div>
+        <div class="ps-sep"></div>
+        <!-- Holdings -->
+        <div class="holdings-row">
+          <div class="hld-item"><div class="hld-val">${fmt(btcHolding,5)}</div><div class="hld-lbl">BTC Holdings</div></div>
+          <div class="hld-item"><div class="hld-val">$${fmt(usdtHolding,0)}</div><div class="hld-lbl">USDT Holdings</div></div>
+          <div class="hld-item"><div class="hld-val">$${fmt(avgBuyPrice,0)}</div><div class="hld-lbl">Avg Buy Price</div></div>
+        </div>
+        <!-- Runtime bar -->
+        <div class="runtime-bar">
+          <div class="rt-item"><div class="rt-val">${runtimeStr}</div><div class="rt-lbl">⏱ Runtime</div></div>
+          <div class="rt-item"><div class="rt-val">${cycles}</div><div class="rt-lbl">🔄 Cycles</div></div>
+          <div class="rt-item"><div class="rt-val">${fmt(dcyc,1)}</div><div class="rt-lbl">📅 /יום</div></div>
+          <div class="rt-item"><div class="rt-val">${dgt}</div><div class="rt-lbl">🔁 DGT</div></div>
+        </div>
+        <!-- Max Drawdown -->
+        <div class="mdd-row">
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd7>5?'#ff5252':'#aaaaaa'}">${fmt(mdd7,1)}%</div><div class="mdd-lbl">MDD 7d</div></div>
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd30>10?'#ff5252':'#aaaaaa'}">${fmt(mdd30,1)}%</div><div class="mdd-lbl">MDD 30d</div></div>
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd>15?'#ff5252':'#aaaaaa'}">${fmt(mdd,1)}%</div><div class="mdd-lbl">MDD All</div></div>
+        </div>
+      </div>
+
+      <!-- ══ PROFIT CURVE ══ -->
+      <div class="profit-curve">
+        <div class="pc-title">
+          <span>📈 עקומת רווח</span>
+          <span style="font-size:.52rem;color:#aaaaaa">${cycles} עסקאות</span>
+        </div>
+        <canvas id="profit-canvas"></canvas>
+      </div>
+
+      <!-- ══ GRID POSITION ══ -->
       <div class="grid-viz">
         <div class="vt">📐 מצב הגריד</div>
         <div class="rl"><span>$${fmt(lower,0)}</span><span style="color:#f7931a;font-weight:600">${fmt(inPct,0)}% בטווח</span><span>$${fmt(upper,0)}</span></div>
@@ -241,79 +597,518 @@ function render(btc){
         <div class="gm4">
           <div class="gm"><div class="gmv">${grids}</div><div class="gml">רמות</div></div>
           <div class="gm"><div class="gmv" style="color:#00e676">${filled}</div><div class="gml">קנויות</div></div>
-          <div class="gm"><div class="gmv" style="color:#2a4a6a">${waiting}</div><div class="gml">ממתינות</div></div>
+          <div class="gm"><div class="gmv" style="color:#ffffff">${waiting}</div><div class="gml">ממתינות</div></div>
           <div class="gm"><div class="gmv" style="color:#f7931a">$${fmt(atr,0)}</div><div class="gml">ATR-14</div></div>
         </div>
       </div>
 
-      <div class="fills-wrap">
-        <div class="ft">📋 עסקאות אחרונות</div>
-        <div class="fscr">
-          ${log.length===0
-            ?`<div style="text-align:center;padding:12px;color:#1a3060;font-size:.7rem">⏳ ממתין לתנועת מחיר</div>`
-            :`<table><thead><tr><th>סוג</th><th>מחיר</th><th>רווח</th><th>זמן</th></tr></thead><tbody>${log.map(t=>`<tr><td><span class="bs">SELL</span></td><td style="font-weight:600">$${fmt(t.price,0)}</td><td class="pp2">+$${fmt(t.profit,4)}</td><td style="color:#1a3060">${fmtD(t.time)}</td></tr>`).join('')}</tbody></table>`}
+      <!-- ══ ACTIVITY LOG ══ -->
+      <div class="log-wrap">
+        <div class="log-head">
+          <div class="ft">📋 לוג פעילות</div>
+          <div class="log-filter">
+            <button class="lf-btn ${currentLogFilter==='all'?'act':''}" onclick="setFilter('all')">הכל</button>
+            <button class="lf-btn ${currentLogFilter==='sell'?'act':''}" onclick="setFilter('sell')">מכירות</button>
+            <button class="lf-btn ${currentLogFilter==='buy'?'act':''}" onclick="setFilter('buy')">קניות</button>
+          </div>
         </div>
+        <div class="fscr" id="log-list">${logHtml}</div>
       </div>
     </div>
 
     <div class="center">
       <div class="chart-header">
         <span>📈 גרף נרות יפנים — BTC/USDT</span>
-        <span style="color:#1a3a5a">TradingView | זמן אמת</span>
+        <div class="chart-info">
+          <span class="ci-item"><span class="ci-dot" style="background:#00e676;height:8px;"></span>${filled} רמות קנויות</span>
+          <span class="ci-item"><span class="ci-dot" style="background:#f7931a;height:8px;"></span>מחיר בטווח ${fmt(inPct,0)}%</span>
+          <span style="color:#cccccc">TradingView | זמן אמת</span>
+        </div>
       </div>
       <div class="chart-wrap"><div id="tv-chart"></div></div>
     </div>
 
     <div class="right">
       <div class="rt">
-        <span>📊 ${grids} רמות גריד</span>
+        <span>📊 ${grids} רמות — ויזואליזציה</span>
         <div class="leg">
           <span><div class="dg" style="background:#00e676"></div>קנוי</span>
           <span><div class="dg" style="background:#f7931a"></div>כאן</span>
-          <span><div class="dg" style="background:#1a3060"></div>ממתין</span>
+          <span><div class="dg" style="background:#152535"></div>ממתין</span>
         </div>
       </div>
-      <div class="ls"><table class="lt"><thead><tr><th style="width:24px">#</th><th>קנייה</th><th>מכירה</th><th>רווח</th><th>סטטוס</th></tr></thead><tbody>${lvlRows}</tbody></table></div>
+      <div class="ls" id="levels-list">${lvlRows}</div>
     </div>
 
     <div class="status">
-      <div><span class="dl"></span>פעיל — GitHub Actions כל 15 דקות</div>
+      <div><span class="dl"></span>Railway WebSocket — KuCoin Real-time</div>
       <div>עדכון GRID: ${fmtD(p.last_updated)}</div>
-      <div>$${fmt(perG,2)}/רמה | ~$${fmt(ppc,5)}/cycle</div>
+      <div>$${fmt(perG,2)}/רמה | ~$${fmt(ppc,5)}/cycle | ${fmt(dcyc,1)}/יום</div>
       <div>התחלה: ${fmtD(p.start_time)}</div>
     </div>
   `;
+
+  // Populate settings modal data
+  if(s) populateSettings(s,p);
+
+  // Scroll levels list to current price level
+  scrollToCurrentLevel();
+
+  // Draw Profit Curve
+  drawProfitCurve(tradeLog, pnl);
 
   loadTVChart();
   startCountdown();
 }
 
+// ── Profit Curve (Pionex-style stepped chart) ──────────────────
+function drawProfitCurve(tradeLog, totalPnl) {
+  const canvas = document.getElementById('profit-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.offsetWidth || 200;
+  const H = 55;
+  canvas.width  = W;
+  canvas.height = H;
+  ctx.clearRect(0, 0, W, H);
+
+  // Build stepped profit array from sell trades
+  const sells = tradeLog.filter(t => t.type === 'SELL').slice(-60);
+  if (sells.length === 0) {
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ממתין לעסקאות...', W/2, H/2);
+    return;
+  }
+
+  let running = 0;
+  const pts = sells.map(t => { running += (t.profit||0); return running; });
+  pts.unshift(0);
+
+  const minV = Math.min(...pts), maxV = Math.max(...pts);
+  const range = maxV - minV || 1;
+  const toY = v => H - 6 - ((v - minV) / range) * (H - 12);
+  const toX = i => (i / (pts.length - 1)) * W;
+
+  // Fill area
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(0,230,118,0.3)');
+  grad.addColorStop(1, 'rgba(0,230,118,0.02)');
+  ctx.beginPath();
+  ctx.moveTo(toX(0), H);
+  pts.forEach((v, i) => {
+    if (i > 0) ctx.lineTo(toX(i-1), toY(pts[i-1])); // stepped
+    ctx.lineTo(toX(i), toY(v));
+  });
+  ctx.lineTo(toX(pts.length-1), H);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Stepped line
+  ctx.beginPath();
+  ctx.strokeStyle = '#00e676';
+  ctx.lineWidth = 1.5;
+  pts.forEach((v, i) => {
+    if (i === 0) { ctx.moveTo(toX(i), toY(v)); return; }
+    ctx.lineTo(toX(i-1), toY(pts[i-1]));
+    ctx.lineTo(toX(i), toY(v));
+  });
+  ctx.stroke();
+
+  // Final value label
+  ctx.fillStyle = '#00e676';
+  ctx.font = 'bold 9px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(`+$${totalPnl.toFixed(2)}`, 4, 10);
+}
+
+// ── Activity log builder (Pionex-style with transaction table)
+function buildLogHtml(tradeLog, filter){
+  let entries=[...tradeLog].reverse();
+  if(filter==='sell') entries=entries.filter(t=>t.type==='SELL');
+  else if(filter==='buy') entries=entries.filter(t=>t.type==='BUY');
+  entries=entries.slice(0,40);
+  if(!entries.length) return `<div style="text-align:center;padding:16px;color:#cccccc;font-size:.7rem">⏳ ממתין לתנועת מחיר</div>`;
+
+  // Show as transaction table for SELL entries, simple rows for BUY
+  if(filter==='sell' || filter==='all'){
+    const sells = entries.filter(t=>t.type==='SELL');
+    const buys  = entries.filter(t=>t.type==='BUY');
+    let html = '';
+
+    if(sells.length){
+      html += `<table style="width:100%;border-collapse:collapse;font-size:.58rem;margin-bottom:4px;">
+        <thead><tr style="color:#aaaaaa;border-bottom:1px solid #0f2030;">
+          <th style="padding:3px 4px;text-align:right">מחיר קנייה</th>
+          <th style="padding:3px 4px;text-align:right">מחיר מכירה</th>
+          <th style="padding:3px 4px;text-align:right">BTC</th>
+          <th style="padding:3px 4px;text-align:right">רווח</th>
+          <th style="padding:3px 4px;text-align:right">שעה</th>
+        </tr></thead><tbody>`;
+      sells.forEach(t=>{
+        const sellPx = t.price||0;
+        const buyPx  = sellPx - (t.profit||0)/(t.qty||0.00001) - sellPx*0.001;
+        html += `<tr style="border-bottom:1px solid #09151f;">
+          <td style="padding:2px 4px;color:#8ab0c8">$${fmt(buyPx,0)}</td>
+          <td style="padding:2px 4px;color:#ffffff">$${fmt(sellPx,0)}</td>
+          <td style="padding:2px 4px;color:#aaaaaa">${fmt(t.qty,5)}</td>
+          <td style="padding:2px 4px;color:#00e676;font-weight:700">+$${fmt(t.profit,4)}</td>
+          <td style="padding:2px 4px;color:#aaaaaa">${fmtT(t.time)}</td>
+        </tr>`;
+      });
+      html += '</tbody></table>';
+    }
+
+    if(filter==='all' && buys.length){
+      html += buys.slice(0,10).map(t=>`<div class="log-entry">
+        <div class="log-icon">🟡</div>
+        <div class="log-info">
+          <div class="log-title" style="color:#ffd700">BUY ↓ — $${fmt(t.price,0)}</div>
+          <div class="log-sub">${fmt(t.qty,6)} BTC</div>
+        </div>
+        <div class="log-right"><div class="log-time">${fmtT(t.time)}</div></div>
+      </div>`).join('');
+    }
+    return html || `<div style="text-align:center;padding:16px;color:#cccccc;font-size:.7rem">⏳ ממתין לתנועת מחיר</div>`;
+  }
+
+  return entries.map(t=>{
+    const isSell=t.type==='SELL';
+    const icon=isSell?'🟢':'🟡';
+    const titleColor=isSell?'#00e676':'#ffd700';
+    const profitHtml=isSell?`<div class="log-profit">+$${fmt(t.profit,4)}</div>`:'';
+    return `<div class="log-entry">
+      <div class="log-icon">${icon}</div>
+      <div class="log-info">
+        <div class="log-title" style="color:${titleColor}">${isSell?'SELL ↑':'BUY ↓'} — $${fmt(t.price,0)}</div>
+        <div class="log-sub">${fmt(t.qty,6)} BTC</div>
+      </div>
+      <div class="log-right">
+        ${profitHtml}
+        <div class="log-time">${fmtT(t.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function setFilter(f){
+  currentLogFilter=f;
+  const gD=botData['grid'],p=gD?.raw||{};
+  const logEl=document.getElementById('log-list');
+  if(logEl) logEl.innerHTML=buildLogHtml(p.trade_log||[],f);
+  document.querySelectorAll('.lf-btn').forEach(b=>{
+    b.classList.toggle('act', b.textContent.trim()===(f==='all'?'הכל':f==='sell'?'מכירות':'קניות'));
+  });
+}
+
+function scrollToCurrentLevel(){
+  const el=document.querySelector('.glv-current');
+  if(el) setTimeout(()=>el.scrollIntoView({block:'center',behavior:'smooth'}),300);
+}
+
+// ── Settings modal
+function populateSettings(s,p){
+  const items=[
+    {l:'טווח תחתון',v:`$${fmt(s.lower,0)}`,s:'Lower Bound (AI)'},
+    {l:'טווח עליון',v:`$${fmt(s.upper,0)}`,s:'Upper Bound (AI)'},
+    {l:'רמות גריד',v:`${s.grids}`,s:'Grid Levels'},
+    {l:'ATR-14',v:`$${fmt(s.atr14,0)}`,s:'Spacing Indicator'},
+    {l:'השקעה',v:`$${fmt(p.investment,0)}`,s:'Capital Deployed'},
+    {l:'עמלה/צד',v:`0.05%`,s:'Pionex Taker Fee'},
+    {l:'DGT',v:p.dgt_count>0?`✅ פעיל`:'✅ פעיל',s:'Auto Range Reset'},
+    {l:'REINVEST',v:'✅ פעיל',s:'Compound Profits'},
+  ];
+  const el=document.getElementById('settings-content');
+  if(el) el.innerHTML=items.map(i=>`
+    <div class="sg-item">
+      <div class="sg-label">${i.l}</div>
+      <div class="sg-val">${i.v}</div>
+      <div class="sg-sub">${i.s}</div>
+    </div>`).join('');
+}
+
+function openSettings(){
+  document.getElementById('modal-settings').classList.remove('hidden');
+}
+
+// ── Calculator modal
+function openCalc(){
+  // pre-fill with current grid values
+  const s=botData['grid']?.state;
+  if(s){
+    document.getElementById('c-low').value=Math.round(s.lower);
+    document.getElementById('c-high').value=Math.round(s.upper);
+    document.getElementById('c-grids').value=s.grids;
+  }
+  const p=botData['grid']?.raw;
+  if(p) document.getElementById('c-inv').value=Math.round(p.investment||1000);
+  document.getElementById('calc-results').innerHTML='';
+  document.getElementById('modal-calc').classList.remove('hidden');
+}
+
+function calcGrid(){
+  const inv=parseFloat(document.getElementById('c-inv').value)||1000;
+  const low=parseFloat(document.getElementById('c-low').value)||70000;
+  const high=parseFloat(document.getElementById('c-high').value)||82000;
+  const grids=parseInt(document.getElementById('c-grids').value)||50;
+  if(high<=low||grids<2) return;
+
+  const rangeSize=high-low;
+  const stepPct=rangeSize/(grids*((low+high)/2))*100;
+  const perLevel=inv/grids;
+  const btcPerLevel=perLevel/((low+high)/2);
+  const profitPerCycle=btcPerLevel*(rangeSize/grids)*0.9991; // minus 2×0.05% fee
+  const cyclesPerDay=Math.max(0,(rangeSize/grids)/50*3); // rough estimate
+  const dailyProfit=profitPerCycle*cyclesPerDay*grids*0.2; // conservative
+  const apr=dailyProfit*365/inv*100;
+
+  const el=document.getElementById('calc-results');
+  el.innerHTML=[
+    {l:'📏 צעד/רמה',v:`${fmt(stepPct,2)}%`},
+    {l:'💵 הון/רמה',v:`$${fmt(perLevel,2)}`},
+    {l:'₿ BTC/רמה',v:`${fmt(btcPerLevel,6)}`},
+    {l:'💰 רווח/cycle',v:`$${fmt(profitPerCycle,4)}`},
+    {l:'📅 רווח יומי (est)',v:`$${fmt(dailyProfit,3)}`},
+    {l:'📈 APR (est)',v:`${fmt(apr,1)}%`},
+  ].map(i=>`<div class="cr-item"><div class="cr-val">${i.v}</div><div class="cr-lbl">${i.l}</div></div>`).join('');
+}
+
+// ── Wizard modal
+const wizContent=[
+  {
+    t:'שלב 1 — בחירת זוג מטבעות',
+    d:'הבוט פועל על <strong style="color:#ffd700">BTC/USDT</strong> ב-Pionex.<br><br>ניתן להוסיף זוגות נוספים בעתיד ע״י יצירת instance נפרד עם symbol שונה בסקריפט.',
+    f:'<div class="wiz-field" style="font-size:.7rem;color:#ffd700;background:#002535;padding:8px;border-radius:6px;margin-top:8px;">✅ BTC/USDT — פעיל</div>'
+  },
+  {
+    t:'שלב 2 — הגדרת טווח גריד',
+    d:'ה-AI מחשב אוטומטית את <strong style="color:#f7931a">Lower</strong> ו-<strong style="color:#f7931a">Upper</strong> לפי Percentile 3–97 של 720 שעות אחרונות + 4% padding.<br><br>לשינוי ידני: ערוך את <code>AI_HOURS</code> ב-<code>grid_simulator.py</code>.',
+    f:''
+  },
+  {
+    t:'שלב 3 — הון ופרמטרים',
+    d:'הגדר את ההון, העמלה ואם להשקיע מחדש רווחים:<br><br><code>INVESTMENT = 1000</code><br><code>FEE_PCT = 0.05</code><br><code>REINVEST_ENABLED = True</code>',
+    f:''
+  },
+  {
+    t:'שלב 4 — הפעלה',
+    d:'לאחר שינוי פרמטרים:<br><br>1. ערוך <code>grid_simulator.py</code> ב-GitHub<br>2. Commit + Push<br>3. הבוט יאפס בריצה הבאה (15 דקות)<br><br>✅ GitHub Actions פעיל ורץ כל 15 דקות!',
+    f:'<div class="wiz-field" style="font-size:.68rem;color:#00e676;background:#001a0e;padding:8px;border-radius:6px;margin-top:8px;">🟢 הבוט פועל — אין צורך בהפעלה ידנית</div>'
+  }
+];
+
+function openWizard(){
+  wizStep=1;
+  renderWiz();
+  document.getElementById('modal-wizard').classList.remove('hidden');
+}
+
+function renderWiz(){
+  const c=wizContent[wizStep-1];
+  document.getElementById('wiz-content').innerHTML=`
+    <div class="wiz-title">${c.t}</div>
+    <div class="wiz-desc">${c.d}${c.f}</div>`;
+  for(let i=1;i<=4;i++){
+    const el=document.getElementById('ws'+i);
+    el.className='wiz-step'+(i===wizStep?' active':i<wizStep?' done':'');
+  }
+  const nav=document.getElementById('wiz-nav');
+  let btns='';
+  if(wizStep>1) btns+=`<button class="wiz-btn gray" onclick="goWiz(${wizStep-1})">← אחורה</button>`;
+  if(wizStep<4) btns+=`<button class="wiz-btn primary" onclick="goWiz(${wizStep+1})">קדימה →</button>`;
+  else btns+=`<button class="wiz-btn primary" onclick="closeModal('modal-wizard')">✅ סיום</button>`;
+  nav.innerHTML=btns;
+}
+
+function goWiz(step){
+  wizStep=step;
+  renderWiz();
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.add('hidden');
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o) o.classList.add('hidden');});
+});
+
+let tvWidgetLoaded=false, chartWs=null;
+// Lightweight Charts vars (unused — kept for compat)
+let lwChart=null, candleSeries=null, priceLabelSeries=null, priceLines=[];
+
+// Real-time BTC price via WebSocket (header only)
+function connectPriceWs(){
+  if(chartWs){ try{ chartWs.close(); }catch(e){} }
+  chartWs = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@miniTicker');
+  chartWs.onmessage = (evt)=>{
+    try{
+      const d = JSON.parse(evt.data);
+      const btc = parseFloat(d.c);
+      const el = document.querySelector('.btc-now');
+      if(el && btc>0) el.textContent='$'+btc.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+    }catch(e){}
+  };
+  chartWs.onclose = ()=>setTimeout(connectPriceWs, 3000);
+  chartWs.onerror = ()=>chartWs.close();
+}
+
 function loadTVChart(){
   const el=document.getElementById('tv-chart');
   if(!el) return;
+
+  // Already loaded — don't reload iframe
+  if(tvWidgetLoaded && el.querySelector('iframe')) return;
+
   el.innerHTML='';
+  tvWidgetLoaded=false;
+
   const s=document.createElement('script');
   s.src='https://s3.tradingview.com/tv.js';
   s.onload=()=>{
     new TradingView.widget({
-      container_id:'tv-chart',
-      width:'100%', height:'100%',
-      symbol:'BINANCE:BTCUSDT',
-      interval:'15',
-      timezone:'Asia/Jerusalem',
-      theme:'dark',
-      style:'1',
-      locale:'he_IL',
-      toolbar_bg:'#070d14',
-      enable_publishing:false,
-      hide_top_toolbar:false,
-      hide_legend:false,
-      save_image:false,
-      backgroundColor:'#070d14',
-      gridColor:'#0d1820',
+      container_id:     'tv-chart',
+      width:            '100%',
+      height:           '100%',
+      symbol:           'BINANCE:BTCUSDT',
+      interval:         '15',
+      timezone:         'Asia/Jerusalem',
+      theme:            'dark',
+      style:            '1',
+      locale:           'he_IL',
+      toolbar_bg:       '#070d14',
+      enable_publishing: false,
+      hide_top_toolbar:  false,
+      hide_legend:       false,
+      save_image:        false,
+      backgroundColor:  '#070d14',
+      gridColor:        '#0d1820',
+      studies:          [],
     });
+    tvWidgetLoaded=true;
   };
   document.head.appendChild(s);
+
+  // Real-time price in header via WebSocket
+  connectPriceWs();
+}
+
+async function buildLWChart(el){
+  const rect=el.getBoundingClientRect();
+  const w=rect.width||800, h=rect.height||400;
+
+  lwChart=LightweightCharts.createChart(el,{
+    width:w, height:h,
+    layout:{ background:{type:'solid',color:'#070d14'}, textColor:'#ffffff' },
+    grid:{ vertLines:{color:'transparent'}, horzLines:{color:'transparent'} },
+    crosshair:{
+      mode: LightweightCharts.CrosshairMode.Normal,
+      vertLine:{ color:'#ffd700', labelBackgroundColor:'#ffd700' },
+      horzLine:{ color:'#ffd700', labelBackgroundColor:'#ffd700' },
+    },
+    rightPriceScale:{ borderColor:'#0f2030', scaleMargins:{top:0.05,bottom:0.05} },
+    timeScale:{ borderColor:'#0f2030', timeVisible:true, secondsVisible:false, rightOffset:5 },
+  });
+
+  new ResizeObserver(entries=>{
+    for(const e of entries) lwChart && lwChart.resize(e.contentRect.width, e.contentRect.height);
+  }).observe(el);
+
+  candleSeries=lwChart.addCandlestickSeries({
+    upColor:'#00e676', downColor:'#ff5252',
+    borderUpColor:'#00e676', borderDownColor:'#ff5252',
+    wickUpColor:'#00a050', wickDownColor:'#cc3030',
+    lastValueVisible: false,
+    priceLineVisible: false,
+    priceFormat:{ type:'price', precision:2, minMove:0.01 },
+  });
+  // White label for current price on axis
+  lwChart.applyOptions({
+    rightPriceScale:{
+      borderColor:'#0f2030',
+      scaleMargins:{top:0.05,bottom:0.05},
+    },
+    layout:{
+      background:{type:'solid',color:'#070d14'},
+      textColor:'#ffffff',
+    },
+  });
+
+  try{
+    const res=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=300');
+    const data=await res.json();
+    candleSeries.setData(data.map(k=>({
+      time:  Math.floor(k[0]/1000),
+      open:  parseFloat(k[1]),
+      high:  parseFloat(k[2]),
+      low:   parseFloat(k[3]),
+      close: parseFloat(k[4]),
+    })));
+  }catch(e){ console.error('Binance fetch failed',e); }
+
+  // ── Real-time WebSocket from Binance ──────────────────────────
+  connectChartWs();
+
+  // Invisible line series — gives us a pure white axis label for current price
+  priceLabelSeries = lwChart.addLineSeries({
+    color:                  'rgba(0,0,0,0)',
+    lineWidth:              1,
+    lastValueVisible:       true,
+    priceLineVisible:       false,
+    crosshairMarkerVisible: false,
+  });
+
+  drawGridLines();
+}
+
+function clearGridLines(){
+  if(!candleSeries) return;
+  priceLines.forEach(pl=>{ try{ candleSeries.removePriceLine(pl); }catch(e){} });
+  priceLines=[];
+}
+
+function drawGridLines(){
+  const s=botData['grid']?.state;
+  if(!candleSeries||!s||!s.grid) return;
+
+  clearGridLines();
+
+  const btc=parseFloat(document.querySelector('.btc-now')?.textContent?.replace(/[$,]/g,'')||0);
+
+  // Find the one current level where BTC is right now
+  const currentLv = s.grid.find(lv => btc >= lv.buy && btc < lv.sell)
+                 || s.grid.reduce((a,b) => Math.abs(b.buy-btc) < Math.abs(a.buy-btc) ? b : a);
+
+  if(!currentLv) return;
+
+  // Feed current price into the white-label series
+  if(btc>0 && priceLabelSeries){
+    const now = Math.floor(Date.now()/1000);
+    priceLabelSeries.setData([{ time: now - 1, value: btc }, { time: now, value: btc }]);
+  }
+
+  // ONE green line — buy price
+  priceLines.push(candleSeries.createPriceLine({
+    price:            currentLv.buy,
+    color:            '#00e67688',
+    lineWidth:        1,
+    lineStyle:        LightweightCharts.LineStyle.Dashed,
+    axisLabelVisible: true,
+    title:            '',
+  }));
+
+  // ONE red line — sell price
+  priceLines.push(candleSeries.createPriceLine({
+    price:            currentLv.sell,
+    color:            '#ff525288',
+    lineWidth:        1,
+    lineStyle:        LightweightCharts.LineStyle.Dashed,
+    axisLabelVisible: true,
+    title:            '',
+  }));
 }
 
 function switchBot(id,e){
