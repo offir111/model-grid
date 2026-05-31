@@ -632,10 +632,6 @@ function render(btc){
       <div class="chart-wrap">
         <div id="tv-chart"></div>
         <canvas id="grid-overlay"></canvas>
-        <div id="ma-legend" style="position:absolute;top:8px;left:8px;z-index:20;background:rgba(7,13,20,0.9);border:1px solid #1e3045;border-radius:6px;padding:6px 12px;pointer-events:none;">
-          <div style="font-size:.72rem;margin-bottom:3px;"><span style="color:#ffd700;font-weight:800;">MA 50</span>&nbsp;&nbsp;<span id="ma50-val" style="color:#ffd700;font-weight:700;">—</span></div>
-          <div style="font-size:.72rem;"><span style="color:#ff5252;font-weight:800;">MA 200</span>&nbsp;<span id="ma200-val" style="color:#ff5252;font-weight:700;">—</span></div>
-        </div>
       </div>
 
       <!-- ══ GRID TARGETS PANEL ══ -->
@@ -1108,19 +1104,6 @@ async function buildLWChart(el){
     },
   });
 
-  // MA50 series — זהוב
-  const ma50Series = lwChart.addLineSeries({
-    color:'#ffd700', lineWidth:2, lastValueVisible:true,
-    priceLineVisible:false, crosshairMarkerVisible:false,
-    title:'MA 50',
-  });
-
-  // MA200 series — אדום
-  const ma200Series = lwChart.addLineSeries({
-    color:'#ff5252', lineWidth:2, lastValueVisible:true,
-    priceLineVisible:false, crosshairMarkerVisible:false,
-    title:'MA 200',
-  });
 
   try{
     const res=await fetch('https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=15m&limit=500');
@@ -1133,28 +1116,6 @@ async function buildLWChart(el){
       close: parseFloat(k[4]),
     }));
     candleSeries.setData(candles);
-
-    // חישוב MA50
-    const ma50 = candles.map((c,i)=>{
-      if(i<49) return null;
-      const avg = candles.slice(i-49,i+1).reduce((s,x)=>s+x.close,0)/50;
-      return { time:c.time, value:avg };
-    }).filter(Boolean);
-    ma50Series.setData(ma50);
-    const ma50Last = ma50[ma50.length-1]?.value;
-    const ma50El = document.getElementById('ma50-val');
-    if(ma50El && ma50Last) ma50El.textContent = '$'+ma50Last.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-
-    // חישוב MA200
-    const ma200 = candles.map((c,i)=>{
-      if(i<199) return null;
-      const avg = candles.slice(i-199,i+1).reduce((s,x)=>s+x.close,0)/200;
-      return { time:c.time, value:avg };
-    }).filter(Boolean);
-    ma200Series.setData(ma200);
-    const ma200Last = ma200[ma200.length-1]?.value;
-    const ma200El = document.getElementById('ma200-val');
-    if(ma200El && ma200Last) ma200El.textContent = '$'+ma200Last.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
 
     // ציור קווי גריד אחרי טעינת נתונים
     setTimeout(drawGridLines, 500);
