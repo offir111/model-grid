@@ -1146,6 +1146,9 @@ async function buildLWChart(el){
     }).filter(Boolean);
     ma200Series.setData(ma200);
 
+    // ציור קווי גריד אחרי טעינת נתונים
+    setTimeout(drawGridLines, 500);
+
   }catch(e){ console.error('Binance fetch failed',e); }
 
   // ── Real-time WebSocket from Binance ──────────────────────────
