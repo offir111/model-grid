@@ -664,6 +664,8 @@ function render(btc){
       <div class="chart-wrap">
         <div id="tv-chart"></div>
         <canvas id="grid-overlay"></canvas>
+        <!-- ריבועי המתנה על הגרף — שמאל למטה -->
+        <div id="waiting-overlay" style="position:absolute;bottom:30px;left:8px;z-index:20;display:flex;flex-direction:column;gap:3px;pointer-events:none;"></div>
       </div>
 
       <!-- ══ GRID LIVE TILES PANEL ══ -->
@@ -710,6 +712,9 @@ function render(btc){
 
   // Draw Profit Curve
   drawProfitCurve(tradeLog, pnl);
+
+  // Waiting tiles on chart
+  setTimeout(()=>buildWaitingOverlay(s, btc), 200);
 
   // ── אם הגרף כבר טעון — החזר אותו במקום לבנות מחדש ────────────
   if(chartAlreadyLoaded){
@@ -847,19 +852,7 @@ function buildLiveTiles(s, btc, tradeLog) {
     </div>`;
   });
 
-  // 3. רמות ממתינות קרובות
-  const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
-  const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
-  const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-2 && i <= base+2);
-  waiting.forEach(lv => {
-    const isCur = btc >= lv.buy && btc < lv.sell;
-    html += `<div class="tile waiting" style="${isCur?'border-color:#f7931a;':''}">
-      <div class="tile-lbl" style="color:#fff">${isCur?'◉ כאן':'⏳ ממתין'}</div>
-      <div class="tile-price" style="color:#fff">$${fmt(lv.buy,0)}</div>
-      <div class="tile-pct" style="color:#fff">→$${fmt(lv.sell,0)}</div>
-      <div class="tile-sub" style="color:#fff">+$${fmt(lv.profit,4)}</div>
-    </div>`;
-  });
+  // רמות ממתינות — מוצגות על הגרף, לא כאן
 
   return html || '<span style="color:#aaa;font-size:.6rem">אין פעילות היום</span>';
 }
@@ -937,6 +930,24 @@ function showHistoryDay(dateStr) {
     </div>`;
   });
   tiles.innerHTML = html || `<span style="color:#aaa;font-size:.6rem">אין עסקאות ב-${dateStr}</span>`;
+}
+
+
+// ── Waiting tiles on chart (bottom-left overlay) ───────────────
+function buildWaitingOverlay(s, btc) {
+  const el = document.getElementById('waiting-overlay');
+  if (!el || !s || !s.grid) return;
+  const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
+  const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
+  const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-3 && i <= base+3);
+  el.innerHTML = waiting.map(lv => {
+    const isCur = btc >= lv.buy && btc < lv.sell;
+    return `<div style="background:#0d1820;border:2px solid #f7931a;border-radius:6px;padding:3px 7px;text-align:center;min-width:70px;opacity:${isCur?'1':'0.75'};">
+      <div style="font-size:.46rem;color:#fff;">${isCur?'◉ כאן':'⏳ ממתין'}</div>
+      <div style="font-size:.68rem;font-weight:700;color:#fff;">$${fmt(lv.buy,0)}</div>
+      <div style="font-size:.5rem;color:#fff;">→$${fmt(lv.sell,0)}</div>
+    </div>`;
+  }).join('');
 }
 
 
