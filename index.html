@@ -822,27 +822,27 @@ function buildLiveTiles(s, btc, tradeLog) {
     </div>`;
   });
 
-  // 2. פוזיציות פתוחות — זוג בחלונית אחת
+  // 2. פוזיציות פתוחות — זוג בחלונית משותפת עם קו אפור
   const filledLevels = s.grid.filter(l => l.filled);
   filledLevels.forEach(lv => {
     const unrealPct = btc > 0 ? ((btc - lv.buy) / lv.buy * 100) : 0;
     const isProfit = unrealPct >= 0;
-    html += `<div style="flex-shrink:0;background:#0d1820;border:2px solid #00e676;border-radius:9px;padding:5px 8px;min-width:130px;display:flex;gap:6px;align-items:stretch;">
-      <!-- קנייה -->
-      <div style="flex:1;text-align:center;border-right:1px solid #1e3a2a;padding-right:6px;">
-        <div style="font-size:.48rem;color:#fff;margin-bottom:2px;">✅ קנוי</div>
-        <div style="font-size:.72rem;font-weight:700;color:#fff;">$${fmt(lv.buy,0)}</div>
-        <div style="font-size:.58rem;font-weight:700;color:#fff;">${isProfit?'+':''}${fmt(unrealPct,2)}%</div>
-        <div style="font-size:.48rem;color:#fff;margin-top:1px;">צף</div>
+    html += `<div style="flex-shrink:0;border:1px solid #333;border-radius:10px;padding:4px;display:flex;gap:3px;align-items:center;background:#0a1218;">
+      <!-- ריבוע קנייה — ירוק כמו קודם -->
+      <div class="tile bought" style="margin:0;">
+        <div class="tile-lbl" style="color:#fff">✅ קנוי</div>
+        <div class="tile-price" style="color:#fff">$${fmt(lv.buy,0)}</div>
+        <div class="tile-pct" style="color:#fff">${isProfit?'+':''}${fmt(unrealPct,2)}%</div>
+        <div class="tile-sub" style="color:#fff">צף</div>
       </div>
       <!-- חץ -->
-      <div style="display:flex;align-items:center;color:#fff;font-size:.9rem;">→</div>
-      <!-- יעד מכירה -->
-      <div style="flex:1;text-align:center;padding-left:2px;">
-        <div style="font-size:.48rem;color:#fff;margin-bottom:2px;">🎯 יעד</div>
-        <div style="font-size:.72rem;font-weight:700;color:#fff;">$${fmt(lv.sell,0)}</div>
-        <div style="font-size:.58rem;font-weight:700;color:#fff;">+$${fmt(lv.profit,4)}</div>
-        <div style="font-size:.48rem;color:#fff;margin-top:1px;">מכירה</div>
+      <div style="color:#555;font-size:.8rem;">›</div>
+      <!-- ריבוע יעד — כתום מקווקו כמו קודם -->
+      <div class="tile" style="margin:0;border-color:#f7931a;border-style:dashed;">
+        <div class="tile-lbl" style="color:#fff">🎯 יעד</div>
+        <div class="tile-price" style="color:#fff">$${fmt(lv.sell,0)}</div>
+        <div class="tile-pct" style="color:#fff">+$${fmt(lv.profit,4)}</div>
+        <div class="tile-sub" style="color:#fff">מכירה</div>
       </div>
     </div>`;
   });
