@@ -987,8 +987,8 @@ function loadTVChart(){
       backgroundColor:  '#070d14',
       gridColor:        '#0d1820',
       studies: [
-        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:50 } },
-        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:200 } }
+        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:50 },  overrides:{ "Plot.color":"#ffd700", "Plot.linewidth":2, "Plot.title":"MA 50"  } },
+        { id:"MASimple@tv-basicstudies", version:60, inputs:{ length:200 }, overrides:{ "Plot.color":"#ff5252", "Plot.linewidth":2, "Plot.title":"MA 200" } }
       ],
     });
     tvWidgetLoaded=true;
