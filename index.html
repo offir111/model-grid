@@ -626,6 +626,14 @@ function render(btc){
         </div>
       </div>
       <div class="chart-wrap"><div id="tv-chart"></div></div>
+
+      <!-- ══ GRID TARGETS PANEL ══ -->
+      <div style="padding:6px 10px;background:#060c14;border-top:1px solid #0f2030;flex-shrink:0;">
+        <div style="font-size:.58rem;color:#ffffff;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;">🎯 יעדי הבוט — רמות קנייה ומכירה קרובות למחיר</div>
+        <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;">
+          ${buildTargetLevels(s, btc)}
+        </div>
+      </div>
     </div>
 
     <div class="right">
@@ -723,6 +731,53 @@ function drawProfitCurve(tradeLog, totalPnl) {
   ctx.textAlign = 'left';
   ctx.fillText(`+$${totalPnl.toFixed(2)}`, 4, 10);
 }
+
+// ── Grid Target Levels Panel ───────────────────────────────────
+function buildTargetLevels(s, btc) {
+  if (!s || !s.grid || !btc) return '<span style="color:#aaa;font-size:.6rem">טוען...</span>';
+
+  const grid = s.grid;
+  // מצא את הרמה הנוכחית
+  const curIdx = grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
+  const ci = curIdx >= 0 ? curIdx : grid.reduce((best,lv,i) =>
+    Math.abs(lv.buy - btc) < Math.abs(grid[best].buy - btc) ? i : best, 0);
+
+  // קח 3 רמות מתחת (קנייה עתידית) + הרמה הנוכחית + 3 רמות מעל (מכירה)
+  const from = Math.max(0, ci - 3);
+  const to   = Math.min(grid.length - 1, ci + 3);
+  const levels = [];
+  for (let i = to; i >= from; i--) levels.push({ ...grid[i], idx: i });
+
+  return levels.map(lv => {
+    const isCurrent = lv.idx === ci;
+    const isFilled  = lv.filled;
+    const isAbove   = lv.buy > btc;
+    const isBelow   = lv.buy < btc && !isCurrent;
+
+    let bg, border, label, arrow, priceColor;
+    if (isCurrent) {
+      bg = '#001a30'; border = '#f7931a'; label = '◉ כאן'; arrow = ''; priceColor = '#f7931a';
+    } else if (isFilled && !isAbove) {
+      bg = '#001a0e'; border = '#00e676'; label = '✅ קנוי'; arrow = '↑ SELL'; priceColor = '#00e676';
+    } else if (isAbove) {
+      bg = '#0a1520'; border = '#555'; label = '⏳ ממתין'; arrow = '↓ BUY'; priceColor = '#8ab0c8';
+    } else {
+      bg = '#0a1520'; border = '#555'; label = '⏳ ממתין'; arrow = '↓ BUY'; priceColor = '#8ab0c8';
+    }
+
+    const dist = btc > 0 ? ((lv.buy - btc) / btc * 100).toFixed(2) : '0';
+    const distColor = parseFloat(dist) > 0 ? '#8ab0c8' : '#00e676';
+
+    return `<div style="flex-shrink:0;background:${bg};border:1px solid ${border};border-radius:6px;padding:5px 8px;text-align:center;min-width:80px;">
+      <div style="font-size:.58rem;color:#aaaaaa;margin-bottom:2px;">${label}</div>
+      <div style="font-size:.78rem;font-weight:700;color:${priceColor}">$${fmt(lv.buy,0)}</div>
+      <div style="font-size:.52rem;color:#00e676;margin-top:1px;">→$${fmt(lv.sell,0)}</div>
+      <div style="font-size:.52rem;color:${distColor};margin-top:1px;">${dist > 0 ? '+' : ''}${dist}%</div>
+      <div style="font-size:.52rem;color:#ffd700;margin-top:1px;">+$${fmt(lv.profit,4)}</div>
+    </div>`;
+  }).join(`<div style="display:flex;align-items:center;color:#555;font-size:.8rem;padding:0 2px;">›</div>`);
+}
+
 
 // ── Activity log builder (Pionex-style with transaction table)
 function buildLogHtml(tradeLog, filter){
