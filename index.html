@@ -1164,7 +1164,7 @@ function drawGridLines(){
       lineWidth:        isCurrent ? 3 : isFilled ? 2 : 1,
       lineStyle:        isFilled || isCurrent ? LightweightCharts.LineStyle.Solid : LightweightCharts.LineStyle.Dashed,
       axisLabelVisible: isCurrent || isFilled,
-      title:            isCurrent ? '◉ כאן' : isFilled ? '✅ קנוי' : '',
+      title:            '',
     }));
 
     // קו מכירה — רק לרמות קנויות
@@ -1175,7 +1175,7 @@ function drawGridLines(){
         lineWidth:        2,
         lineStyle:        LightweightCharts.LineStyle.Dashed,
         axisLabelVisible: true,
-        title:            '🎯 SELL',
+        title:            '',
       }));
     }
   });
