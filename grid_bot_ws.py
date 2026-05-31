@@ -22,6 +22,10 @@ import websocket
 from grid_simulator import (
     calc_ai_params, build_grid, simulate_fills,
     check_and_apply_dgt, check_support_distance,
+    detect_market_regime, get_regime_grid_ratio,
+    check_circuit_breaker,
+    calc_inventory_skew, update_btc_value_est,
+    check_and_apply_trailing,
     load_state, save_state,
     load_portfolio, init_portfolio, save_portfolio,
     DATA_DIR, DGT_ENABLED, AI_HOURS
@@ -173,33 +177,61 @@ def process_candle(candle):
     if bot_state is None or portfolio is None:
         return
 
-    # Recalc AI params if due
+    price = candle["close"]
+
+    # ── 1. CIRCUIT BREAKER ────────────────────────────────────────
+    if check_circuit_breaker(portfolio):
+        log("🚨 Circuit Breaker פעיל — הבוט מושהה 24 שעות!")
+        time.sleep(86400)
+        return
+
+    # ── 2. Recalc AI params if due ────────────────────────────────
     if time.time() - last_ai_calc > AI_RECALC_SEC:
         threading.Thread(target=refresh_ai_params, daemon=True).start()
 
-    # DGT check
+    # ── 3. MARKET REGIME ──────────────────────────────────────────
+    regime = "stable"
+    if hourly_cache:
+        regime = detect_market_regime(hourly_cache)
+        buy_ratio, sell_ratio = get_regime_grid_ratio(regime)
+        regime_emoji = {"rising": "📈", "falling": "📉", "stable": "➡️"}.get(regime, "➡️")
+
+    # ── 4. TRAILING GRID ──────────────────────────────────────────
+    if check_and_apply_trailing(bot_state, price, portfolio):
+        log(f"🔀 Trailing Grid → ${bot_state['lower']:,.0f}–${bot_state['upper']:,.0f}")
+
+    # ── 5. DGT check ──────────────────────────────────────────────
     if DGT_ENABLED and hourly_cache:
-        dgt = check_and_apply_dgt(bot_state, candle["close"], portfolio, hourly_cache)
+        dgt = check_and_apply_dgt(bot_state, price, portfolio, hourly_cache)
         if dgt:
             log(f"🔁 DGT Reset → ${bot_state['lower']:,.0f}–${bot_state['upper']:,.0f}")
 
-    # Fill simulation
+    # ── 6. INVENTORY SKEW ─────────────────────────────────────────
+    skew = calc_inventory_skew(portfolio, price)
+    skew_txt = f"BUY↑" if skew > 0.1 else ("SELL↑" if skew < -0.1 else "BAL")
+
+    # ── 7. Fill simulation ────────────────────────────────────────
     profit, cycles = simulate_fills(bot_state, [candle], portfolio)
 
+    # עדכון הערכת BTC
+    update_btc_value_est(portfolio, cycles, 0, price)
+
+    # ── 8. LOG ────────────────────────────────────────────────────
+    filled = sum(1 for l in bot_state["grid"] if l["filled"])
+    _, sup_dist = check_support_distance(price, hourly_cache) if hourly_cache else (True, 100)
+    safety = "✅" if sup_dist >= 3.0 else "⚠️"
+
     if cycles > 0:
-        log(f"💰 {cycles} SELL | profit: +${profit:.4f} | "
-            f"P&L: ${portfolio['realized_pnl']:+.4f} | "
-            f"APR: {portfolio.get('apr',0):.1f}%")
+        log(f"💰 {cycles} SELL | +${profit:.4f} | P&L: ${portfolio['realized_pnl']:+.4f} | "
+            f"APR: {portfolio.get('apr',0):.1f}% | {regime_emoji}{regime.upper()}")
     else:
-        filled = sum(1 for l in bot_state["grid"] if l["filled"])
-        _, sup_dist = check_support_distance(candle["close"], hourly_cache)
-        safety = "✅" if sup_dist >= 3.0 else "⚠️"
         log(f"  ${candle['low']:,.0f}–${candle['high']:,.0f} | "
             f"filled: {filled}/{bot_state['grids']} | "
             f"P&L: ${portfolio['realized_pnl']:+.4f} | "
-            f"Support: {safety}{sup_dist:.1f}%")
+            f"{regime_emoji}{regime} | Sup:{safety}{sup_dist:.1f}% | Inv:{skew_txt}")
 
     bot_state["last_run_time"] = datetime.now().isoformat()
+    portfolio["grids"] = bot_state["grids"]
     save_state(bot_state)
     save_portfolio(portfolio)
 

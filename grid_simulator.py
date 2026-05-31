@@ -113,35 +113,46 @@ def calc_ai_params(candles):
 # GRID BUILDER — with real BTC quantity per level
 # ─────────────────────────────────────────────────────────────────
 
-def build_grid(lower, upper, grids, investment):
+def build_grid(lower, upper, grids, investment, geometric=True):
     """
-    FIX 4 — Real BTC quantity tracking (Pionex method):
-      per_grid = investment / grids          (USDT per level)
-      qty      = per_grid / buy_px           (BTC bought)
-      sell_val = qty * sell_px               (USDT received on sell)
-      profit   = sell_val*(1-fee) - per_grid*(1+fee)
+    UPGRADE: Geometric Grid (3Commas-inspired)
+    ─────────────────────────────────────────────
+    geometric=True  → מרווחים שווים ב-% (עדיף ל-BTC, מתאים לתנועות גדולות)
+    geometric=False → מרווחים שווים ב-$ (arithmetic — קלאסי)
+
+    per_grid = investment / grids          (USDT per level)
+    qty      = per_grid / buy_px           (BTC bought)
+    sell_val = qty * sell_px               (USDT received on sell)
+    profit   = sell_val*(1-fee) - per_grid*(1+fee)
     """
     if grids < 2:
         grids = 2
-    step     = (upper - lower) / grids
     per_grid = investment / grids
     fee      = FEE_PCT / 100
 
+    # ── Geometric: step_pct = (upper/lower)^(1/grids) - 1 ────────
+    if geometric and lower > 0:
+        ratio    = (upper / lower) ** (1.0 / grids)
+        prices   = [round(lower * (ratio ** i), 2) for i in range(grids + 1)]
+    else:
+        step   = (upper - lower) / grids
+        prices = [round(lower + i * step, 2) for i in range(grids + 1)]
+
     levels = []
     for i in range(grids):
-        buy_px  = round(lower + i * step, 2)
-        sell_px = round(buy_px + step, 2)
-        qty     = per_grid / buy_px if buy_px > 0 else 0
+        buy_px   = prices[i]
+        sell_px  = prices[i + 1]
+        qty      = per_grid / buy_px if buy_px > 0 else 0
         sell_val = qty * sell_px
         profit   = round(sell_val * (1 - fee) - per_grid * (1 + fee), 6)
 
         levels.append({
             "buy":         buy_px,
             "sell":        sell_px,
-            "qty":         round(qty, 8),   # BTC per grid
+            "qty":         round(qty, 8),
             "profit":      profit,
             "filled":      False,
-            "just_bought": False,           # FIX 3 — same-candle guard
+            "just_bought": False,
         })
     return levels
 
@@ -222,6 +233,97 @@ def check_support_distance(current_price, hourly_candles, lookback=24, min_pct=3
     return is_safe, round(distance_pct, 2)
 
 
+# ─────────────────────────────────────────────────────────────────
+# MARKET REGIME DETECTION — 3Commas-inspired
+# ─────────────────────────────────────────────────────────────────
+
+def detect_market_regime(hourly_candles):
+    """
+    מזהה מצב שוק לפי MA50/MA200 + RSI ממוצע.
+    מחזיר: 'rising' | 'falling' | 'stable'
+    """
+    if len(hourly_candles) < 200:
+        return "stable"
+
+    closes = [c["close"] for c in hourly_candles]
+    ma50   = sum(closes[-50:])  / 50
+    ma200  = sum(closes[-200:]) / 200
+
+    # RSI-14
+    gains, losses = [], []
+    for i in range(1, 15):
+        diff = closes[-i] - closes[-i-1]
+        (gains if diff > 0 else losses).append(abs(diff))
+    avg_gain = sum(gains) / 14 if gains else 0
+    avg_loss = sum(losses) / 14 if losses else 0.001
+    rsi = 100 - (100 / (1 + avg_gain / avg_loss))
+
+    if ma50 > ma200 * 1.01 and rsi > 55:
+        return "rising"
+    elif ma50 < ma200 * 0.99 and rsi < 45:
+        return "falling"
+    else:
+        return "stable"
+
+
+def get_regime_grid_ratio(regime):
+    """
+    מחזיר יחס buy/sell orders לפי מצב השוק (3Commas method):
+    rising  → 9 buy : 1 sell (מנצל עלייה)
+    falling → 1 buy : 9 sell (מגן מירידה)
+    stable  → 5 buy : 5 sell (קלאסי)
+    """
+    return {"rising": (0.9, 0.1), "falling": (0.1, 0.9), "stable": (0.5, 0.5)}.get(regime, (0.5, 0.5))
+
+
+# ─────────────────────────────────────────────────────────────────
+# EQUITY CIRCUIT BREAKER — MetaTrader-inspired
+# ─────────────────────────────────────────────────────────────────
+
+MAX_DRAWDOWN_PCT = 15.0   # עצור בוט אם הפסד > 15% מהקפיטל ההתחלתי
+
+def check_circuit_breaker(portfolio):
+    """
+    עוצר את הבוט אם הפסד עצום. מחזיר True = עצור, False = המשך.
+    """
+    start_inv = portfolio.get("starting_investment", portfolio["investment"])
+    cur_val   = portfolio["investment"] + portfolio["realized_pnl"]
+    drawdown  = (start_inv - cur_val) / start_inv * 100
+    if drawdown >= MAX_DRAWDOWN_PCT:
+        print(f"  🚨 CIRCUIT BREAKER! Drawdown={drawdown:.1f}% >= {MAX_DRAWDOWN_PCT}% — עוצר בוט!")
+        return True
+    return False
+
+
+# ─────────────────────────────────────────────────────────────────
+# INVENTORY SKEW — Hummingbot-inspired
+# ─────────────────────────────────────────────────────────────────
+
+def calc_inventory_skew(portfolio, current_price, target_pct=0.5):
+    """
+    מחשב הטיית מלאי: אם יש לנו יותר מדי BTC → מקטין buy orders.
+    מחזיר skew בין -1 (מלאי BTC מלא) ל-+1 (אין BTC).
+    """
+    investment = portfolio["investment"]
+    realized   = portfolio.get("realized_pnl", 0)
+    total_val  = investment + realized
+
+    # הערכת BTC בידנו לפי כמות רמות מלאות
+    btc_value_est = portfolio.get("btc_value_est", total_val * 0.5)
+    current_pct   = btc_value_est / total_val if total_val > 0 else 0.5
+    skew = target_pct - current_pct   # חיובי = צריך לקנות, שלילי = צריך למכור
+    return round(max(-1.0, min(1.0, skew * 2)), 3)
+
+
+def update_btc_value_est(portfolio, cycles_sell, cycles_buy, price):
+    """מעדכן הערכת שווי BTC בפורטפוליו לאחר קניות/מכירות."""
+    per_grid = portfolio["investment"] / max(portfolio.get("grids", 20), 1)
+    btc_est  = portfolio.get("btc_value_est", portfolio["investment"] * 0.5)
+    btc_est += cycles_buy  * per_grid        # קנינו BTC
+    btc_est -= cycles_sell * per_grid        # מכרנו BTC
+    portfolio["btc_value_est"] = round(max(0, btc_est), 4)
+
+
 def check_and_apply_dgt(state, current_price, portfolio, hourly_candles):
     upper = state["upper"]
     lower = state["lower"]
@@ -276,6 +378,54 @@ def check_and_apply_dgt(state, current_price, portfolio, hourly_candles):
     print(f"  New range: ${ai['lower']:,.2f} -- ${ai['upper']:,.2f}  "
           f"Grids: {ai['grids']}  ATR: ${ai['atr14']:,.2f}")
     return True
+
+# ─────────────────────────────────────────────────────────────────
+# TRAILING GRID — 3Commas-inspired
+# ─────────────────────────────────────────────────────────────────
+
+TRAILING_THRESHOLD_PCT = 2.0   # הגריד "גולש" אחרי המחיר אם פרץ ב-2% מעל/מתחת
+
+def check_and_apply_trailing(state, current_price, portfolio):
+    """
+    Trailing Grid: אם מחיר פרץ מעל/מתחת הגריד ב-TRAILING_THRESHOLD_PCT%
+    הגריד כולו מוזז לעקוב אחרי המחיר — בלי לאפס את כל הפרמטרים.
+    מחזיר True אם הגריד הוזז.
+    """
+    upper = state["upper"]
+    lower = state["lower"]
+    rng   = upper - lower
+
+    moved = False
+
+    if current_price > upper * (1 + TRAILING_THRESHOLD_PCT / 100):
+        # פריצה כלפי מעלה — הגריד עולה
+        shift        = current_price - upper + rng * 0.1
+        new_lower    = round(lower + shift, 2)
+        new_upper    = round(upper + shift, 2)
+        print(f"  📈 Trailing UP: גריד עולה ${lower:,.0f}–${upper:,.0f} → "
+              f"${new_lower:,.0f}–${new_upper:,.0f}")
+        moved = True
+
+    elif current_price < lower * (1 - TRAILING_THRESHOLD_PCT / 100):
+        # פריצה כלפי מטה — הגריד יורד
+        shift        = lower - current_price + rng * 0.1
+        new_lower    = round(lower - shift, 2)
+        new_upper    = round(upper - shift, 2)
+        print(f"  📉 Trailing DOWN: גריד יורד ${lower:,.0f}–${upper:,.0f} → "
+              f"${new_lower:,.0f}–${new_upper:,.0f}")
+        moved = True
+
+    if moved:
+        grid = build_grid(new_lower, new_upper, state["grids"], portfolio["investment"])
+        state.update({
+            "lower": new_lower,
+            "upper": new_upper,
+            "grid":  grid,
+            "last_trailing": datetime.now().isoformat(),
+        })
+
+    return moved
+
 
 # ─────────────────────────────────────────────────────────────────
 # FILL SIMULATION — Pionex-accurate (all 4 fixes applied)
