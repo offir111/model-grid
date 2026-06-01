@@ -2,239 +2,250 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>Model GRID — BEEP BEEP · מרכז שליטה</title>
+  <title>Model GRID — מרכז שליטה</title>
   <style>
-    :root {
-      --font-scale: 1;
-      --bg: #0a0f14;
-      --panel: #121c28;
-      --panel-border: #3d5a80;
-      --text: #ffffff;
-      --text-muted: #c8d8e8;
-      --gold: #ffd700;
-      --profit: #00e676;
-      --loss: #ff5252;
-      --btc: #ff9f00;
-      --buy: #4fc3f7;
-    }
     * { margin:0; padding:0; box-sizing:border-box; }
-    html, body {
-      height:100vh; overflow:hidden;
-      background:var(--bg); color:var(--text);
-      font-family:'Segoe UI', Tahoma, Arial, sans-serif;
-      font-size: calc(16px * var(--font-scale));
-      line-height: 1.35;
-    }
-    body.text-xl { --font-scale: 1.15; }
-    body.text-xxl { --font-scale: 1.28; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .sb-dot, .bc-dot, .dl { animation: none !important; }
-    }
+    html, body { height:100vh; overflow:hidden; background:#070d14; color:#dce8f0; font-family:'Segoe UI',Arial,sans-serif; }
 
     .root {
       display: grid;
-      grid-template-rows: auto auto 1fr auto auto;
-      grid-template-columns: minmax(280px, 320px) 1fr;
+      grid-template-rows: 52px 80px 1fr 20px;
+      grid-template-columns: 240px 1fr 300px;
       height: 100vh;
     }
 
     /* ── HEADER ── */
     .header {
       grid-column: 1 / -1;
-      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
-      padding:10px 16px;
-      background:#080f18; border-bottom:2px solid var(--panel-border);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 14px;
+      background:#080f18; border-bottom:1px solid #0f2030;
     }
-    .header-brand { min-width:200px; }
-    .header-title { font-size: calc(1.35rem * var(--font-scale)); font-weight:800; color:var(--gold); letter-spacing:.5px; }
-    .header-tagline { font-size: calc(.85rem * var(--font-scale)); color:var(--text-muted); margin-top:4px; font-weight:600; }
-    .header-hero { display:flex; gap:20px; align-items:center; flex-wrap:wrap; justify-content:center; flex:1; }
-    .hero-stat { text-align:center; min-width:100px; padding:6px 12px; border-radius:10px; border:2px solid var(--panel-border); background:var(--panel); }
-    .hero-stat.btc-box { border-color:var(--btc); background:#1a1200; }
-    .hero-val { font-size: calc(1.65rem * var(--font-scale)); font-weight:800; line-height:1.1; }
-    .hero-lbl { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-top:4px; }
-    .btc-now { font-size: calc(2rem * var(--font-scale)); font-weight:800; color:var(--btc); }
-    .ref-txt { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); text-align:center; margin-top:4px; font-weight:600; }
-    .hdr-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .header-title { font-size:.95rem; font-weight:700; color:#ffd700; letter-spacing:1px; }
+    .header-sub   { font-size:.6rem; color:#ffffff; margin-top:1px; }
+    .btc-now      { font-size:1.35rem; font-weight:800; color:#f7931a; }
+    .ref-txt      { font-size:.58rem; color:#ffffff; text-align:left; margin-top:1px; }
+    .hm           { display:flex; gap:18px; align-items:center; }
+    .hmi          { text-align:center; }
+    .hmi-v        { font-size:.88rem; font-weight:700; }
+    .hmi-l        { font-size:.58rem; color:#ffffff; margin-top:1px; }
+
+    /* Status badge */
     .status-badge {
-      display:inline-flex; align-items:center; gap:6px;
-      padding:6px 12px; border-radius:24px;
-      font-size: calc(.8rem * var(--font-scale)); font-weight:800; letter-spacing:.5px;
-      margin-top:6px; border:2px solid;
+      display:inline-flex; align-items:center; gap:4px;
+      padding:2px 8px; border-radius:20px;
+      font-size:.6rem; font-weight:700; letter-spacing:.5px;
+      margin-top:3px;
     }
-    .sb-sim  { background:#0a2540; border-color:#4fc3f7; color:#4fc3f7; }
-    .sb-live { background:#003318; border-color:var(--profit); color:var(--profit); }
-    .sb-dot  { width:8px;height:8px;border-radius:50%;background:currentColor;animation:pulse 2s infinite; }
+    .sb-sim  { background:#0a2030; border:1px solid #005a8a; color:#ffd700; }
+    .sb-live { background:#002a10; border:1px solid #005a30; color:#00e676; }
+    .sb-dot  { width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 2s infinite; }
+
+    /* Header action buttons */
+    .hdr-btns { display:flex; gap:6px; align-items:center; }
     .hdr-btn {
-      background:var(--panel); border:2px solid var(--panel-border); border-radius:8px;
-      color:var(--gold); font-size: calc(.85rem * var(--font-scale)); font-weight:700;
-      padding:10px 14px; min-height:44px; cursor:pointer; white-space:nowrap;
+      background:#0d1820; border:1px solid #152535; border-radius:6px;
+      color:#ffd700; font-size:.68rem; padding:4px 9px; cursor:pointer;
+      transition:all .2s; white-space:nowrap;
     }
-    .hdr-btn:hover, .hdr-btn:focus { border-color:var(--gold); outline:3px solid #ffd70044; }
-    .font-btn { min-width:44px; font-size:1.1rem; padding:8px; }
+    .hdr-btn:hover { border-color:#ffd70055; color:#ffd700; background:#0f2030; }
 
     /* ── BOTS BAR ── */
     .bots-bar {
       grid-column:1/-1;
       display:grid; grid-template-columns:repeat(4,1fr);
-      gap:10px; padding:10px 16px;
-      background:#060c14; border-bottom:2px solid var(--panel-border);
+      gap:7px; padding:7px 14px;
+      background:#060c14; border-bottom:1px solid #0f2030;
     }
     .bot-card {
-      background:var(--panel); border:2px solid var(--panel-border); border-radius:10px;
-      padding:10px 12px; min-height:76px; cursor:pointer;
-      display:flex; align-items:center; gap:10px;
+      background:#0a1520; border:1px solid #152535; border-radius:8px;
+      padding:6px 10px; cursor:pointer;
+      transition:border-color .2s,background .2s;
+      display:flex; align-items:center; gap:8px;
     }
-    .bot-card:hover { border-color:var(--gold); }
-    .bot-card.active { border-color:var(--gold); border-width:3px; background:#1a2838; box-shadow:0 0 12px #ffd70033; }
-    .bc-dot  { width:10px;height:10px;border-radius:50%;background:var(--profit);flex-shrink:0;animation:pulse 2s infinite; }
-    .bc-icon { font-size:1.5rem; flex-shrink:0; }
+    .bot-card:hover { border-color:#ffd70044; background:#0d1e2e; }
+    .bot-card.active { border-color:#ffd700; background:#0d1e30; }
+    .bc-dot  { width:5px;height:5px;border-radius:50%;background:#00e676;flex-shrink:0;animation:pulse 2s infinite; }
+    .bc-icon { font-size:1.2rem; flex-shrink:0; }
     .bc-r    { flex:1; min-width:0; }
-    .bc-name { font-size: calc(1rem * var(--font-scale)); font-weight:800; color:var(--gold); }
-    .bc-row  { display:flex; gap:8px; margin-top:6px; align-items:center; flex-wrap:wrap; }
-    .bc-pnl  { font-size: calc(1.2rem * var(--font-scale)); font-weight:800; }
-    .bc-wl   { font-size: calc(.9rem * var(--font-scale)); font-weight:700; }
-    .bc-lbl  { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-right:auto; }
-    .bc-badge { font-size: calc(.7rem * var(--font-scale)); padding:3px 8px; border-radius:8px; font-weight:800; border:1px solid; }
-    .bc-badge-sim  { background:#0a2540; border-color:#4fc3f7; color:#4fc3f7; }
-    .bc-badge-live { background:#003318; border-color:var(--profit); color:var(--profit); }
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+    .bc-name { font-size:.73rem; font-weight:700; color:#ffd700; }
+    .bc-row  { display:flex; gap:6px; margin-top:2px; align-items:center; flex-wrap:wrap; }
+    .bc-pnl  { font-size:.78rem; font-weight:700; }
+    .bc-wl   { font-size:.62rem; }
+    .bc-lbl  { font-size:.6rem; color:#ffffff; margin-right:auto; }
+    .bc-badge { font-size:.52rem; padding:1px 5px; border-radius:8px; font-weight:700; }
+    .bc-badge-sim  { background:#0a2030; border:1px solid #005a8a; color:#00a0cc; }
+    .bc-badge-live { background:#002a10; border:1px solid #005a30; color:#00c050; }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
     /* ── LEFT STATS ── */
     .left {
-      grid-column:1; grid-row:3;
-      padding:10px 12px;
-      display:flex; flex-direction:column; gap:10px; overflow-y:auto;
-      border-left:2px solid var(--panel-border);
+      grid-column:1; padding:7px 6px 7px 12px;
+      display:flex; flex-direction:column; gap:5px; overflow:hidden;
     }
-    .green{color:var(--profit);} .red{color:var(--loss);} .blue{color:var(--gold);} .orange{color:var(--btc);}
+    .card { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
+    .cl   { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:3px; }
+    .cv   { font-size:1.05rem; font-weight:700; }
+    .cs   { font-size:.58rem; color:#cccccc; margin-top:2px; }
+    .green{color:#00e676;} .blue{color:#ffd700;} .orange{color:#f7931a;} .gray{color:#ffffff;}
 
-    .stat-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .stat-card {
-      background:var(--panel); border:2px solid var(--panel-border); border-radius:10px;
-      padding:12px; text-align:center;
+    /* ── PIONEX STATS PANEL ── */
+    .pionex-stats {
+      background:#0d1820; border:1px solid #152535; border-radius:7px; padding:8px 10px;
     }
-    .stat-card.wide { grid-column:1 / -1; }
-    .stat-val { font-size: calc(1.45rem * var(--font-scale)); font-weight:800; }
-    .stat-sub { font-size: calc(.85rem * var(--font-scale)); color:var(--gold); font-weight:700; margin-top:4px; }
-    .stat-lbl { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-top:6px; }
+    .ps-title { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
+    .ps-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-bottom:4px; }
+    .ps-item { background:#0a1520; border-radius:5px; padding:5px 6px; text-align:center; border:1px solid #0f2030; }
+    .ps-val { font-size:.82rem; font-weight:700; }
+    .ps-lbl { font-size:.52rem; color:#ffffff; margin-top:1px; }
+    .ps-apr { font-size:.7rem; font-weight:700; color:#ffd700; margin-top:1px; }
+    .ps-sep { border-top:1px solid #0f2030; margin:5px 0; }
 
-    .grid-viz { background:var(--panel); border:2px solid var(--panel-border); border-radius:10px; padding:12px; }
-    .vt  { font-size: calc(.9rem * var(--font-scale)); color:var(--text); font-weight:800; margin-bottom:8px; }
-    .rl  { display:flex; justify-content:space-between; font-size: calc(.85rem * var(--font-scale)); font-weight:700; margin-bottom:6px; }
-    .rb  { position:relative; height:24px; background:#0a1520; border-radius:12px; border:2px solid var(--panel-border); margin-bottom:10px; }
-    .rf  { height:100%; background:linear-gradient(90deg,#004a6a,#0088cc); border-radius:10px 0 0 10px; }
-    .pp  { position:absolute; top:-6px; width:4px; height:36px; background:var(--btc); border-radius:2px; transform:translateX(-50%); box-shadow:0 0 10px #ff9f0088; }
-    .pl  { position:absolute; top:-22px; left:50%; transform:translateX(-50%); font-size: calc(.85rem * var(--font-scale)); color:var(--btc); white-space:nowrap; font-weight:800; }
-    .gm4 { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
-    .gm  { background:#0a1520; border-radius:8px; padding:8px; text-align:center; border:2px solid var(--panel-border); }
-    .gmv { font-size: calc(1.1rem * var(--font-scale)); font-weight:800; color:var(--gold); }
-    .gml { font-size: calc(.75rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-top:4px; }
+    /* Profit Curve */
+    .profit-curve { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
+    .pc-title { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px; display:flex; justify-content:space-between; }
+    #profit-canvas { width:100%; height:55px; display:block; }
 
-    .profit-curve { background:var(--panel); border:2px solid var(--panel-border); border-radius:10px; padding:12px; }
-    .pc-title { font-size: calc(.9rem * var(--font-scale)); font-weight:800; margin-bottom:8px; display:flex; justify-content:space-between; }
-    #profit-canvas { width:100%; height:72px; display:block; }
+    /* Holdings */
+    .holdings-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; }
+    .hld-item { background:#0a1520; border:1px solid #0f2030; border-radius:5px; padding:4px 6px; text-align:center; }
+    .hld-val { font-size:.72rem; font-weight:700; color:#ffd700; }
+    .hld-lbl { font-size:.5rem; color:#ffffff; margin-top:1px; }
 
-    .mdd-main { text-align:center; padding:8px; background:#0a1520; border-radius:8px; border:2px solid var(--panel-border); margin-top:8px; }
-    .mdd-main-val { font-size: calc(1.3rem * var(--font-scale)); font-weight:800; }
-    .mdd-mini { display:flex; justify-content:space-around; margin-top:8px; font-size: calc(.75rem * var(--font-scale)); color:var(--text-muted); font-weight:600; }
+    /* Runtime */
+    .runtime-bar { display:flex; justify-content:space-between; align-items:center; background:#0a1520; border-radius:5px; padding:4px 8px; border:1px solid #0f2030; margin-top:4px; }
+    .rt-item { text-align:center; }
+    .rt-val { font-size:.72rem; font-weight:700; color:#ffffff; }
+    .rt-lbl { font-size:.5rem; color:#aaaaaa; }
+
+    /* MDD badges */
+    .mdd-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px; margin-top:4px; }
+    .mdd-item { background:#0a1520; border-radius:5px; padding:4px 6px; text-align:center; border:1px solid #0f2030; }
+    .mdd-val { font-size:.7rem; font-weight:700; }
+    .mdd-lbl { font-size:.5rem; color:#aaaaaa; }
+    .cl{ color:#ffffff !important; font-size:.65rem !important; }
+    .cs{ color:#ffffff !important; }
+    .hmi-l{ color:#ffffff !important; font-weight:600 !important; }
+    .gml{ color:#ffffff !important; font-weight:600 !important; }
+    .bc-lbl{ color:#ffffff !important; }
+    .header-sub{ color:#ffffff !important; }
+    .log-sub{ color:#ffffff !important; font-weight:600 !important; }
+    .log-time{ color:#ffffff !important; font-weight:600 !important; }
+    .ft{ color:#ffffff !important; font-size:.68rem !important; font-weight:700 !important; }
+    .lf-btn{ color:#ffffff !important; font-size:.62rem !important; border-color:#555 !important; }
+    .lf-btn.act{ color:#ffd700 !important; border-color:#ffd700 !important; font-weight:700 !important; }
+    .log-title{ color:#ffffff !important; font-size:.72rem !important; font-weight:700 !important; }
+    .red  {color:#ff5252;}
+
+    .grid-viz { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:7px 10px; }
+    .vt  { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; margin-bottom:5px; }
+    .rl  { display:flex; justify-content:space-between; font-size:.58rem; color:#ffffff; margin-bottom:3px; }
+    .rb  { position:relative; height:16px; background:#0a1520; border-radius:8px; border:1px solid #152535; overflow:visible; margin-bottom:7px; }
+    .rf  { height:100%; background:linear-gradient(90deg,#003a5a,#005a8a); border-radius:8px 0 0 8px; }
+    .pp  { position:absolute; top:-4px; width:2px; height:24px; background:#f7931a; border-radius:2px; transform:translateX(-50%); box-shadow:0 0 6px #f7931a88; }
+    .pl  { position:absolute; top:-15px; left:50%; transform:translateX(-50%); font-size:.58rem; color:#f7931a; white-space:nowrap; font-weight:700; }
+    .gm4 { display:grid; grid-template-columns:repeat(2,1fr); gap:4px; }
+    .gm  { background:#0a1520; border-radius:5px; padding:4px 6px; text-align:center; border:1px solid #0f2030; }
+    .gmv { font-size:.82rem; font-weight:700; color:#ffd700; }
+    .gml { font-size:.55rem; color:#cccccc; margin-top:1px; }
+
+    /* Activity Log */
+    .log-wrap { background:#0d1820; border:1px solid #152535; border-radius:7px; padding:6px 8px; flex:1; overflow:hidden; display:flex; flex-direction:column; }
+    .log-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+    .ft   { font-size:.58rem; color:#ffffff; text-transform:uppercase; letter-spacing:.6px; }
+    .log-filter { display:flex; gap:3px; }
+    .lf-btn {
+      font-size:.52rem; padding:1px 5px; border-radius:8px; cursor:pointer;
+      background:#0a1520; border:1px solid #0f2030; color:#ffffff;
+      transition:all .15s;
+    }
+    .lf-btn.act { background:#0a2535; border-color:#005a8a; color:#ffd700; }
+    .fscr { flex:1; overflow-y:auto; }
+
+    /* Log entry rows */
+    .log-entry {
+      display:flex; align-items:center; gap:6px;
+      padding:3px 4px; border-bottom:1px solid #09151f;
+      font-size:.65rem;
+    }
+    .log-icon { font-size:.8rem; flex-shrink:0; }
+    .log-info { flex:1; min-width:0; }
+    .log-title { font-weight:600; font-size:.66rem; }
+    .log-sub   { font-size:.56rem; color:#ffffff; margin-top:1px; }
+    .log-right { text-align:left; flex-shrink:0; }
+    .log-profit { font-size:.68rem; font-weight:700; color:#00e676; }
+    .log-time   { font-size:.54rem; color:#cccccc; margin-top:1px; }
 
     /* ── CENTER — CHART ── */
     .center {
-      grid-column:2; grid-row:3;
+      grid-column:2;
       display:flex; flex-direction:column;
-      border-left:2px solid var(--panel-border);
+      border-left:1px solid #0f2030; border-right:1px solid #0f2030;
       overflow:hidden;
     }
     .chart-header {
-      padding:10px 14px;
-      font-size: calc(.9rem * var(--font-scale)); font-weight:800;
-      border-bottom:2px solid var(--panel-border); flex-shrink:0;
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;
-      background:var(--panel);
+      padding:5px 12px;
+      font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.8px;
+      border-bottom:1px solid #0f2030; flex-shrink:0;
+      display:flex; justify-content:space-between; align-items:center;
     }
-    .chart-info { display:flex; gap:14px; align-items:center; font-size: calc(.85rem * var(--font-scale)); font-weight:700; flex-wrap:wrap; }
-    .ci-item { display:flex; gap:6px; align-items:center; }
-    .ci-dot  { width:12px;height:12px;border-radius:50%; }
-    .chart-wrap {
-      flex:1; overflow:hidden; position:relative;
-      border:2px solid #ffd70033; margin:8px; border-radius:10px;
-    }
+    .chart-info { display:flex; gap:10px; align-items:center; font-size:.58rem; }
+    .ci-item { display:flex; gap:3px; align-items:center; }
+    .ci-dot  { width:8px;height:8px;border-radius:50%; }
+    .chart-wrap { flex:1; overflow:hidden; position:relative; }
     #tv-chart   { width:100%; height:100%; }
-    #grid-overlay { position:absolute; inset:0; pointer-events:none; z-index:10; }
+    #grid-overlay {
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      pointer-events:none; z-index:10;
+    }
 
-    /* ── BOTTOM PANEL (tabs) ── */
-    .bottom-panel {
-      grid-column:1 / -1; grid-row:4;
-      display:flex; flex-direction:column;
-      background:#060c14; border-top:2px solid var(--panel-border);
-      min-height:200px; max-height:32vh;
+    /* ── RIGHT — LEVELS (visual) ── */
+    .right {
+      grid-column:3;
+      display:flex; flex-direction:column; overflow:hidden;
+      background:#070d14;
     }
-    .tab-bar { display:flex; gap:8px; padding:8px 12px; border-bottom:2px solid var(--panel-border); flex-wrap:wrap; }
-    .tab-btn {
-      font-size: calc(.95rem * var(--font-scale)); font-weight:800;
-      padding:10px 18px; min-height:44px; border-radius:8px; cursor:pointer;
-      background:var(--panel); border:2px solid var(--panel-border); color:var(--text);
+    .rt {
+      padding:6px 10px 5px;
+      font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.7px;
+      border-bottom:1px solid #0f2030; flex-shrink:0;
+      display:flex; justify-content:space-between; align-items:center;
     }
-    .tab-btn.active { border-color:var(--gold); color:var(--gold); background:#1a2838; }
-    .tab-btn:focus { outline:3px solid #ffd70055; }
-    .tab-body { flex:1; overflow:hidden; display:flex; flex-direction:column; padding:8px 12px; }
-    .tab-pane { display:none; flex:1; overflow:hidden; flex-direction:column; }
-    .tab-pane.active { display:flex; }
-    .levels-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
-    .levels-toolbar .leg { display:flex; gap:12px; font-size: calc(.85rem * var(--font-scale)); font-weight:700; }
-    .leg span { display:flex; align-items:center; gap:6px; }
-    .dg { width:10px;height:10px;border-radius:50%; }
-    .ls { flex:1; overflow-y:auto; }
-    .glv-row { padding:8px 10px; border-bottom:2px solid #09151f; min-height:44px; }
+    .leg { display:flex; gap:7px; font-size:.56rem; }
+    .leg span { display:flex; align-items:center; gap:3px; }
+    .dg { width:5px;height:5px;border-radius:50%; }
+    .ls { flex:1; overflow-y:auto; padding:2px 0; }
+
+    /* Visual grid level rows */
+    .glv-row {
+      padding:2px 8px;
+      border-bottom:1px solid #09151f;
+      display:flex; flex-direction:column; gap:1px;
+    }
     .glv-row:hover { background:#0a1520; }
-    .glv-top { display:flex; justify-content:space-between; align-items:center; font-size: calc(.95rem * var(--font-scale)); font-weight:700; gap:8px; flex-wrap:wrap; }
-    .glv-num { color:var(--text-muted); font-weight:800; min-width:28px; }
-    .glv-buy  { color:var(--buy); font-weight:800; }
-    .glv-sell { color:var(--text); font-weight:700; }
-    .glv-prof { color:var(--profit); font-weight:800; }
-    .glv-bar-wrap { height:6px; background:#0a1520; border-radius:3px; margin-top:6px; }
-    .glv-filled  { background:#003318; }
-    .glv-current { background:#332200; }
-
-    .log-wrap { flex:1; overflow:hidden; display:flex; flex-direction:column; }
-    .log-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
-    .ft { font-size: calc(.95rem * var(--font-scale)); font-weight:800; }
-    .log-filter { display:flex; gap:8px; }
-    .lf-btn {
-      font-size: calc(.9rem * var(--font-scale)); font-weight:700;
-      padding:8px 14px; min-height:44px; border-radius:8px; cursor:pointer;
-      background:var(--panel); border:2px solid var(--panel-border); color:var(--text);
-    }
-    .lf-btn.act { border-color:var(--gold); color:var(--gold); background:#1a2838; }
-    .fscr { flex:1; overflow-y:auto; }
-    .log-entry { display:flex; align-items:center; gap:10px; padding:10px 8px; min-height:48px; border-bottom:2px solid #09151f; font-size: calc(.9rem * var(--font-scale)); }
-    .log-icon { font-size:1.2rem; }
-    .log-title { font-weight:800; }
-    .log-sub { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:600; margin-top:2px; }
-    .log-profit { font-size: calc(1rem * var(--font-scale)); font-weight:800; color:var(--profit); }
-    .log-time { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:600; }
-    .log-table { width:100%; border-collapse:collapse; font-size: calc(.9rem * var(--font-scale)); }
-    .log-table th { padding:8px; text-align:right; color:var(--text-muted); font-weight:800; border-bottom:2px solid var(--panel-border); }
-    .log-table td { padding:10px 8px; border-bottom:1px solid #09151f; font-weight:700; }
-    .log-table tr.sell-row { background:#003318; }
-
-    .tiles-panel { flex:1; overflow:hidden; display:flex; flex-direction:column; }
-    .tiles-toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:8px; }
-    .tiles-toolbar-title { font-size: calc(.95rem * var(--font-scale)); font-weight:800; }
-    .hist-btn { font-size: calc(.85rem * var(--font-scale)); font-weight:700; padding:8px 14px; min-height:44px; background:var(--panel); border:2px solid var(--gold); border-radius:8px; color:var(--gold); cursor:pointer; }
-    #tiles-row { display:flex; gap:10px; overflow-x:auto; padding-bottom:8px; }
+    .glv-top { display:flex; justify-content:space-between; align-items:center; font-size:.62rem; }
+    .glv-num { color:#cccccc; font-size:.58rem; width:20px; flex-shrink:0; text-align:center; }
+    .glv-buy  { color:#8ab0c8; font-weight:600; }
+    .glv-sell { color:#ffffff; }
+    .glv-prof { color:#00e676; font-size:.58rem; }
+    .glv-badge { font-size:.58rem; font-weight:700; }
+    .glv-bar-wrap { height:3px; background:#0a1520; border-radius:2px; overflow:hidden; }
+    .glv-bar-fill { height:100%; border-radius:2px; transition:width .3s; }
+    .glv-filled  .glv-bar-fill { background:#00e676; }
+    .glv-current .glv-bar-fill { background:#f7931a; }
+    .glv-waiting .glv-bar-fill { background:#152535; }
+    .glv-filled  { background:#001a0e; }
+    .glv-current { background:#180d00; }
 
     /* ── STATUS ── */
     .status {
-      grid-column:1/-1; grid-row:5;
-      background:#050b12; border-top:2px solid var(--panel-border);
-      padding:8px 16px;
-      display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
-      font-size: calc(.85rem * var(--font-scale)); font-weight:700; color:var(--text-muted);
+      grid-column:1/-1;
+      background:#050b12; border-top:1px solid #0f2030;
+      padding:2px 12px;
+      display:flex; justify-content:space-between;
+      font-size:.58rem; color:#cccccc;
     }
-    .dl { width:8px;height:8px;background:var(--profit);border-radius:50%;display:inline-block;margin-left:6px;animation:pulse 2s infinite; }
+    .dl { width:5px;height:5px;background:#00e676;border-radius:50%;display:inline-block;margin-left:4px;animation:pulse 2s infinite; }
 
     /* ══ MODALS ══ */
     .modal-overlay {
@@ -244,12 +255,15 @@
     }
     .modal-overlay.hidden { display:none; }
     .modal-box {
-      background:var(--panel); border:2px solid var(--gold); border-radius:12px;
-      padding:24px; min-width:400px; max-width:560px; width:92vw;
-      box-shadow:0 8px 32px #00000080; position:relative;
+      background:#0d1820; border:1px solid #cccccc; border-radius:12px;
+      padding:20px; min-width:340px; max-width:520px; width:90vw;
+      box-shadow:0 8px 32px #00000080;
+      position:relative;
     }
-    .modal-title { font-size: calc(1.2rem * var(--font-scale)); font-weight:800; color:var(--gold); margin-bottom:8px; }
-    .modal-sub { font-size: calc(.9rem * var(--font-scale)); color:var(--text-muted); margin-bottom:16px; font-weight:600; }
+    .modal-title {
+      font-size:.95rem; font-weight:700; color:#ffd700; margin-bottom:4px;
+    }
+    .modal-sub { font-size:.62rem; color:#ffffff; margin-bottom:16px; }
     .modal-close {
       position:absolute; top:12px; left:12px;
       background:none; border:none; color:#ffffff; font-size:1.1rem;
@@ -260,30 +274,31 @@
     /* Settings modal */
     .settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
     .sg-item { background:#0a1520; border:1px solid #0f2030; border-radius:7px; padding:8px 10px; }
-    .sg-label { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-bottom:4px; }
-    .sg-val   { font-size: calc(1.1rem * var(--font-scale)); font-weight:800; color:var(--gold); }
-    .sg-sub   { font-size: calc(.75rem * var(--font-scale)); color:var(--text-muted); margin-top:4px; }
-    .modal-note { background:#071520; border:2px solid var(--panel-border); border-radius:8px; padding:12px; font-size: calc(.85rem * var(--font-scale)); font-weight:600; }
+    .sg-label { font-size:.56rem; color:#ffffff; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px; }
+    .sg-val   { font-size:.9rem; font-weight:700; color:#ffd700; }
+    .sg-sub   { font-size:.56rem; color:#cccccc; margin-top:2px; }
+    .modal-note { background:#071520; border:1px solid #0f2535; border-radius:7px; padding:8px 10px; font-size:.62rem; color:#ffffff; }
 
     /* Calculator modal */
     .calc-form { display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
     .cf-row { display:flex; flex-direction:column; gap:3px; }
-    .cf-label { font-size: calc(.85rem * var(--font-scale)); font-weight:700; color:var(--text-muted); }
+    .cf-label { font-size:.6rem; color:#ffffff; text-transform:uppercase; letter-spacing:.5px; }
     .cf-input {
-      background:#0a1520; border:2px solid var(--panel-border); border-radius:8px;
-      color:var(--text); font-size: calc(1rem * var(--font-scale)); padding:12px 14px; min-height:48px; outline:none;
+      background:#0a1520; border:1px solid #152535; border-radius:6px;
+      color:#dce8f0; font-size:.82rem; padding:7px 10px; outline:none;
+      transition:border-color .2s;
     }
-    .cf-input:focus { border-color:var(--gold); outline:3px solid #ffd70044; }
+    .cf-input:focus { border-color:#ffd70055; }
     .calc-btn {
-      background:#003a5a; border:2px solid #4fc3f7; border-radius:8px;
-      color:var(--gold); font-size: calc(1rem * var(--font-scale)); font-weight:800;
-      padding:14px; min-height:48px; cursor:pointer; width:100%;
+      background:#003a5a; border:1px solid #005a8a; border-radius:7px;
+      color:#ffd700; font-size:.72rem; font-weight:700; padding:8px;
+      cursor:pointer; transition:all .2s; width:100%;
     }
     .calc-btn:hover { background:#004a6a; }
     .calc-results { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
     .cr-item { background:#0a1520; border:1px solid #0f2030; border-radius:7px; padding:8px 10px; text-align:center; }
-    .cr-val { font-size: calc(1.15rem * var(--font-scale)); font-weight:800; color:var(--profit); }
-    .cr-lbl { font-size: calc(.8rem * var(--font-scale)); color:var(--text-muted); font-weight:700; margin-top:4px; }
+    .cr-val { font-size:.9rem; font-weight:700; color:#00e676; }
+    .cr-lbl { font-size:.56rem; color:#ffffff; margin-top:2px; }
 
     /* Wizard modal */
     .wiz-steps { display:flex; gap:6px; margin-bottom:18px; }
@@ -311,206 +326,34 @@
     .wiz-btn.primary { background:#003a5a; }
     .wiz-btn.gray    { background:#0a1520; border-color:#152535; color:#ffffff; }
 
-    ::-webkit-scrollbar{width:10px} ::-webkit-scrollbar-track{background:var(--bg)} ::-webkit-scrollbar-thumb{background:var(--panel-border);border-radius:5px}
+    ::-webkit-scrollbar{width:3px} ::-webkit-scrollbar-track{background:#070d14} ::-webkit-scrollbar-thumb{background:#152535;border-radius:2px}
 
     /* ══ LIVE TILES ══ */
     .tile {
-      flex-shrink:0; width:96px; min-height:88px; border-radius:10px; padding:8px 10px;
-      background:var(--panel); border:3px solid var(--btc);
-      text-align:center; cursor:default;
+      flex-shrink:0; width:72px; border-radius:7px; padding:5px 6px;
+      background:#0d1820; border:2px solid #f7931a;
+      text-align:center; position:relative; cursor:default;
+      transition:border-color .3s;
     }
     .tile.waiting  { border-color:#f7931a; }
     .tile.bought   { border-color:#00e676; }
     .tile.loss     { border-color:#ff4444; }
     .tile.sold-win { border-color:#00e676; background:#001a0e; }
     .tile.sold-los { border-color:#ff4444; background:#1a0000; }
-    .tile-lbl  { font-size: calc(.75rem * var(--font-scale)); color:var(--text); font-weight:700; margin-bottom:4px; }
-    .tile-price{ font-size: calc(.95rem * var(--font-scale)); font-weight:800; color:var(--text); }
-    .tile-pct  { font-size: calc(.85rem * var(--font-scale)); font-weight:800; margin-top:4px; }
-    .tile-sub  { font-size: calc(.75rem * var(--font-scale)); color:var(--text-muted); font-weight:600; margin-top:4px; }
+    .tile-lbl  { font-size:.48rem; color:#aaaaaa; margin-bottom:2px; }
+    .tile-price{ font-size:.72rem; font-weight:700; color:#ffffff; }
+    .tile-pct  { font-size:.58rem; font-weight:700; margin-top:2px; }
+    .tile-sub  { font-size:.48rem; color:#aaaaaa; margin-top:1px; }
     .tile-pair { display:flex; gap:3px; }
     .tile-arrow{ display:flex;align-items:center;color:#555;font-size:.8rem;}
 
     /* History calendar */
     .hist-day {
-      font-size: calc(.8rem * var(--font-scale)); font-weight:700;
-      padding:6px 10px; border-radius:6px; cursor:pointer;
-      background:var(--panel); border:2px solid var(--panel-border); color:var(--text-muted);
+      font-size:.55rem; padding:2px 5px; border-radius:4px; cursor:pointer;
+      background:#0a1520; border:1px solid #152535; color:#aaaaaa;
     }
-    .toggle-levels-btn {
-      font-size: calc(.85rem * var(--font-scale)); font-weight:700;
-      padding:8px 14px; min-height:44px; border-radius:8px; cursor:pointer;
-      background:#0a2540; border:2px solid #4fc3f7; color:#4fc3f7;
-    }
-    .num-ltr { direction:ltr; unicode-bidi:embed; display:inline-block; }
     .hist-day:hover { border-color:#ffd700; color:#ffd700; }
     .hist-day.active { border-color:#ffd700; color:#ffd700; background:#0d1e30; }
-
-    /* ══════════════════════════════════════════════════════════
-       MODEL GRID — Winner UI v3 (Senior-friendly terminal)
-       ══════════════════════════════════════════════════════════ */
-    .root {
-      grid-template-rows: auto auto 1fr minmax(140px, 22vh) auto;
-      grid-template-columns: minmax(260px, 290px) 1fr;
-      background: linear-gradient(165deg, #0b1220 0%, #070d14 45%, #0a1018 100%);
-    }
-    .mg-cmd {
-      grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap; padding:8px 16px;
-      background: linear-gradient(90deg, #0d1624, #111d2e);
-      border-bottom:3px solid #2a4a6a;
-    }
-    .mg-brand { display:flex; align-items:center; gap:14px; }
-    .mg-logo {
-      width:48px; height:48px; border-radius:12px;
-      background: linear-gradient(135deg, #ffd700, #ff9f00);
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.6rem; box-shadow:0 4px 16px #ffd70044;
-    }
-    .mg-title { font-size:calc(1.5rem * var(--font-scale)); font-weight:900; color:#fff; letter-spacing:.3px; }
-    .mg-sub { font-size:calc(.88rem * var(--font-scale)); color:#c8d8e8; font-weight:700; margin-top:2px; }
-    .mg-pills { display:flex; gap:10px; flex-wrap:wrap; flex:1; justify-content:center; }
-    .mg-pill {
-      display:flex; align-items:center; gap:8px; padding:10px 16px; min-height:48px;
-      border-radius:999px; border:2px solid; font-size:calc(.88rem * var(--font-scale)); font-weight:800;
-      background:#121c28;
-    }
-    .mg-pill.ok { border-color:#00e676; color:#00e676; background:#002818; }
-    .mg-pill.warn { border-color:#ff9f00; color:#ff9f00; background:#2a1a00; }
-    .mg-pill.info { border-color:#4fc3f7; color:#4fc3f7; background:#0a2540; }
-    .mg-pill-dot { width:10px; height:10px; border-radius:50%; background:currentColor; }
-    .mg-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .mg-btn {
-      border:2px solid #3d5a80; background:#121c28; color:#fff;
-      border-radius:10px; padding:10px 16px; min-height:48px; min-width:48px;
-      font-size:calc(.88rem * var(--font-scale)); font-weight:800; cursor:pointer;
-    }
-    .mg-btn:hover, .mg-btn:focus { border-color:#ffd700; color:#ffd700; outline:3px solid #ffd70044; }
-    .mg-btn.gold { border-color:#ffd700; color:#ffd700; background:#1a2838; }
-    .mg-kpi { display:none !important; }
-    .mg-kpi-compact {
-      display:grid; grid-template-columns:1fr 1fr; gap:6px;
-      margin-bottom:12px; padding-bottom:12px;
-      border-bottom:2px solid #2a4a6a;
-    }
-    .mg-kc {
-      background:#0a1520; border:1px solid #2a4a6a; border-radius:8px;
-      padding:6px 8px; text-align:center;
-    }
-    .mg-kc-l {
-      display:block; font-size:calc(.68rem * var(--font-scale)); color:#8aa4be;
-      font-weight:800; text-transform:uppercase; margin-bottom:2px;
-    }
-    .mg-kc-v {
-      display:block; font-size:calc(.95rem * var(--font-scale)); font-weight:900; line-height:1.2;
-    }
-    .mg-stage { grid-column:1/-1; grid-row:3; display:grid; grid-template-columns:minmax(260px,290px) 1fr; min-height:0; }
-    .mg-sidebar {
-      padding:8px 10px; display:flex; flex-direction:column; gap:8px;
-      overflow-y:auto; border-left:2px solid #2a4a6a; max-height:100%;
-    }
-    .mg-panel {
-      background:#121c28; border:2px solid #3d5a80; border-radius:12px; padding:10px;
-    }
-    .mg-panel-h {
-      font-size:calc(.92rem * var(--font-scale)); font-weight:900; color:#ffd700;
-      margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid #2a4a6a;
-      display:flex; align-items:center; gap:8px;
-    }
-    .mg-verdict {
-      font-size:calc(.9rem * var(--font-scale)); font-weight:800; line-height:1.45;
-      padding:10px; border-radius:10px; border:2px solid #3d5a80;
-      background:#0a1520; margin-bottom:8px;
-    }
-    .mg-verdict.good { border-color:#00e676; background:#002818; }
-    .mg-verdict.caution { border-color:#ff9f00; background:#2a1a00; }
-    .mg-checklist { list-style:none; display:flex; flex-direction:column; gap:10px; }
-    .mg-checklist li {
-      font-size:calc(.82rem * var(--font-scale)); font-weight:700; padding:7px 9px;
-      background:#0a1520; border-radius:8px; border-right:3px solid #3d5a80;
-    }
-    .mg-checklist li.ok { border-right-color:#00e676; }
-    .mg-checklist li.warn { border-right-color:#ff9f00; }
-    .mg-range-big { margin-top:8px; }
-    .mg-range-bar { height:28px; background:#0a1520; border-radius:14px; border:2px solid #3d5a80; position:relative; margin:10px 0; }
-    .mg-range-fill { height:100%; border-radius:12px 0 0 12px; background:linear-gradient(90deg,#0066aa,#00aaff); }
-    .mg-range-marker {
-      position:absolute; top:-8px; width:6px; height:44px; background:#ff9f00;
-      border-radius:3px; transform:translateX(-50%); box-shadow:0 0 12px #ff9f0088;
-    }
-    .mg-mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-    .mg-mini-cell {
-      text-align:center; padding:10px; background:#0a1520; border-radius:10px;
-      border:2px solid #2a4a6a;
-    }
-    .mg-mini-cell b { display:block; font-size:calc(1.2rem * var(--font-scale)); color:#ffd700; margin-top:4px; }
-    .mg-chart-col {
-      display:flex; flex-direction:column; min-height:0; background:#080c12;
-    }
-    .mg-chart-top {
-      padding:6px 12px; background:#121c28; border-bottom:2px solid #2a4a6a;
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
-    }
-    .mg-chart-top h2 { font-size:calc(.92rem * var(--font-scale)); font-weight:900; }
-    .mg-chart-wrap {
-      flex:1; margin:4px 6px 6px; border-radius:12px; border:2px solid #ffd70055;
-      overflow:hidden; position:relative; min-height:min(55vh, 520px);
-    }
-    .mg-dock {
-      grid-column:1/-1; grid-row:4; display:flex; flex-direction:column;
-      background:#060c14; border-top:3px solid #2a4a6a;
-    }
-    .mg-dock-tabs { display:flex; gap:8px; padding:10px 16px; flex-wrap:wrap; background:#0a1018; }
-    .mg-dock-tab {
-      padding:12px 22px; min-height:50px; border-radius:10px 10px 0 0;
-      border:2px solid #3d5a80; border-bottom:none; background:#121c28;
-      font-size:calc(.95rem * var(--font-scale)); font-weight:800; color:#c8d8e8; cursor:pointer;
-    }
-    .mg-dock-tab.active { background:#1a2838; border-color:#ffd700; color:#ffd700; margin-bottom:-2px; padding-bottom:14px; }
-    .mg-dock-body { flex:1; overflow:hidden; padding:12px 16px; min-height:0; }
-    .mg-dock-pane { display:none; height:100%; flex-direction:column; overflow:hidden; }
-    .mg-dock-pane.active { display:flex; }
-    .mg-overview-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; height:100%; overflow-y:auto; }
-    @media (max-width:900px) { .mg-overview-grid { grid-template-columns:1fr; } }
-    .mg-ov-card {
-      background:#121c28; border:2px solid #3d5a80; border-radius:12px; padding:16px;
-    }
-    .mg-ov-card h3 { font-size:calc(.95rem * var(--font-scale)); font-weight:900; color:#ffd700; margin-bottom:12px; }
-    .mg-ov-big { font-size:calc(1.8rem * var(--font-scale)); font-weight:900; }
-    .mg-ov-row {
-      display:flex; justify-content:space-between; padding:10px 0;
-      border-bottom:1px solid #2a4a6a; font-size:calc(.92rem * var(--font-scale)); font-weight:700;
-    }
-    .mg-ladder .glv-row { border-radius:10px; margin-bottom:6px; border:2px solid #2a4a6a; padding:12px; }
-    .mg-ladder .glv-filled { border-color:#00e676; background:#002818; }
-    .mg-ladder .glv-current { border-color:#ff9f00; background:#2a1a00; }
-    .profit-curve { padding:8px !important; }
-    .profit-curve #profit-canvas { height:48px !important; }
-    .mg-foot {
-      grid-column:1/-1; grid-row:5;
-      padding:10px 20px; background:#050810; border-top:2px solid #2a4a6a;
-      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
-      font-size:calc(.88rem * var(--font-scale)); font-weight:700; color:#c8d8e8;
-    }
-  /* legacy layout only — NOT .mg-bots */
-    .header, .left, .center, .bottom-panel, .status { display:none !important; }
-    .mg-bots {
-      grid-column:1/-1; grid-row:2;
-      display:grid !important;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px; padding:10px 16px;
-      min-height:80px;
-      background:#060c14; border-bottom:3px solid #2a4a6a;
-    }
-    .mg-cmd { grid-row:1; }
-    .tile-pair-wrap {
-      flex-shrink:0; border:2px solid #3d5a80; border-radius:14px; padding:8px;
-      display:flex; gap:8px; align-items:center; background:#0a1218;
-    }
-    .empty-hint {
-      font-size:calc(1rem * var(--font-scale)); font-weight:700; color:#8aa4be;
-      padding:24px; text-align:center;
-    }
   </style>
 </head>
 <body>
@@ -586,133 +429,6 @@ const BOTS=[
 const BTC_URL='https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
 
 let botData={}, countdown=60, timer, currentLogFilter='all', wizStep=1;
-let showAllLevels=false, activeBottomTab='overview', lastBtc=0;
-
-function buildVerdict(btc, lower, upper, inPct, pnl, filled, grids){
-  const inRange=btc>=lower&&btc<=upper;
-  const profitOk=pnl>=0;
-  const cls=inRange&&profitOk?'good':'caution';
-  const headline=inRange&&profitOk
-    ? '✅ הכל תקין — הגריד עובד בטווח'
-    : (!inRange ? '⚠️ שים לב — המחיר קרוב או מחוץ לטווח' : '⚠️ שים לב — בדוק את הרווח');
-  return {cls, headline, inRange, profitOk,
-    lines:[
-      inRange?'המחיר נמצא בתוך טווח הגריד':'המחיר מחוץ לטווח הגריד — DGT עלול להתאפס',
-      profitOk?`רווח ממומש חיובי: $${fmt(pnl,2)}`:`רווח ממומש שלילי: $${fmt(pnl,2)}`,
-      `${filled} רמות עם קנייה פתוחה · ${grids-filled} ממתינות לקנייה`,
-      `מיקום בטווח: ${fmt(inPct,0)}% מהתחתון לעליון`
-    ]};
-}
-function buildCompactKpis(btc, pnl, apr, inPct, pc, ac){
-  return `
-    <div class="mg-kpi-compact">
-      <div class="mg-kc"><span class="mg-kc-l">מחיר BTC</span><span class="mg-kc-v orange btc-now num-ltr">$${fmt(btc)}</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">רווח ממומש</span><span class="mg-kc-v ${pc} num-ltr">${pnl>=0?'+':''}$${fmt(pnl,2)}</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">APR שנתי</span><span class="mg-kc-v ${ac} num-ltr">${fmt(apr,1)}%</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">מיקום בגריד</span><span class="mg-kc-v num-ltr">${fmt(inPct,0)}%</span></div>
-    </div>`;
-}
-function buildStatusPills(btc, lower, upper, pnl, inPct){
-  const inRange=btc>=lower&&btc<=upper;
-  return `
-    <div class="mg-pill ${inRange?'ok':'warn'}"><span class="mg-pill-dot"></span>${inRange?'מחיר בטווח':'מחוץ לטווח'}</div>
-    <div class="mg-pill ${pnl>=0?'ok':'warn'}"><span class="mg-pill-dot"></span>${pnl>=0?'ברווח':'בהפסד'}</div>
-    <div class="mg-pill info"><span class="mg-pill-dot"></span>סימולציה SIM</div>
-    <div class="mg-pill info"><span class="mg-pill-dot"></span>בטווח ${fmt(inPct,0)}%</div>`;
-}
-function buildOverviewHtml(btc, p, s, tradeLog, pnl, apr, cycles, filled, grids, inPct, lower, upper, unrealPnl, totalPnl){
-  const today=new Date().toDateString();
-  const todaySells=(tradeLog||[]).filter(t=>t.type==='SELL'&&new Date(t.time).toDateString()===today);
-  const todayProfit=todaySells.reduce((sum,t)=>sum+(t.profit||0),0);
-  const last5=[...tradeLog].reverse().filter(t=>t.type==='SELL').slice(0,5);
-  const tradesHtml=last5.length?last5.map(t=>`
-    <div class="mg-ov-row">
-      <span>מכירה <span class="num-ltr">$${fmt(t.price,0)}</span></span>
-      <span class="green num-ltr">+$${fmt(t.profit,4)}</span>
-    </div>`).join(''):'<div class="empty-hint">עדיין אין מכירות להצגה</div>';
-  return `
-    <div class="mg-overview-grid">
-      <div class="mg-ov-card">
-        <h3>📅 היום</h3>
-        <div class="mg-ov-big ${todayProfit>=0?'green':'red'} num-ltr">${todayProfit>=0?'+':''}$${fmt(todayProfit,2)}</div>
-        <div class="mg-kpi-hint">${todaySells.length} מכירות היום · ${cycles} סייקלים סה״כ</div>
-      </div>
-      <div class="mg-ov-card">
-        <h3>💰 ביצועים</h3>
-        <div class="mg-ov-row"><span>רווח ממומש</span><span class="${pnl>=0?'green':'red'} num-ltr">${pnl>=0?'+':''}$${fmt(pnl,2)}</span></div>
-        <div class="mg-ov-row"><span>רווח צף</span><span class="num-ltr">${unrealPnl>=0?'+':''}$${fmt(unrealPnl,2)}</span></div>
-        <div class="mg-ov-row"><span>APR</span><span class="blue num-ltr">${fmt(apr,1)}%</span></div>
-        <div class="mg-ov-row"><span>סה״כ</span><span class="num-ltr">$${fmt(totalPnl,2)}</span></div>
-      </div>
-      <div class="mg-ov-card" style="grid-column:1/-1">
-        <h3>🕐 מכירות אחרונות</h3>
-        ${tradesHtml}
-      </div>
-      <div class="mg-ov-card">
-        <h3>📐 טווח גריד</h3>
-        <div class="mg-ov-row"><span>תחתון</span><span class="num-ltr">$${fmt(lower,0)}</span></div>
-        <div class="mg-ov-row"><span>עליון</span><span class="num-ltr">$${fmt(upper,0)}</span></div>
-        <div class="mg-ov-row"><span>BTC עכשיו</span><span class="orange num-ltr">$${fmt(btc,0)}</span></div>
-      </div>
-    </div>`;
-}
-
-function applyFontScale(){
-  const idx=parseInt(localStorage.getItem('mgFontIdx')||'0',10);
-  document.body.classList.remove('text-xl','text-xxl');
-  if(idx===1) document.body.classList.add('text-xl');
-  if(idx===2) document.body.classList.add('text-xxl');
-}
-function adjustFont(delta){
-  let idx=parseInt(localStorage.getItem('mgFontIdx')||'0',10);
-  idx=Math.max(0,Math.min(2,idx+delta));
-  localStorage.setItem('mgFontIdx',String(idx));
-  applyFontScale();
-  if(lastBtc) render(lastBtc);
-}
-function setBottomTab(tab){
-  activeBottomTab=tab;
-  document.querySelectorAll('.mg-dock-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  document.querySelectorAll('.mg-dock-pane').forEach(p=>p.classList.toggle('active',p.id==='mg-tab-'+tab));
-}
-function toggleAllLevels(){
-  showAllLevels=!showAllLevels;
-  if(lastBtc) render(lastBtc);
-}
-function buildLevelRows(s,btc,grids,upper,lower){
-  if(!s||!s.grid) return '';
-  let indices=[];
-  if(showAllLevels||!btc){
-    indices=s.grid.map((_,i)=>i);
-  }else{
-    let ci=s.grid.findIndex(lv=>btc>=lv.buy&&btc<lv.sell);
-    if(ci<0) ci=s.grid.reduce((best,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[best].buy-btc)?i:best,0);
-    const from=Math.max(0,ci-5), to=Math.min(s.grid.length-1,ci+5);
-    for(let i=from;i<=to;i++) indices.push(i);
-  }
-  return [...indices].reverse().map(i=>{
-    const lv=s.grid[i], idx=i+1;
-    const isFilled=lv.filled;
-    const isHere=!lv.filled&&btc>=lv.buy&&btc<lv.sell;
-    let rowCls='glv-row ';
-    const barPct=upper>lower?((lv.sell-lv.buy)/(upper-lower)*100)*grids*0.6:30;
-    const barW=Math.max(15,Math.min(100,barPct));
-    if(isFilled) rowCls+='glv-filled';
-    else if(isHere) rowCls+='glv-current';
-    const badge=isFilled?'✅ קנוי':isHere?'◉ כאן':'○ ממתין';
-    return `<div class="${rowCls}">
-      <div class="glv-top">
-        <span class="glv-num">#${idx}</span>
-        <span class="glv-buy"><span class="num-ltr">$${fmt(lv.buy,0)}</span></span>
-        <span class="glv-sell">→ <span class="num-ltr">$${fmt(lv.sell,0)}</span></span>
-        <span class="glv-prof">+<span class="num-ltr">$${fmt(lv.profit,4)}</span></span>
-        <span style="font-weight:800">${badge}</span>
-      </div>
-      <div class="glv-bar-wrap"><div class="glv-bar-fill" style="width:${barW}%;background:${isFilled?'#00e676':isHere?'#ff9f00':'#3d5a80'};height:100%;border-radius:3px;"></div></div>
-    </div>`;
-  }).join('');
-}
-applyFontScale();
 const fmt =(n,d=2)=>n==null||isNaN(n)?'—':Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtD=iso=>{if(!iso)return'—';const d=new Date(iso);return d.toLocaleDateString('he-IL')+' '+d.toTimeString().slice(0,5);};
 const fmtT=iso=>{if(!iso)return'—';const d=new Date(iso);return d.toTimeString().slice(0,5);};
@@ -744,7 +460,6 @@ async function load(){
 }
 
 function render(btc){
-  lastBtc=btc;
   const gD=botData['grid'],p=gD?.raw||{},s=gD?.state||null;
   const inv=p.investment||0,pnl=p.realized_pnl||0,total=inv+pnl;
   const apr=p.apr||0,cycles=p.total_cycles||0,dgt=p.dgt_count||0,mdd=p.max_drawdown||0;
@@ -777,8 +492,28 @@ function render(btc){
   const mdd7  = Math.min(mdd, mdd*0.4);  // rough 7d estimate
   const mdd30 = Math.min(mdd, mdd*0.75); // rough 30d estimate
 
-  const lvlRows=buildLevelRows(s,btc,grids,upper,lower);
-  const levelsBtnLabel=showAllLevels?`הצג רק סביב המחיר (${grids} רמות)`:`הצג את כל ${grids} הרמות`;
+  // ── Grid level visual rows (reversed: highest first)
+  const lvlRows=s&&s.grid?[...s.grid].reverse().map((lv,i)=>{
+    const idx=grids-i;
+    const isFilled=lv.filled;
+    const isHere=!lv.filled&&btc>=lv.buy&&btc<lv.sell;
+    let rowCls='glv-row ',barCls='glv-bar-fill',badge='';
+    const barPct=upper>lower?((lv.sell-lv.buy)/(upper-lower)*100)*grids*0.6:30;
+    const barW=Math.max(15,Math.min(100,barPct));
+    if(isFilled) { rowCls+='glv-filled'; badge=`<span class="glv-badge green">✅</span>`; }
+    else if(isHere){ rowCls+='glv-current'; badge=`<span class="glv-badge orange">◉</span>`; }
+    else           { badge=`<span class="glv-badge" style="color:#0f2030">○</span>`; }
+    return `<div class="${rowCls}">
+      <div class="glv-top">
+        <span class="glv-num">${idx}</span>
+        <span class="glv-buy">$${fmt(lv.buy,0)}</span>
+        <span class="glv-sell" style="font-size:.56rem">→$${fmt(lv.sell,0)}</span>
+        <span class="glv-prof">+$${fmt(lv.profit,4)}</span>
+        ${badge}
+      </div>
+      <div class="glv-bar-wrap"><div class="${barCls}" style="width:${barW}%;background:${isFilled?'#00e676':isHere?'#f7931a':'#152535'}"></div></div>
+    </div>`;
+  }).join(''):'';
 
   // ── Bot cards
   const botCards=BOTS.map(bot=>{
@@ -802,11 +537,6 @@ function render(btc){
 
   // ── Activity log HTML
   const logHtml=buildLogHtml(tradeLog,currentLogFilter);
-  const verdict=buildVerdict(btc,lower,upper,inPct,pnl,filled,grids);
-  const statusPills=buildStatusPills(btc,lower,upper,pnl,inPct);
-  const overviewHtml=buildOverviewHtml(btc,p,s,tradeLog,pnl,apr,cycles,filled,grids,inPct,lower,upper,unrealPnl,totalPnl);
-  const rangeHint=inPct<20?'קרוב לתחתית':inPct>80?'קרוב לעליון':'באמצע הטווח';
-  const compactKpis=buildCompactKpis(btc,pnl,apr,inPct,pc,ac);
 
   // ── שמור את הגרף לפני rebuild ─────────────────────────────────
   const savedChart = document.getElementById('tv-chart');
@@ -814,129 +544,164 @@ function render(btc){
   const chartAlreadyLoaded = lwChart && savedChart && savedChart.querySelector('canvas');
 
   document.getElementById('root').innerHTML=`
-    <div class="mg-cmd">
-      <div class="mg-brand">
-        <div class="mg-logo">⚡</div>
-        <div>
-          <div class="mg-title">MODEL GRID</div>
-          <div class="mg-sub">BEEP BEEP · מרכז שליטה ל-4 בוטים · BTC/USDT</div>
+    <div class="header">
+      <div>
+        <div class="header-title">⚡ MODEL GRID <span style="font-size:.6rem;color:#ffffff;font-weight:400">| מרכז שליטה 4 בוטים</span></div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div class="header-sub">BEEP AI Grid Bot 2.0 | BTC/USDT</div>
+          <span class="status-badge sb-sim"><span class="sb-dot"></span>SIM MODE</span>
         </div>
       </div>
-      <div class="mg-pills">${statusPills}</div>
-      <div class="mg-actions">
-        <button type="button" class="mg-btn" onclick="adjustFont(-1)" title="הקטן">A−</button>
-        <button type="button" class="mg-btn" onclick="adjustFont(1)" title="הגדל">A+</button>
-        <button type="button" class="mg-btn gold" onclick="openSettings()">⚙️ הגדרות</button>
-        <button type="button" class="mg-btn" onclick="openCalc()">📐 מחשבון</button>
-        <button type="button" class="mg-btn" onclick="openWizard()">🧙 אשף</button>
-        <span class="ref-txt" id="ref" style="margin-right:8px">רענון ${countdown}ש׳</span>
+      <div class="hm">
+        <div class="hmi"><div class="hmi-v blue">$${fmt(total)}</div><div class="hmi-l">שווי גריד</div></div>
+        <div class="hmi"><div class="hmi-v ${pc}">${pnl>=0?'+':''}$${fmt(pnl,4)}</div><div class="hmi-l">רווח</div></div>
+        <div class="hmi"><div class="hmi-v ${ac}">${fmt(apr,1)}%</div><div class="hmi-l">APR</div></div>
+        <div class="hmi"><div class="hmi-v orange">${cycles}</div><div class="hmi-l">סייקלים</div></div>
+        <div class="hmi"><div class="hmi-v gray">${fmt(d,1)}</div><div class="hmi-l">ימים</div></div>
+        <div class="hdr-btns">
+          <button class="hdr-btn" onclick="openSettings()">⚙️ הגדרות</button>
+          <button class="hdr-btn" onclick="openCalc()">📐 מחשבון</button>
+          <button class="hdr-btn" onclick="openWizard()">🧙 אשף</button>
+        </div>
       </div>
-    </div>
-
-    <div class="bots-bar mg-bots">${botCards}</div>
-
-    <div class="mg-stage">
-      <aside class="mg-sidebar">
-        <section class="mg-panel">
-          <div class="mg-panel-h">👁️ מבט מהיר</div>
-          ${compactKpis}
-          <div class="mg-verdict ${verdict.cls}">${verdict.headline}</div>
-          <ul class="mg-checklist">
-            ${verdict.lines.map((line,i)=>`<li class="${verdict.inRange&&i===0?'ok':!verdict.profitOk&&i===1?'warn':''}">${line}</li>`).join('')}
-          </ul>
-        </section>
-        <section class="mg-panel">
-          <div class="mg-panel-h">📐 בריאות הגריד</div>
-          <div class="mg-range-big">
-            <div class="rl"><span class="num-ltr">$${fmt(lower,0)}</span><strong class="orange">${fmt(inPct,0)}%</strong><span class="num-ltr">$${fmt(upper,0)}</span></div>
-            <div class="mg-range-bar">
-              <div class="mg-range-fill" style="width:${inPct}%"></div>
-              <div class="mg-range-marker" style="left:${inPct}%"></div>
-            </div>
-            <div class="mg-mini-grid">
-              <div class="mg-mini-cell">רמות<b>${grids}</b></div>
-              <div class="mg-mini-cell">קנויות<b class="green">${filled}</b></div>
-              <div class="mg-mini-cell">ממתינות<b>${waiting}</b></div>
-              <div class="mg-mini-cell">ATR<b class="orange num-ltr">$${fmt(atr,0)}</b></div>
-            </div>
-          </div>
-          <div class="mdd-main" style="margin-top:12px">
-            <div class="mdd-main-val" style="color:${mdd>10?'var(--loss)':'var(--text)'}">${fmt(mdd,1)}%</div>
-            <div class="stat-lbl">ירידה מקסימלית · ${runtimeStr}</div>
-          </div>
-        </section>
-        <section class="mg-panel profit-curve">
-          <div class="pc-title"><span>📈 עקומת רווח</span><span>${cycles}</span></div>
-          <canvas id="profit-canvas"></canvas>
-        </section>
-      </aside>
-      <div class="mg-chart-col">
-        <div class="mg-chart-top">
-          <h2>📈 גרף מחיר + רמות גריד</h2>
-          <div class="chart-info">
-            <span class="ci-item"><span class="ci-dot" style="background:#00e676"></span><strong>${filled}</strong> פוזיציות</span>
-            <span class="ci-item"><span class="ci-dot" style="background:#ff9f00"></span>TradingView</span>
-          </div>
-        </div>
-        <div class="mg-chart-wrap chart-wrap">
-          <div id="tv-chart"></div>
-          <canvas id="grid-overlay"></canvas>
-        </div>
+      <div>
+        <div class="btc-now">$${fmt(btc)}</div>
+        <div class="ref-txt" id="ref">BTC עכשיו | מתרענן בעוד ${countdown}ש׳</div>
       </div>
     </div>
 
-    <div class="mg-dock">
-      <div class="mg-dock-tabs">
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='overview'?'active':''}" data-tab="overview" onclick="setBottomTab('overview')">🏠 סקירה</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='levels'?'active':''}" data-tab="levels" onclick="setBottomTab('levels')">📊 רמות גריד</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='activity'?'active':''}" data-tab="activity" onclick="setBottomTab('activity')">🎯 פעילות</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='log'?'active':''}" data-tab="log" onclick="setBottomTab('log')">📋 עסקאות</button>
+    <div class="bots-bar">${botCards}</div>
+
+    <div class="left">
+
+      <!-- ══ PIONEX STATS PANEL ══ -->
+      <div class="pionex-stats">
+        <div class="ps-title">📊 סטטיסטיקות — Pionex Style</div>
+        <div class="ps-row">
+          <div class="ps-item">
+            <div class="ps-val green">+$${fmt(pnl,2)}</div>
+            <div class="ps-apr">${fmt(apr,1)}% APR</div>
+            <div class="ps-lbl">Grid Profit</div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-val" style="color:${unrealPnl>=0?'#00e676':'#ff5252'}">${unrealPnl>=0?'+':''}$${fmt(unrealPnl,2)}</div>
+            <div class="ps-apr" style="color:#aaaaaa">צף</div>
+            <div class="ps-lbl">Unrealized P&L</div>
+          </div>
+          <div class="ps-item">
+            <div class="ps-val" style="color:${totalPnl>=0?'#00e676':'#ff5252'}">${totalPnl>=0?'+':''}$${fmt(totalPnl,2)}</div>
+            <div class="ps-apr" style="color:#ffd700">${fmt(totalApr,1)}% APR</div>
+            <div class="ps-lbl">Total P&L</div>
+          </div>
+        </div>
+        <div class="ps-sep"></div>
+        <!-- Holdings -->
+        <div class="holdings-row">
+          <div class="hld-item"><div class="hld-val">${fmt(btcHolding,5)}</div><div class="hld-lbl">BTC Holdings</div></div>
+          <div class="hld-item"><div class="hld-val">$${fmt(usdtHolding,0)}</div><div class="hld-lbl">USDT Holdings</div></div>
+          <div class="hld-item"><div class="hld-val">$${fmt(avgBuyPrice,0)}</div><div class="hld-lbl">Avg Buy Price</div></div>
+        </div>
+        <!-- Runtime bar -->
+        <div class="runtime-bar">
+          <div class="rt-item"><div class="rt-val">${runtimeStr}</div><div class="rt-lbl">⏱ Runtime</div></div>
+          <div class="rt-item"><div class="rt-val">${cycles}</div><div class="rt-lbl">🔄 Cycles</div></div>
+          <div class="rt-item"><div class="rt-val">${fmt(dcyc,1)}</div><div class="rt-lbl">📅 /יום</div></div>
+          <div class="rt-item"><div class="rt-val">${dgt}</div><div class="rt-lbl">🔁 DGT</div></div>
+        </div>
+        <!-- Max Drawdown -->
+        <div class="mdd-row">
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd7>5?'#ff5252':'#aaaaaa'}">${fmt(mdd7,1)}%</div><div class="mdd-lbl">MDD 7d</div></div>
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd30>10?'#ff5252':'#aaaaaa'}">${fmt(mdd30,1)}%</div><div class="mdd-lbl">MDD 30d</div></div>
+          <div class="mdd-item"><div class="mdd-val" style="color:${mdd>15?'#ff5252':'#aaaaaa'}">${fmt(mdd,1)}%</div><div class="mdd-lbl">MDD All</div></div>
+        </div>
       </div>
-      <div class="mg-dock-body">
-        <div id="mg-tab-overview" class="mg-dock-pane ${activeBottomTab==='overview'?'active':''}">${overviewHtml}</div>
-        <div id="mg-tab-levels" class="mg-dock-pane mg-ladder ${activeBottomTab==='levels'?'active':''}">
-          <div class="levels-toolbar">
-            <div class="leg">
-              <span><span class="dg" style="background:#00e676"></span>קנוי</span>
-              <span><span class="dg" style="background:#ff9f00"></span>כאן עכשיו</span>
-              <span><span class="dg" style="background:#3d5a80"></span>ממתין</span>
-            </div>
-            <button type="button" class="toggle-levels-btn" onclick="toggleAllLevels()">${levelsBtnLabel}</button>
-          </div>
-          <div class="ls" id="levels-list">${lvlRows}</div>
+
+      <!-- ══ PROFIT CURVE ══ -->
+      <div class="profit-curve">
+        <div class="pc-title">
+          <span>📈 עקומת רווח</span>
+          <span style="font-size:.52rem;color:#aaaaaa">${cycles} עסקאות</span>
         </div>
-        <div id="mg-tab-activity" class="mg-dock-pane ${activeBottomTab==='activity'?'active':''}">
-          <div class="tiles-panel">
-            <div class="tiles-toolbar">
-              <div class="tiles-toolbar-title">🎯 פוזיציות פתוחות ומכירות היום</div>
-              <button type="button" id="hist-btn" class="hist-btn" onclick="toggleHistory()">📅 היסטוריה</button>
-              <span id="hist-date"></span>
-            </div>
-            <div id="hist-cal" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
-            <div id="tiles-row">${buildLiveTiles(s, btc, tradeLog)}</div>
+        <canvas id="profit-canvas"></canvas>
+      </div>
+
+      <!-- ══ GRID POSITION ══ -->
+      <div class="grid-viz">
+        <div class="vt">📐 מצב הגריד</div>
+        <div class="rl"><span>$${fmt(lower,0)}</span><span style="color:#f7931a;font-weight:600">${fmt(inPct,0)}% בטווח</span><span>$${fmt(upper,0)}</span></div>
+        <div class="rb"><div class="rf" style="width:${inPct}%"></div><div class="pp" style="left:${inPct}%"><div class="pl">$${fmt(btc,0)}</div></div></div>
+        <div class="gm4">
+          <div class="gm"><div class="gmv">${grids}</div><div class="gml">רמות</div></div>
+          <div class="gm"><div class="gmv" style="color:#00e676">${filled}</div><div class="gml">קנויות</div></div>
+          <div class="gm"><div class="gmv" style="color:#ffffff">${waiting}</div><div class="gml">ממתינות</div></div>
+          <div class="gm"><div class="gmv" style="color:#f7931a">$${fmt(atr,0)}</div><div class="gml">ATR-14</div></div>
+        </div>
+      </div>
+
+      <!-- ══ ACTIVITY LOG ══ -->
+      <div class="log-wrap">
+        <div class="log-head">
+          <div class="ft">📋 לוג פעילות</div>
+          <div class="log-filter">
+            <button class="lf-btn ${currentLogFilter==='all'?'act':''}" onclick="setFilter('all')">הכל</button>
+            <button class="lf-btn ${currentLogFilter==='sell'?'act':''}" onclick="setFilter('sell')">מכירות</button>
+            <button class="lf-btn ${currentLogFilter==='buy'?'act':''}" onclick="setFilter('buy')">קניות</button>
           </div>
         </div>
-        <div id="mg-tab-log" class="mg-dock-pane ${activeBottomTab==='log'?'active':''}">
-          <div class="log-wrap">
-            <div class="log-head">
-              <div class="ft">📋 יומן עסקאות</div>
-              <div class="log-filter">
-                <button type="button" class="lf-btn ${currentLogFilter==='all'?'act':''}" onclick="setFilter('all')">הכל</button>
-                <button type="button" class="lf-btn ${currentLogFilter==='sell'?'act':''}" onclick="setFilter('sell')">מכירות</button>
-                <button type="button" class="lf-btn ${currentLogFilter==='buy'?'act':''}" onclick="setFilter('buy')">קניות</button>
-              </div>
-            </div>
-            <div class="fscr" id="log-list">${logHtml}</div>
+        <div class="fscr" id="log-list">${logHtml}</div>
+      </div>
+    </div>
+
+    <div class="center">
+      <div class="chart-header">
+        <span>📈 גרף נרות יפנים — BTC/USDT</span>
+        <div class="chart-info">
+          <span class="ci-item"><span class="ci-dot" style="background:#00e676;height:8px;"></span>${filled} רמות קנויות</span>
+          <span class="ci-item"><span class="ci-dot" style="background:#f7931a;height:8px;"></span>מחיר בטווח ${fmt(inPct,0)}%</span>
+          <span style="color:#cccccc">TradingView | זמן אמת</span>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <div id="tv-chart"></div>
+        <canvas id="grid-overlay"></canvas>
+        <!-- ריבועי המתנה על הגרף — שמאל למטה -->
+        <div id="waiting-overlay" style="position:absolute;bottom:30px;left:8px;z-index:20;display:flex;flex-direction:column;gap:3px;pointer-events:none;"></div>
+      </div>
+
+      <!-- ══ GRID LIVE TILES PANEL ══ -->
+      <div style="padding:6px 10px;background:#060c14;border-top:1px solid #0f2030;flex-shrink:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <div style="font-size:.58rem;color:#ffffff;text-transform:uppercase;letter-spacing:.6px;">🎯 פוזיציות גריד — היום</div>
+          <div style="display:flex;gap:4px;align-items:center;">
+            <button id="hist-btn" onclick="toggleHistory()" style="font-size:.55rem;padding:2px 7px;background:#0a1520;border:1px solid #ffd700;border-radius:5px;color:#ffd700;cursor:pointer;">📅 היסטוריה</button>
+            <span id="hist-date" style="font-size:.55rem;color:#aaaaaa;"></span>
           </div>
+        </div>
+        <div id="hist-cal" class="hidden" style="display:none;flex-wrap:wrap;gap:3px;margin-bottom:6px;"></div>
+        <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:3px;" id="tiles-row">
+          ${buildLiveTiles(s, btc, tradeLog)}
         </div>
       </div>
     </div>
 
-    <footer class="mg-foot">
-      <div><span class="dl"></span>מערכת פעילה · KuCoin WebSocket</div>
-      <div>עדכון: ${fmtD(p.last_updated)}</div>
-      <div>שווי: <span class="num-ltr">$${fmt(total)}</span> · DGT: ${dgt}</div>
-    </footer>
+    <div class="right">
+      <div class="rt">
+        <span>📊 ${grids} רמות — ויזואליזציה</span>
+        <div class="leg">
+          <span><div class="dg" style="background:#00e676"></div>קנוי</span>
+          <span><div class="dg" style="background:#f7931a"></div>כאן</span>
+          <span><div class="dg" style="background:#152535"></div>ממתין</span>
+        </div>
+      </div>
+      <div class="ls" id="levels-list">${lvlRows}</div>
+    </div>
+
+    <div class="status">
+      <div><span class="dl"></span>Railway WebSocket — KuCoin Real-time</div>
+      <div>עדכון GRID: ${fmtD(p.last_updated)}</div>
+      <div>$${fmt(perG,2)}/רמה | ~$${fmt(ppc,5)}/cycle | ${fmt(dcyc,1)}/יום</div>
+      <div>התחלה: ${fmtD(p.start_time)}</div>
+    </div>
   `;
 
   // Populate settings modal data
@@ -947,6 +712,9 @@ function render(btc){
 
   // Draw Profit Curve
   drawProfitCurve(tradeLog, pnl);
+
+  // Waiting tiles on chart
+  setTimeout(()=>buildWaitingOverlay(s, btc), 200);
 
   // ── אם הגרף כבר טעון — החזר אותו במקום לבנות מחדש ────────────
   if(chartAlreadyLoaded){
@@ -969,7 +737,7 @@ function drawProfitCurve(tradeLog, totalPnl) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = canvas.offsetWidth || 200;
-  const H = canvas.offsetHeight || 48;
+  const H = 55;
   canvas.width  = W;
   canvas.height = H;
   ctx.clearRect(0, 0, W, H);
@@ -977,8 +745,8 @@ function drawProfitCurve(tradeLog, totalPnl) {
   // Build stepped profit array from sell trades
   const sells = tradeLog.filter(t => t.type === 'SELL').slice(-60);
   if (sells.length === 0) {
-    ctx.fillStyle = '#c8d8e8';
-    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '10px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('ממתין לעסקאות...', W/2, H/2);
     return;
@@ -1064,7 +832,7 @@ function buildLiveTiles(s, btc, tradeLog) {
   filledLevels.forEach(lv => {
     const unrealPct = btc > 0 ? ((btc - lv.buy) / lv.buy * 100) : 0;
     const isProfit = unrealPct >= 0;
-    html += `<div class="tile-pair-wrap">
+    html += `<div style="flex-shrink:0;border:1px solid #333;border-radius:10px;padding:4px;display:flex;gap:3px;align-items:center;background:#0a1218;">
       <!-- ריבוע קנייה — ירוק כמו קודם -->
       <div class="tile bought" style="margin:0;">
         <div class="tile-lbl" style="color:#fff">✅ קנוי</div>
@@ -1086,7 +854,7 @@ function buildLiveTiles(s, btc, tradeLog) {
 
   // רמות ממתינות — מוצגות על הגרף, לא כאן
 
-  return html || '<div class="empty-hint">אין פעילות היום — הרובוט ממתין לתנועת מחיר</div>';
+  return html || '<span style="color:#aaa;font-size:.6rem">אין פעילות היום</span>';
 }
 
 function toggleHistory() {
@@ -1165,6 +933,24 @@ function showHistoryDay(dateStr) {
 }
 
 
+// ── Waiting tiles on chart (bottom-left overlay) ───────────────
+function buildWaitingOverlay(s, btc) {
+  const el = document.getElementById('waiting-overlay');
+  if (!el || !s || !s.grid) return;
+  const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
+  const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
+  const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-3 && i <= base+3);
+  el.innerHTML = waiting.map(lv => {
+    const isCur = btc >= lv.buy && btc < lv.sell;
+    return `<div style="background:#0d1820;border:2px solid #f7931a;border-radius:6px;padding:3px 7px;text-align:center;min-width:70px;opacity:${isCur?'1':'0.75'};">
+      <div style="font-size:.46rem;color:#fff;">${isCur?'◉ כאן':'⏳ ממתין'}</div>
+      <div style="font-size:.68rem;font-weight:700;color:#fff;">$${fmt(lv.buy,0)}</div>
+      <div style="font-size:.5rem;color:#fff;">→$${fmt(lv.sell,0)}</div>
+    </div>`;
+  }).join('');
+}
+
+
 // ── Grid Target Levels Panel ───────────────────────────────────
 function buildTargetLevels(s, btc) {
   if (!s || !s.grid || !btc) return '<span style="color:#aaa;font-size:.6rem">טוען...</span>';
@@ -1227,17 +1013,23 @@ function buildLogHtml(tradeLog, filter){
     let html = '';
 
     if(sells.length){
-      html += `<table class="log-table"><thead><tr>
-          <th>מחיר קנייה</th><th>מחיר מכירה</th><th>רווח</th><th>שעה</th>
+      html += `<table style="width:100%;border-collapse:collapse;font-size:.58rem;margin-bottom:4px;">
+        <thead><tr style="color:#aaaaaa;border-bottom:1px solid #0f2030;">
+          <th style="padding:3px 4px;text-align:right">מחיר קנייה</th>
+          <th style="padding:3px 4px;text-align:right">מחיר מכירה</th>
+          <th style="padding:3px 4px;text-align:right">BTC</th>
+          <th style="padding:3px 4px;text-align:right">רווח</th>
+          <th style="padding:3px 4px;text-align:right">שעה</th>
         </tr></thead><tbody>`;
       sells.forEach(t=>{
         const sellPx = t.price||0;
         const buyPx  = sellPx - (t.profit||0)/(t.qty||0.00001) - sellPx*0.001;
-        html += `<tr class="sell-row">
-          <td><span class="num-ltr">$${fmt(buyPx,0)}</span></td>
-          <td><span class="num-ltr">$${fmt(sellPx,0)}</span></td>
-          <td class="green"><span class="num-ltr">+$${fmt(t.profit,4)}</span></td>
-          <td>${fmtT(t.time)}</td>
+        html += `<tr style="border-bottom:1px solid #09151f;">
+          <td style="padding:2px 4px;color:#8ab0c8">$${fmt(buyPx,0)}</td>
+          <td style="padding:2px 4px;color:#ffffff">$${fmt(sellPx,0)}</td>
+          <td style="padding:2px 4px;color:#aaaaaa">${fmt(t.qty,5)}</td>
+          <td style="padding:2px 4px;color:#00e676;font-weight:700">+$${fmt(t.profit,4)}</td>
+          <td style="padding:2px 4px;color:#aaaaaa">${fmtT(t.time)}</td>
         </tr>`;
       });
       html += '</tbody></table>';

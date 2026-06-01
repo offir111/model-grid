@@ -2,7 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>Model GRID — BEEP BEEP · מרכז שליטה</title>
+  <title>Model GRID — מרכז שליטה</title>
   <style>
     :root {
       --font-scale: 1;
@@ -345,172 +345,6 @@
     .num-ltr { direction:ltr; unicode-bidi:embed; display:inline-block; }
     .hist-day:hover { border-color:#ffd700; color:#ffd700; }
     .hist-day.active { border-color:#ffd700; color:#ffd700; background:#0d1e30; }
-
-    /* ══════════════════════════════════════════════════════════
-       MODEL GRID — Winner UI v3 (Senior-friendly terminal)
-       ══════════════════════════════════════════════════════════ */
-    .root {
-      grid-template-rows: auto auto 1fr minmax(140px, 22vh) auto;
-      grid-template-columns: minmax(260px, 290px) 1fr;
-      background: linear-gradient(165deg, #0b1220 0%, #070d14 45%, #0a1018 100%);
-    }
-    .mg-cmd {
-      grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
-      gap:10px; flex-wrap:wrap; padding:8px 16px;
-      background: linear-gradient(90deg, #0d1624, #111d2e);
-      border-bottom:3px solid #2a4a6a;
-    }
-    .mg-brand { display:flex; align-items:center; gap:14px; }
-    .mg-logo {
-      width:48px; height:48px; border-radius:12px;
-      background: linear-gradient(135deg, #ffd700, #ff9f00);
-      display:flex; align-items:center; justify-content:center;
-      font-size:1.6rem; box-shadow:0 4px 16px #ffd70044;
-    }
-    .mg-title { font-size:calc(1.5rem * var(--font-scale)); font-weight:900; color:#fff; letter-spacing:.3px; }
-    .mg-sub { font-size:calc(.88rem * var(--font-scale)); color:#c8d8e8; font-weight:700; margin-top:2px; }
-    .mg-pills { display:flex; gap:10px; flex-wrap:wrap; flex:1; justify-content:center; }
-    .mg-pill {
-      display:flex; align-items:center; gap:8px; padding:10px 16px; min-height:48px;
-      border-radius:999px; border:2px solid; font-size:calc(.88rem * var(--font-scale)); font-weight:800;
-      background:#121c28;
-    }
-    .mg-pill.ok { border-color:#00e676; color:#00e676; background:#002818; }
-    .mg-pill.warn { border-color:#ff9f00; color:#ff9f00; background:#2a1a00; }
-    .mg-pill.info { border-color:#4fc3f7; color:#4fc3f7; background:#0a2540; }
-    .mg-pill-dot { width:10px; height:10px; border-radius:50%; background:currentColor; }
-    .mg-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-    .mg-btn {
-      border:2px solid #3d5a80; background:#121c28; color:#fff;
-      border-radius:10px; padding:10px 16px; min-height:48px; min-width:48px;
-      font-size:calc(.88rem * var(--font-scale)); font-weight:800; cursor:pointer;
-    }
-    .mg-btn:hover, .mg-btn:focus { border-color:#ffd700; color:#ffd700; outline:3px solid #ffd70044; }
-    .mg-btn.gold { border-color:#ffd700; color:#ffd700; background:#1a2838; }
-    .mg-kpi { display:none !important; }
-    .mg-kpi-compact {
-      display:grid; grid-template-columns:1fr 1fr; gap:6px;
-      margin-bottom:12px; padding-bottom:12px;
-      border-bottom:2px solid #2a4a6a;
-    }
-    .mg-kc {
-      background:#0a1520; border:1px solid #2a4a6a; border-radius:8px;
-      padding:6px 8px; text-align:center;
-    }
-    .mg-kc-l {
-      display:block; font-size:calc(.68rem * var(--font-scale)); color:#8aa4be;
-      font-weight:800; text-transform:uppercase; margin-bottom:2px;
-    }
-    .mg-kc-v {
-      display:block; font-size:calc(.95rem * var(--font-scale)); font-weight:900; line-height:1.2;
-    }
-    .mg-stage { grid-column:1/-1; grid-row:3; display:grid; grid-template-columns:minmax(260px,290px) 1fr; min-height:0; }
-    .mg-sidebar {
-      padding:8px 10px; display:flex; flex-direction:column; gap:8px;
-      overflow-y:auto; border-left:2px solid #2a4a6a; max-height:100%;
-    }
-    .mg-panel {
-      background:#121c28; border:2px solid #3d5a80; border-radius:12px; padding:10px;
-    }
-    .mg-panel-h {
-      font-size:calc(.92rem * var(--font-scale)); font-weight:900; color:#ffd700;
-      margin-bottom:8px; padding-bottom:6px; border-bottom:2px solid #2a4a6a;
-      display:flex; align-items:center; gap:8px;
-    }
-    .mg-verdict {
-      font-size:calc(.9rem * var(--font-scale)); font-weight:800; line-height:1.45;
-      padding:10px; border-radius:10px; border:2px solid #3d5a80;
-      background:#0a1520; margin-bottom:8px;
-    }
-    .mg-verdict.good { border-color:#00e676; background:#002818; }
-    .mg-verdict.caution { border-color:#ff9f00; background:#2a1a00; }
-    .mg-checklist { list-style:none; display:flex; flex-direction:column; gap:10px; }
-    .mg-checklist li {
-      font-size:calc(.82rem * var(--font-scale)); font-weight:700; padding:7px 9px;
-      background:#0a1520; border-radius:8px; border-right:3px solid #3d5a80;
-    }
-    .mg-checklist li.ok { border-right-color:#00e676; }
-    .mg-checklist li.warn { border-right-color:#ff9f00; }
-    .mg-range-big { margin-top:8px; }
-    .mg-range-bar { height:28px; background:#0a1520; border-radius:14px; border:2px solid #3d5a80; position:relative; margin:10px 0; }
-    .mg-range-fill { height:100%; border-radius:12px 0 0 12px; background:linear-gradient(90deg,#0066aa,#00aaff); }
-    .mg-range-marker {
-      position:absolute; top:-8px; width:6px; height:44px; background:#ff9f00;
-      border-radius:3px; transform:translateX(-50%); box-shadow:0 0 12px #ff9f0088;
-    }
-    .mg-mini-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-    .mg-mini-cell {
-      text-align:center; padding:10px; background:#0a1520; border-radius:10px;
-      border:2px solid #2a4a6a;
-    }
-    .mg-mini-cell b { display:block; font-size:calc(1.2rem * var(--font-scale)); color:#ffd700; margin-top:4px; }
-    .mg-chart-col {
-      display:flex; flex-direction:column; min-height:0; background:#080c12;
-    }
-    .mg-chart-top {
-      padding:6px 12px; background:#121c28; border-bottom:2px solid #2a4a6a;
-      display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
-    }
-    .mg-chart-top h2 { font-size:calc(.92rem * var(--font-scale)); font-weight:900; }
-    .mg-chart-wrap {
-      flex:1; margin:4px 6px 6px; border-radius:12px; border:2px solid #ffd70055;
-      overflow:hidden; position:relative; min-height:min(55vh, 520px);
-    }
-    .mg-dock {
-      grid-column:1/-1; grid-row:4; display:flex; flex-direction:column;
-      background:#060c14; border-top:3px solid #2a4a6a;
-    }
-    .mg-dock-tabs { display:flex; gap:8px; padding:10px 16px; flex-wrap:wrap; background:#0a1018; }
-    .mg-dock-tab {
-      padding:12px 22px; min-height:50px; border-radius:10px 10px 0 0;
-      border:2px solid #3d5a80; border-bottom:none; background:#121c28;
-      font-size:calc(.95rem * var(--font-scale)); font-weight:800; color:#c8d8e8; cursor:pointer;
-    }
-    .mg-dock-tab.active { background:#1a2838; border-color:#ffd700; color:#ffd700; margin-bottom:-2px; padding-bottom:14px; }
-    .mg-dock-body { flex:1; overflow:hidden; padding:12px 16px; min-height:0; }
-    .mg-dock-pane { display:none; height:100%; flex-direction:column; overflow:hidden; }
-    .mg-dock-pane.active { display:flex; }
-    .mg-overview-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; height:100%; overflow-y:auto; }
-    @media (max-width:900px) { .mg-overview-grid { grid-template-columns:1fr; } }
-    .mg-ov-card {
-      background:#121c28; border:2px solid #3d5a80; border-radius:12px; padding:16px;
-    }
-    .mg-ov-card h3 { font-size:calc(.95rem * var(--font-scale)); font-weight:900; color:#ffd700; margin-bottom:12px; }
-    .mg-ov-big { font-size:calc(1.8rem * var(--font-scale)); font-weight:900; }
-    .mg-ov-row {
-      display:flex; justify-content:space-between; padding:10px 0;
-      border-bottom:1px solid #2a4a6a; font-size:calc(.92rem * var(--font-scale)); font-weight:700;
-    }
-    .mg-ladder .glv-row { border-radius:10px; margin-bottom:6px; border:2px solid #2a4a6a; padding:12px; }
-    .mg-ladder .glv-filled { border-color:#00e676; background:#002818; }
-    .mg-ladder .glv-current { border-color:#ff9f00; background:#2a1a00; }
-    .profit-curve { padding:8px !important; }
-    .profit-curve #profit-canvas { height:48px !important; }
-    .mg-foot {
-      grid-column:1/-1; grid-row:5;
-      padding:10px 20px; background:#050810; border-top:2px solid #2a4a6a;
-      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
-      font-size:calc(.88rem * var(--font-scale)); font-weight:700; color:#c8d8e8;
-    }
-  /* legacy layout only — NOT .mg-bots */
-    .header, .left, .center, .bottom-panel, .status { display:none !important; }
-    .mg-bots {
-      grid-column:1/-1; grid-row:2;
-      display:grid !important;
-      grid-template-columns:repeat(4,1fr);
-      gap:10px; padding:10px 16px;
-      min-height:80px;
-      background:#060c14; border-bottom:3px solid #2a4a6a;
-    }
-    .mg-cmd { grid-row:1; }
-    .tile-pair-wrap {
-      flex-shrink:0; border:2px solid #3d5a80; border-radius:14px; padding:8px;
-      display:flex; gap:8px; align-items:center; background:#0a1218;
-    }
-    .empty-hint {
-      font-size:calc(1rem * var(--font-scale)); font-weight:700; color:#8aa4be;
-      padding:24px; text-align:center;
-    }
   </style>
 </head>
 <body>
@@ -586,76 +420,7 @@ const BOTS=[
 const BTC_URL='https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT';
 
 let botData={}, countdown=60, timer, currentLogFilter='all', wizStep=1;
-let showAllLevels=false, activeBottomTab='overview', lastBtc=0;
-
-function buildVerdict(btc, lower, upper, inPct, pnl, filled, grids){
-  const inRange=btc>=lower&&btc<=upper;
-  const profitOk=pnl>=0;
-  const cls=inRange&&profitOk?'good':'caution';
-  const headline=inRange&&profitOk
-    ? '✅ הכל תקין — הגריד עובד בטווח'
-    : (!inRange ? '⚠️ שים לב — המחיר קרוב או מחוץ לטווח' : '⚠️ שים לב — בדוק את הרווח');
-  return {cls, headline, inRange, profitOk,
-    lines:[
-      inRange?'המחיר נמצא בתוך טווח הגריד':'המחיר מחוץ לטווח הגריד — DGT עלול להתאפס',
-      profitOk?`רווח ממומש חיובי: $${fmt(pnl,2)}`:`רווח ממומש שלילי: $${fmt(pnl,2)}`,
-      `${filled} רמות עם קנייה פתוחה · ${grids-filled} ממתינות לקנייה`,
-      `מיקום בטווח: ${fmt(inPct,0)}% מהתחתון לעליון`
-    ]};
-}
-function buildCompactKpis(btc, pnl, apr, inPct, pc, ac){
-  return `
-    <div class="mg-kpi-compact">
-      <div class="mg-kc"><span class="mg-kc-l">מחיר BTC</span><span class="mg-kc-v orange btc-now num-ltr">$${fmt(btc)}</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">רווח ממומש</span><span class="mg-kc-v ${pc} num-ltr">${pnl>=0?'+':''}$${fmt(pnl,2)}</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">APR שנתי</span><span class="mg-kc-v ${ac} num-ltr">${fmt(apr,1)}%</span></div>
-      <div class="mg-kc"><span class="mg-kc-l">מיקום בגריד</span><span class="mg-kc-v num-ltr">${fmt(inPct,0)}%</span></div>
-    </div>`;
-}
-function buildStatusPills(btc, lower, upper, pnl, inPct){
-  const inRange=btc>=lower&&btc<=upper;
-  return `
-    <div class="mg-pill ${inRange?'ok':'warn'}"><span class="mg-pill-dot"></span>${inRange?'מחיר בטווח':'מחוץ לטווח'}</div>
-    <div class="mg-pill ${pnl>=0?'ok':'warn'}"><span class="mg-pill-dot"></span>${pnl>=0?'ברווח':'בהפסד'}</div>
-    <div class="mg-pill info"><span class="mg-pill-dot"></span>סימולציה SIM</div>
-    <div class="mg-pill info"><span class="mg-pill-dot"></span>בטווח ${fmt(inPct,0)}%</div>`;
-}
-function buildOverviewHtml(btc, p, s, tradeLog, pnl, apr, cycles, filled, grids, inPct, lower, upper, unrealPnl, totalPnl){
-  const today=new Date().toDateString();
-  const todaySells=(tradeLog||[]).filter(t=>t.type==='SELL'&&new Date(t.time).toDateString()===today);
-  const todayProfit=todaySells.reduce((sum,t)=>sum+(t.profit||0),0);
-  const last5=[...tradeLog].reverse().filter(t=>t.type==='SELL').slice(0,5);
-  const tradesHtml=last5.length?last5.map(t=>`
-    <div class="mg-ov-row">
-      <span>מכירה <span class="num-ltr">$${fmt(t.price,0)}</span></span>
-      <span class="green num-ltr">+$${fmt(t.profit,4)}</span>
-    </div>`).join(''):'<div class="empty-hint">עדיין אין מכירות להצגה</div>';
-  return `
-    <div class="mg-overview-grid">
-      <div class="mg-ov-card">
-        <h3>📅 היום</h3>
-        <div class="mg-ov-big ${todayProfit>=0?'green':'red'} num-ltr">${todayProfit>=0?'+':''}$${fmt(todayProfit,2)}</div>
-        <div class="mg-kpi-hint">${todaySells.length} מכירות היום · ${cycles} סייקלים סה״כ</div>
-      </div>
-      <div class="mg-ov-card">
-        <h3>💰 ביצועים</h3>
-        <div class="mg-ov-row"><span>רווח ממומש</span><span class="${pnl>=0?'green':'red'} num-ltr">${pnl>=0?'+':''}$${fmt(pnl,2)}</span></div>
-        <div class="mg-ov-row"><span>רווח צף</span><span class="num-ltr">${unrealPnl>=0?'+':''}$${fmt(unrealPnl,2)}</span></div>
-        <div class="mg-ov-row"><span>APR</span><span class="blue num-ltr">${fmt(apr,1)}%</span></div>
-        <div class="mg-ov-row"><span>סה״כ</span><span class="num-ltr">$${fmt(totalPnl,2)}</span></div>
-      </div>
-      <div class="mg-ov-card" style="grid-column:1/-1">
-        <h3>🕐 מכירות אחרונות</h3>
-        ${tradesHtml}
-      </div>
-      <div class="mg-ov-card">
-        <h3>📐 טווח גריד</h3>
-        <div class="mg-ov-row"><span>תחתון</span><span class="num-ltr">$${fmt(lower,0)}</span></div>
-        <div class="mg-ov-row"><span>עליון</span><span class="num-ltr">$${fmt(upper,0)}</span></div>
-        <div class="mg-ov-row"><span>BTC עכשיו</span><span class="orange num-ltr">$${fmt(btc,0)}</span></div>
-      </div>
-    </div>`;
-}
+let showAllLevels=false, activeBottomTab='levels', lastBtc=0;
 
 function applyFontScale(){
   const idx=parseInt(localStorage.getItem('mgFontIdx')||'0',10);
@@ -672,8 +437,8 @@ function adjustFont(delta){
 }
 function setBottomTab(tab){
   activeBottomTab=tab;
-  document.querySelectorAll('.mg-dock-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
-  document.querySelectorAll('.mg-dock-pane').forEach(p=>p.classList.toggle('active',p.id==='mg-tab-'+tab));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.toggle('active',p.id==='tab-'+tab));
 }
 function toggleAllLevels(){
   showAllLevels=!showAllLevels;
@@ -802,11 +567,6 @@ function render(btc){
 
   // ── Activity log HTML
   const logHtml=buildLogHtml(tradeLog,currentLogFilter);
-  const verdict=buildVerdict(btc,lower,upper,inPct,pnl,filled,grids);
-  const statusPills=buildStatusPills(btc,lower,upper,pnl,inPct);
-  const overviewHtml=buildOverviewHtml(btc,p,s,tradeLog,pnl,apr,cycles,filled,grids,inPct,lower,upper,unrealPnl,totalPnl);
-  const rangeHint=inPct<20?'קרוב לתחתית':inPct>80?'קרוב לעליון':'באמצע הטווח';
-  const compactKpis=buildCompactKpis(btc,pnl,apr,inPct,pc,ac);
 
   // ── שמור את הגרף לפני rebuild ─────────────────────────────────
   const savedChart = document.getElementById('tv-chart');
@@ -814,112 +574,142 @@ function render(btc){
   const chartAlreadyLoaded = lwChart && savedChart && savedChart.querySelector('canvas');
 
   document.getElementById('root').innerHTML=`
-    <div class="mg-cmd">
-      <div class="mg-brand">
-        <div class="mg-logo">⚡</div>
-        <div>
-          <div class="mg-title">MODEL GRID</div>
-          <div class="mg-sub">BEEP BEEP · מרכז שליטה ל-4 בוטים · BTC/USDT</div>
+    <div class="header">
+      <div class="header-brand">
+        <div class="header-title">⚡ MODEL GRID</div>
+        <div class="header-tagline">BEEP BEEP · מרכז שליטה ל-4 בוטים</div>
+        <span class="status-badge sb-sim"><span class="sb-dot"></span>מצב סימולציה SIM</span>
+      </div>
+      <div class="header-hero">
+        <div class="hero-stat btc-box">
+          <div class="btc-now num-ltr">$${fmt(btc)}</div>
+          <div class="hero-lbl">מחיר BTC עכשיו</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-val ${pc} num-ltr">${pnl>=0?'+':''}$${fmt(pnl,2)}</div>
+          <div class="hero-lbl">רווח ממומש</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-val ${ac} num-ltr">${fmt(apr,1)}%</div>
+          <div class="hero-lbl">APR שנתי</div>
         </div>
       </div>
-      <div class="mg-pills">${statusPills}</div>
-      <div class="mg-actions">
-        <button type="button" class="mg-btn" onclick="adjustFont(-1)" title="הקטן">A−</button>
-        <button type="button" class="mg-btn" onclick="adjustFont(1)" title="הגדל">A+</button>
-        <button type="button" class="mg-btn gold" onclick="openSettings()">⚙️ הגדרות</button>
-        <button type="button" class="mg-btn" onclick="openCalc()">📐 מחשבון</button>
-        <button type="button" class="mg-btn" onclick="openWizard()">🧙 אשף</button>
-        <span class="ref-txt" id="ref" style="margin-right:8px">רענון ${countdown}ש׳</span>
+      <div class="hdr-actions">
+        <button class="hdr-btn font-btn" onclick="adjustFont(-1)" title="הקטן טקסט">A−</button>
+        <button class="hdr-btn font-btn" onclick="adjustFont(1)" title="הגדל טקסט">A+</button>
+        <button class="hdr-btn" onclick="openSettings()">⚙️ הגדרות</button>
+        <button class="hdr-btn" onclick="openCalc()">📐 מחשבון</button>
+        <button class="hdr-btn" onclick="openWizard()">🧙 אשף</button>
+        <div class="ref-txt" id="ref">מתרענן בעוד ${countdown}ש׳</div>
       </div>
     </div>
 
-    <div class="bots-bar mg-bots">${botCards}</div>
+    <div class="bots-bar">${botCards}</div>
 
-    <div class="mg-stage">
-      <aside class="mg-sidebar">
-        <section class="mg-panel">
-          <div class="mg-panel-h">👁️ מבט מהיר</div>
-          ${compactKpis}
-          <div class="mg-verdict ${verdict.cls}">${verdict.headline}</div>
-          <ul class="mg-checklist">
-            ${verdict.lines.map((line,i)=>`<li class="${verdict.inRange&&i===0?'ok':!verdict.profitOk&&i===1?'warn':''}">${line}</li>`).join('')}
-          </ul>
-        </section>
-        <section class="mg-panel">
-          <div class="mg-panel-h">📐 בריאות הגריד</div>
-          <div class="mg-range-big">
-            <div class="rl"><span class="num-ltr">$${fmt(lower,0)}</span><strong class="orange">${fmt(inPct,0)}%</strong><span class="num-ltr">$${fmt(upper,0)}</span></div>
-            <div class="mg-range-bar">
-              <div class="mg-range-fill" style="width:${inPct}%"></div>
-              <div class="mg-range-marker" style="left:${inPct}%"></div>
-            </div>
-            <div class="mg-mini-grid">
-              <div class="mg-mini-cell">רמות<b>${grids}</b></div>
-              <div class="mg-mini-cell">קנויות<b class="green">${filled}</b></div>
-              <div class="mg-mini-cell">ממתינות<b>${waiting}</b></div>
-              <div class="mg-mini-cell">ATR<b class="orange num-ltr">$${fmt(atr,0)}</b></div>
-            </div>
-          </div>
-          <div class="mdd-main" style="margin-top:12px">
-            <div class="mdd-main-val" style="color:${mdd>10?'var(--loss)':'var(--text)'}">${fmt(mdd,1)}%</div>
-            <div class="stat-lbl">ירידה מקסימלית · ${runtimeStr}</div>
-          </div>
-        </section>
-        <section class="mg-panel profit-curve">
-          <div class="pc-title"><span>📈 עקומת רווח</span><span>${cycles}</span></div>
-          <canvas id="profit-canvas"></canvas>
-        </section>
-      </aside>
-      <div class="mg-chart-col">
-        <div class="mg-chart-top">
-          <h2>📈 גרף מחיר + רמות גריד</h2>
-          <div class="chart-info">
-            <span class="ci-item"><span class="ci-dot" style="background:#00e676"></span><strong>${filled}</strong> פוזיציות</span>
-            <span class="ci-item"><span class="ci-dot" style="background:#ff9f00"></span>TradingView</span>
-          </div>
+    <div class="left">
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-val green num-ltr">+${fmt(pnl,2)}</div>
+          <div class="stat-sub num-ltr">${fmt(apr,1)}% APR</div>
+          <div class="stat-lbl">רווח גריד</div>
         </div>
-        <div class="mg-chart-wrap chart-wrap">
-          <div id="tv-chart"></div>
-          <canvas id="grid-overlay"></canvas>
+        <div class="stat-card">
+          <div class="stat-val" style="color:${unrealPnl>=0?'var(--profit)':'var(--loss)'}"><span class="num-ltr">${unrealPnl>=0?'+':''}$${fmt(unrealPnl,2)}</span></div>
+          <div class="stat-lbl">רווח צף</div>
         </div>
+        <div class="stat-card wide">
+          <div class="stat-val" style="color:${totalPnl>=0?'var(--profit)':'var(--loss)'}"><span class="num-ltr">${totalPnl>=0?'+':''}$${fmt(totalPnl,2)}</span></div>
+          <div class="stat-sub num-ltr">${fmt(totalApr,1)}% APR כולל</div>
+          <div class="stat-lbl">סה״כ רווח · שווי <span class="num-ltr">$${fmt(total)}</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val orange">${cycles}</div>
+          <div class="stat-lbl">סייקלים</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${fmt(d,1)}</div>
+          <div class="stat-lbl">ימים פעילים</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">${dgt}</div>
+          <div class="stat-lbl">איפוסי DGT</div>
+        </div>
+      </div>
+
+      <div class="grid-viz">
+        <div class="vt">📐 מצב הגריד</div>
+        <div class="rl"><span class="num-ltr">$${fmt(lower,0)}</span><span class="orange" style="font-weight:800">${fmt(inPct,0)}% בטווח</span><span class="num-ltr">$${fmt(upper,0)}</span></div>
+        <div class="rb"><div class="rf" style="width:${inPct}%"></div><div class="pp" style="left:${inPct}%"><div class="pl num-ltr">$${fmt(btc,0)}</div></div></div>
+        <div class="gm4">
+          <div class="gm"><div class="gmv">${grids}</div><div class="gml">רמות</div></div>
+          <div class="gm"><div class="gmv green">${filled}</div><div class="gml">קנויות</div></div>
+          <div class="gm"><div class="gmv">${waiting}</div><div class="gml">ממתינות</div></div>
+          <div class="gm"><div class="gmv orange num-ltr">$${fmt(atr,0)}</div><div class="gml">ATR-14</div></div>
+        </div>
+        <div class="mdd-main">
+          <div class="mdd-main-val" style="color:${mdd>10?'var(--loss)':'var(--text)'}">${fmt(mdd,1)}%</div>
+          <div class="stat-lbl">ירידה מקסימלית (MDD)</div>
+          <div class="mdd-mini"><span>7d: ${fmt(mdd7,1)}%</span><span>30d: ${fmt(mdd30,1)}%</span><span>⏱ ${runtimeStr}</span></div>
+        </div>
+      </div>
+
+      <div class="profit-curve">
+        <div class="pc-title"><span>📈 עקומת רווח</span><span>${cycles} עסקאות</span></div>
+        <canvas id="profit-canvas"></canvas>
       </div>
     </div>
 
-    <div class="mg-dock">
-      <div class="mg-dock-tabs">
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='overview'?'active':''}" data-tab="overview" onclick="setBottomTab('overview')">🏠 סקירה</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='levels'?'active':''}" data-tab="levels" onclick="setBottomTab('levels')">📊 רמות גריד</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='activity'?'active':''}" data-tab="activity" onclick="setBottomTab('activity')">🎯 פעילות</button>
-        <button type="button" class="mg-dock-tab ${activeBottomTab==='log'?'active':''}" data-tab="log" onclick="setBottomTab('log')">📋 עסקאות</button>
+    <div class="center">
+      <div class="chart-header">
+        <span>📈 גרף BTC/USDT</span>
+        <div class="chart-info">
+          <span class="ci-item"><span class="ci-dot" style="background:#00e676"></span><strong>${filled}</strong> קנויות</span>
+          <span class="ci-item"><span class="ci-dot" style="background:#ff9f00"></span>בטווח <strong>${fmt(inPct,0)}%</strong></span>
+          <span>TradingView · זמן אמת</span>
+        </div>
       </div>
-      <div class="mg-dock-body">
-        <div id="mg-tab-overview" class="mg-dock-pane ${activeBottomTab==='overview'?'active':''}">${overviewHtml}</div>
-        <div id="mg-tab-levels" class="mg-dock-pane mg-ladder ${activeBottomTab==='levels'?'active':''}">
+      <div class="chart-wrap">
+        <div id="tv-chart"></div>
+        <canvas id="grid-overlay"></canvas>
+        <div id="waiting-overlay" style="position:absolute;bottom:30px;left:8px;z-index:20;display:flex;flex-direction:column;gap:6px;pointer-events:none;"></div>
+      </div>
+    </div>
+
+    <div class="bottom-panel">
+      <div class="tab-bar">
+        <button type="button" class="tab-btn ${activeBottomTab==='levels'?'active':''}" data-tab="levels" onclick="setBottomTab('levels')">📊 רמות גריד</button>
+        <button type="button" class="tab-btn ${activeBottomTab==='activity'?'active':''}" data-tab="activity" onclick="setBottomTab('activity')">🎯 פעילות היום</button>
+        <button type="button" class="tab-btn ${activeBottomTab==='log'?'active':''}" data-tab="log" onclick="setBottomTab('log')">📋 לוג עסקאות</button>
+      </div>
+      <div class="tab-body">
+        <div id="tab-levels" class="tab-pane ${activeBottomTab==='levels'?'active':''}">
           <div class="levels-toolbar">
             <div class="leg">
               <span><span class="dg" style="background:#00e676"></span>קנוי</span>
-              <span><span class="dg" style="background:#ff9f00"></span>כאן עכשיו</span>
+              <span><span class="dg" style="background:#ff9f00"></span>כאן</span>
               <span><span class="dg" style="background:#3d5a80"></span>ממתין</span>
             </div>
             <button type="button" class="toggle-levels-btn" onclick="toggleAllLevels()">${levelsBtnLabel}</button>
           </div>
           <div class="ls" id="levels-list">${lvlRows}</div>
         </div>
-        <div id="mg-tab-activity" class="mg-dock-pane ${activeBottomTab==='activity'?'active':''}">
+        <div id="tab-activity" class="tab-pane ${activeBottomTab==='activity'?'active':''}">
           <div class="tiles-panel">
             <div class="tiles-toolbar">
-              <div class="tiles-toolbar-title">🎯 פוזיציות פתוחות ומכירות היום</div>
-              <button type="button" id="hist-btn" class="hist-btn" onclick="toggleHistory()">📅 היסטוריה</button>
-              <span id="hist-date"></span>
+              <div class="tiles-toolbar-title">🎯 פוזיציות גריד — היום</div>
+              <div style="display:flex;gap:8px;align-items:center">
+                <button type="button" id="hist-btn" class="hist-btn" onclick="toggleHistory()">📅 היסטוריה</button>
+                <span id="hist-date"></span>
+              </div>
             </div>
             <div id="hist-cal" style="display:none;flex-wrap:wrap;gap:6px;margin-bottom:8px;"></div>
             <div id="tiles-row">${buildLiveTiles(s, btc, tradeLog)}</div>
           </div>
         </div>
-        <div id="mg-tab-log" class="mg-dock-pane ${activeBottomTab==='log'?'active':''}">
+        <div id="tab-log" class="tab-pane ${activeBottomTab==='log'?'active':''}">
           <div class="log-wrap">
             <div class="log-head">
-              <div class="ft">📋 יומן עסקאות</div>
+              <div class="ft">📋 לוג פעילות</div>
               <div class="log-filter">
                 <button type="button" class="lf-btn ${currentLogFilter==='all'?'act':''}" onclick="setFilter('all')">הכל</button>
                 <button type="button" class="lf-btn ${currentLogFilter==='sell'?'act':''}" onclick="setFilter('sell')">מכירות</button>
@@ -932,11 +722,11 @@ function render(btc){
       </div>
     </div>
 
-    <footer class="mg-foot">
-      <div><span class="dl"></span>מערכת פעילה · KuCoin WebSocket</div>
+    <div class="status">
+      <div><span class="dl"></span>מחובר · KuCoin / Railway</div>
       <div>עדכון: ${fmtD(p.last_updated)}</div>
-      <div>שווי: <span class="num-ltr">$${fmt(total)}</span> · DGT: ${dgt}</div>
-    </footer>
+      <div><span class="num-ltr">$${fmt(perG,2)}</span>/רמה · <span class="num-ltr">$${fmt(ppc,5)}</span>/סייקל</div>
+    </div>
   `;
 
   // Populate settings modal data
@@ -947,6 +737,9 @@ function render(btc){
 
   // Draw Profit Curve
   drawProfitCurve(tradeLog, pnl);
+
+  // Waiting tiles on chart
+  setTimeout(()=>buildWaitingOverlay(s, btc), 200);
 
   // ── אם הגרף כבר טעון — החזר אותו במקום לבנות מחדש ────────────
   if(chartAlreadyLoaded){
@@ -969,7 +762,7 @@ function drawProfitCurve(tradeLog, totalPnl) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = canvas.offsetWidth || 200;
-  const H = canvas.offsetHeight || 48;
+  const H = 72;
   canvas.width  = W;
   canvas.height = H;
   ctx.clearRect(0, 0, W, H);
@@ -977,8 +770,8 @@ function drawProfitCurve(tradeLog, totalPnl) {
   // Build stepped profit array from sell trades
   const sells = tradeLog.filter(t => t.type === 'SELL').slice(-60);
   if (sells.length === 0) {
-    ctx.fillStyle = '#c8d8e8';
-    ctx.font = 'bold 14px Segoe UI, sans-serif';
+    ctx.fillStyle = '#aaaaaa';
+    ctx.font = '10px sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText('ממתין לעסקאות...', W/2, H/2);
     return;
@@ -1064,7 +857,7 @@ function buildLiveTiles(s, btc, tradeLog) {
   filledLevels.forEach(lv => {
     const unrealPct = btc > 0 ? ((btc - lv.buy) / lv.buy * 100) : 0;
     const isProfit = unrealPct >= 0;
-    html += `<div class="tile-pair-wrap">
+    html += `<div style="flex-shrink:0;border:1px solid #333;border-radius:10px;padding:4px;display:flex;gap:3px;align-items:center;background:#0a1218;">
       <!-- ריבוע קנייה — ירוק כמו קודם -->
       <div class="tile bought" style="margin:0;">
         <div class="tile-lbl" style="color:#fff">✅ קנוי</div>
@@ -1086,7 +879,7 @@ function buildLiveTiles(s, btc, tradeLog) {
 
   // רמות ממתינות — מוצגות על הגרף, לא כאן
 
-  return html || '<div class="empty-hint">אין פעילות היום — הרובוט ממתין לתנועת מחיר</div>';
+  return html || '<span style="color:#aaa;font-size:.6rem">אין פעילות היום</span>';
 }
 
 function toggleHistory() {
@@ -1162,6 +955,24 @@ function showHistoryDay(dateStr) {
     </div>`;
   });
   tiles.innerHTML = html || `<span style="color:#aaa;font-size:.6rem">אין עסקאות ב-${dateStr}</span>`;
+}
+
+
+// ── Waiting tiles on chart (bottom-left overlay) ───────────────
+function buildWaitingOverlay(s, btc) {
+  const el = document.getElementById('waiting-overlay');
+  if (!el || !s || !s.grid) return;
+  const ci = s.grid.findIndex(lv => btc >= lv.buy && btc < lv.sell);
+  const base = ci >= 0 ? ci : s.grid.reduce((b,lv,i)=>Math.abs(lv.buy-btc)<Math.abs(s.grid[b].buy-btc)?i:b,0);
+  const waiting = s.grid.filter((lv,i) => !lv.filled && i >= base-3 && i <= base+3);
+  el.innerHTML = waiting.map(lv => {
+    const isCur = btc >= lv.buy && btc < lv.sell;
+    return `<div style="background:#0d1820;border:2px solid #f7931a;border-radius:6px;padding:3px 7px;text-align:center;min-width:70px;opacity:${isCur?'1':'0.75'};">
+      <div style="font-size:.46rem;color:#fff;">${isCur?'◉ כאן':'⏳ ממתין'}</div>
+      <div style="font-size:.68rem;font-weight:700;color:#fff;">$${fmt(lv.buy,0)}</div>
+      <div style="font-size:.5rem;color:#fff;">→$${fmt(lv.sell,0)}</div>
+    </div>`;
+  }).join('');
 }
 
 
