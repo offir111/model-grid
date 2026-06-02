@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
   <title>Model GRID — BEEP BEEP · מרכז שליטה</title>
   <style>
     :root {
@@ -19,12 +20,14 @@
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     html, body {
-      height:100vh; overflow:hidden;
+      width:100%; height:100%; margin:0; overflow:hidden;
       background:var(--bg); color:var(--text);
       font-family:'Segoe UI', Tahoma, Arial, sans-serif;
       font-size: calc(16px * var(--font-scale));
       line-height: 1.35;
     }
+    html { height:100dvh; }
+    body { min-height:0; max-height:100dvh; }
     body.text-xl { --font-scale: 1.15; }
     body.text-xxl { --font-scale: 1.28; }
 
@@ -32,14 +35,7 @@
       .sb-dot, .bc-dot, .dl { animation: none !important; }
     }
 
-    .root {
-      display: grid;
-      grid-template-rows: auto auto 1fr auto auto;
-      grid-template-columns: minmax(280px, 320px) 1fr;
-      height: 100vh;
-    }
-
-    /* ── HEADER ── */
+    /* ── HEADER (legacy — hidden) ── */
     .header {
       grid-column: 1 / -1;
       display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
@@ -350,9 +346,14 @@
        MODEL GRID — Winner UI v3 (Senior-friendly terminal)
        ══════════════════════════════════════════════════════════ */
     .root {
-      grid-template-rows: auto auto 1fr minmax(140px, 22vh) auto;
-      grid-template-columns: minmax(260px, 290px) 1fr;
-      background: linear-gradient(165deg, #0b1220 0%, #070d14 45%, #0a1018 100%);
+      display:grid;
+      width:100%;
+      height:100%;
+      max-height:100dvh;
+      min-height:0;
+      grid-template-rows:auto auto minmax(0,1fr) minmax(88px,min(22dvh,240px)) auto;
+      grid-template-columns:minmax(220px,28vw) minmax(0,1fr);
+      background:linear-gradient(165deg,#0b1220 0%,#070d14 45%,#0a1018 100%);
     }
     .mg-cmd {
       grid-column:1/-1; display:flex; align-items:center; justify-content:space-between;
@@ -404,10 +405,16 @@
     .mg-kc-v {
       display:block; font-size:calc(.95rem * var(--font-scale)); font-weight:900; line-height:1.2;
     }
-    .mg-stage { grid-column:1/-1; grid-row:3; display:grid; grid-template-columns:minmax(260px,290px) 1fr; min-height:0; }
+    .mg-stage {
+      grid-column:1/-1; grid-row:3;
+      display:grid; grid-template-columns:minmax(220px,28vw) minmax(0,1fr);
+      min-height:0; max-height:100%; overflow:hidden;
+    }
     .mg-sidebar {
       padding:8px 10px; display:flex; flex-direction:column; gap:8px;
-      overflow-y:auto; border-left:2px solid #2a4a6a; max-height:100%;
+      overflow-y:auto; overflow-x:hidden;
+      border-left:2px solid #2a4a6a;
+      min-height:0; max-height:100%;
     }
     .mg-panel {
       background:#121c28; border:2px solid #3d5a80; border-radius:12px; padding:10px;
@@ -445,20 +452,42 @@
     }
     .mg-mini-cell b { display:block; font-size:calc(1.2rem * var(--font-scale)); color:#ffd700; margin-top:4px; }
     .mg-chart-col {
-      display:flex; flex-direction:column; min-height:0; background:#080c12;
+      display:flex; flex-direction:column;
+      min-height:0; min-width:0; height:100%;
+      background:#080c12; overflow:hidden;
     }
     .mg-chart-top {
+      flex:0 0 auto;
       padding:6px 12px; background:#121c28; border-bottom:2px solid #2a4a6a;
       display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
     }
     .mg-chart-top h2 { font-size:calc(.92rem * var(--font-scale)); font-weight:900; }
     .mg-chart-wrap {
-      flex:1; margin:4px 6px 6px; border-radius:12px; border:2px solid #ffd70055;
-      overflow:hidden; position:relative; min-height:min(55vh, 520px);
+      flex:1 1 auto; min-height:0; height:100%;
+      margin:4px; border-radius:12px; border:2px solid #ffd70055;
+      overflow:hidden; position:relative;
     }
+    #tv-chart {
+      width:100%; height:100%;
+      min-height:0; display:block;
+    }
+    #tv-chart iframe { width:100%; height:100%; border:0; display:block; }
+    #grid-overlay { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
     .mg-dock {
-      grid-column:1/-1; grid-row:4; display:flex; flex-direction:column;
+      grid-column:1/-1; grid-row:4;
+      display:flex; flex-direction:column;
+      min-height:0; max-height:min(22dvh,240px);
       background:#060c14; border-top:3px solid #2a4a6a;
+    }
+    @media (max-height:720px) {
+      .root { grid-template-rows:auto auto minmax(0,1fr) minmax(72px,16dvh) auto; }
+      .mg-sidebar .profit-curve { display:none; }
+      .mg-pills { display:none; }
+    }
+    @media (max-width:900px) {
+      .root { grid-template-columns:1fr; grid-template-rows:auto auto minmax(0,1fr) minmax(72px,18dvh) auto; }
+      .mg-stage { grid-template-columns:1fr; grid-template-rows:minmax(0,32vh) minmax(0,1fr); }
+      .mg-sidebar { max-height:32vh; border-left:none; border-bottom:2px solid #2a4a6a; }
     }
     .mg-dock-tabs { display:flex; gap:8px; padding:10px 16px; flex-wrap:wrap; background:#0a1018; }
     .mg-dock-tab {
@@ -510,6 +539,204 @@
     .empty-hint {
       font-size:calc(1rem * var(--font-scale)); font-weight:700; color:#8aa4be;
       padding:24px; text-align:center;
+    }
+
+    /* ── מצב קומפקט: iframe BEEP BEEP / תצוגת טלפון ── */
+    html.mg-compact {
+      height:100%; overflow:hidden;
+    }
+    html.mg-compact body {
+      --font-scale: 0.92;
+      height:100%; max-height:100%;
+      overflow-x:hidden;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior-y:contain;
+    }
+    html.mg-compact .root {
+      display:flex; flex-direction:column;
+      width:100%; min-height:100%;
+      height:auto; max-height:none;
+      grid-template-columns:1fr;
+      grid-template-rows:none;
+      padding-bottom:max(16px, env(safe-area-inset-bottom, 0px));
+    }
+    html.mg-compact .mg-cmd,
+    html.mg-compact .mg-bots,
+    html.mg-compact .mg-stage,
+    html.mg-compact .mg-dock,
+    html.mg-compact .mg-foot {
+      flex-shrink:0;
+      grid-column:unset; grid-row:unset;
+    }
+    html.mg-compact .mg-foot { display:none; }
+    html.mg-compact .mg-cmd {
+      padding:5px 8px; gap:4px; flex-wrap:nowrap;
+    }
+    html.mg-compact .mg-brand { gap:8px; min-width:0; }
+    html.mg-compact .mg-logo { width:34px; height:34px; font-size:1.15rem; border-radius:8px; flex-shrink:0; }
+    html.mg-compact .mg-title { font-size:calc(1.05rem * var(--font-scale)); white-space:nowrap; }
+    html.mg-compact .mg-sub { display:none; }
+    html.mg-compact .mg-pills { display:none !important; }
+    html.mg-compact .mg-actions {
+      gap:4px; flex-shrink:0; flex-wrap:nowrap;
+    }
+    html.mg-compact .mg-btn {
+      min-height:34px; min-width:34px; padding:5px 8px;
+      font-size:calc(.72rem * var(--font-scale)); border-radius:8px;
+    }
+    html.mg-compact .mg-actions .ref-txt { display:none; }
+    html.mg-compact .mg-bots {
+      grid-template-columns:repeat(2,1fr);
+      gap:5px; padding:5px 8px; min-height:0;
+    }
+    html.mg-compact .bot-card {
+      min-height:52px; padding:6px 8px; gap:6px; border-radius:8px;
+    }
+    html.mg-compact .bc-icon { font-size:1.1rem; }
+    html.mg-compact .bc-name { font-size:calc(.78rem * var(--font-scale)); }
+    html.mg-compact .bc-pnl { font-size:calc(.9rem * var(--font-scale)); }
+    html.mg-compact .bc-wl, html.mg-compact .bc-lbl { font-size:calc(.65rem * var(--font-scale)); }
+    html.mg-compact .bc-badge { font-size:calc(.58rem * var(--font-scale)); padding:2px 5px; }
+    html.mg-compact .mg-stage {
+      display:flex; flex-direction:column;
+      grid-template-columns:1fr; grid-template-rows:none;
+      min-height:0; overflow:visible;
+      flex-shrink:0;
+    }
+    html.mg-compact .mg-chart-col {
+      order:1; flex:0 0 auto; width:100%;
+    }
+    html.mg-compact .mg-chart-top {
+      padding:4px 8px; min-height:0;
+    }
+    html.mg-compact .mg-chart-top h2 { font-size:calc(.78rem * var(--font-scale)); }
+    html.mg-compact .chart-info { font-size:calc(.65rem * var(--font-scale)); gap:6px; }
+    html.mg-compact .mg-chart-wrap {
+      flex:0 0 auto;
+      height:clamp(200px, 36vh, 340px);
+      min-height:200px;
+      margin:2px 4px 4px;
+      border-radius:10px;
+    }
+    html.mg-compact .mg-sidebar {
+      order:2; flex:0 0 auto;
+      width:100%; max-width:100%;
+      max-height:min(46vh, 380px);
+      height:auto;
+      padding:4px 6px 8px; gap:8px;
+      border-left:none; border-top:2px solid #2a4a6a;
+      overflow-x:hidden;
+      overflow-y:auto;
+      display:flex; flex-direction:column; flex-wrap:nowrap;
+      -webkit-overflow-scrolling:touch;
+      overscroll-behavior:contain;
+      touch-action:pan-y;
+    }
+    html.mg-compact .mg-sidebar .mg-panel {
+      flex:0 0 auto;
+      width:100%; min-width:0; max-width:100%;
+      padding:8px 10px; margin:0;
+    }
+    html.mg-compact .mg-sidebar .mg-panel.profit-curve { display:none; }
+    html.mg-compact .mg-panel-h { font-size:calc(.75rem * var(--font-scale)); margin-bottom:4px; padding-bottom:4px; }
+    html.mg-compact .mg-kpi-compact { margin-bottom:6px; padding-bottom:6px; gap:4px; }
+    html.mg-compact .mg-kc { padding:4px 6px; }
+    html.mg-compact .mg-kc-l { font-size:calc(.58rem * var(--font-scale)); }
+    html.mg-compact .mg-kc-v { font-size:calc(.82rem * var(--font-scale)); }
+    html.mg-compact .mg-verdict {
+      display:block;
+      font-size:calc(.8rem * var(--font-scale));
+      padding:8px;
+    }
+    html.mg-compact .mg-checklist {
+      display:flex;
+      gap:6px;
+    }
+    html.mg-compact .mg-checklist li {
+      font-size:calc(.72rem * var(--font-scale));
+      padding:6px 8px;
+    }
+    html.mg-compact .mg-range-bar { height:22px; margin:6px 0; }
+    html.mg-compact .mg-range-marker { height:34px; top:-6px; }
+    html.mg-compact .mg-mini-grid { gap:6px; }
+    html.mg-compact .mg-mini-cell { padding:8px; }
+    html.mg-compact .mg-dock {
+      flex-shrink:0;
+      max-height:none; min-height:0;
+      overflow:visible;
+    }
+    html.mg-compact .mg-dock-tabs {
+      padding:4px 6px; gap:4px; flex-wrap:nowrap; overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+    html.mg-compact .mg-dock-tab {
+      min-height:36px; padding:6px 10px; flex-shrink:0;
+      font-size:calc(.7rem * var(--font-scale)); border-radius:8px 8px 0 0;
+    }
+    html.mg-compact .mg-dock-tab.active { padding-bottom:8px; }
+    html.mg-compact .mg-dock-body {
+      padding:6px 8px;
+      overflow:visible;
+      min-height:0;
+    }
+    html.mg-compact .mg-dock-pane.active {
+      overflow-y:visible;
+      max-height:none;
+      min-height:80px;
+    }
+    html.mg-compact .mg-overview-grid,
+    html.mg-compact .mg-dock-pane.active .ls,
+    html.mg-compact .mg-dock-pane.active .log-wrap,
+    html.mg-compact .mg-dock-pane.active .tiles-panel {
+      overflow-y:visible;
+      max-height:none;
+    }
+    html.mg-compact .mg-ov-big { font-size:calc(1.2rem * var(--font-scale)); }
+    html.mg-compact .modal-box { max-width:96vw; max-height:90vh; overflow-y:auto; }
+
+    @media (max-width:520px), (max-height:640px) {
+      html:not(.mg-compact) { height:100%; overflow:hidden; }
+      html:not(.mg-compact) body {
+        --font-scale: 0.9;
+        height:100%; overflow-x:hidden; overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+      html:not(.mg-compact) .root {
+        display:flex; flex-direction:column;
+        min-height:100%; height:auto; max-height:none;
+        grid-template-columns:1fr; grid-template-rows:none;
+      }
+      html:not(.mg-compact) .mg-foot { display:none; }
+      html:not(.mg-compact) .mg-pills { display:none; }
+      html:not(.mg-compact) .mg-bots { grid-template-columns:repeat(2,1fr); padding:6px 8px; min-height:0; }
+      html:not(.mg-compact) .mg-stage {
+        grid-template-columns:1fr;
+        grid-template-rows:none;
+        overflow:visible;
+      }
+      html:not(.mg-compact) .mg-chart-wrap {
+        height:clamp(200px, 36vh, 340px);
+        min-height:200px;
+      }
+      html:not(.mg-compact) .mg-sidebar {
+        width:100%;
+        max-height:min(46vh, 380px);
+        border-left:none; border-top:2px solid #2a4a6a;
+        overflow-x:hidden;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+        touch-action:pan-y;
+      }
+      html:not(.mg-compact) .mg-sidebar .mg-panel {
+        width:100%; min-width:0;
+      }
+      html:not(.mg-compact) .mg-sidebar .profit-curve { display:none; }
+      html:not(.mg-compact) .mg-dock { max-height:none; overflow:visible; }
+      html:not(.mg-compact) .mg-dock-body,
+      html:not(.mg-compact) .mg-dock-pane.active { overflow-y:visible; max-height:none; }
+      html:not(.mg-compact) .mg-btn { min-height:36px; padding:6px 10px; font-size:calc(.78rem * var(--font-scale)); }
+      html:not(.mg-compact) .mg-dock-tab { min-height:40px; padding:8px 12px; font-size:calc(.78rem * var(--font-scale)); }
     }
   </style>
 </head>
@@ -577,6 +804,18 @@
 </div>
 
 <script>
+function applyCompactLayout(){
+  const params=new URLSearchParams(location.search);
+  const inBeep=params.get('embed')==='beep'||window.self!==window.top;
+  const narrow=window.innerWidth<=520;
+  const short=window.innerHeight<=640;
+  const compact=inBeep||narrow||short;
+  document.documentElement.classList.toggle('mg-compact',compact);
+  document.documentElement.classList.toggle('mg-in-beep',inBeep);
+}
+applyCompactLayout();
+window.applyCompactLayout = applyCompactLayout;
+
 const BOTS=[
   {id:'grid',name:'Model GRID',icon:'⚡',pUrl:'https://raw.githubusercontent.com/offir111/model-grid/master/data/portfolio.json',sUrl:'https://raw.githubusercontent.com/offir111/model-grid/master/data/grid_state.json',type:'grid'},
   {id:'bit', name:'Model BIT', icon:'₿',  pUrl:'https://raw.githubusercontent.com/offir111/model-bit/master/data/portfolio.json',type:'bit'},
@@ -809,9 +1048,13 @@ function render(btc){
   const compactKpis=buildCompactKpis(btc,pnl,apr,inPct,pc,ac);
 
   // ── שמור את הגרף לפני rebuild ─────────────────────────────────
-  const savedChart = document.getElementById('tv-chart');
-  const savedChartHTML = savedChart ? savedChart.innerHTML : '';
-  const chartAlreadyLoaded = lwChart && savedChart && savedChart.querySelector('canvas');
+  const chartWrap = document.querySelector('.chart-wrap');
+  const savedChartEl = document.getElementById('tv-chart');
+  const savedOverlay = document.getElementById('grid-overlay');
+  const savedWaiting = document.getElementById('waiting-overlay');
+  const chartAlreadyLoaded = savedChartEl && savedChartEl.querySelector('iframe');
+  // שמור reference לאלמנטים עצמם (לא innerHTML)
+  const savedChartNode   = chartAlreadyLoaded ? savedChartEl.cloneNode(true) : null;
 
   document.getElementById('root').innerHTML=`
     <div class="mg-cmd">
@@ -949,16 +1192,16 @@ function render(btc){
   drawProfitCurve(tradeLog, pnl);
 
   // ── אם הגרף כבר טעון — החזר אותו במקום לבנות מחדש ────────────
-  if(chartAlreadyLoaded){
+  if(chartAlreadyLoaded && savedChartNode){
     const newChartEl = document.getElementById('tv-chart');
-    if(newChartEl && savedChartHTML){
-      newChartEl.innerHTML = savedChartHTML;
-      // עדכן רק קווי גריד (ללא fetch מחדש)
-      setTimeout(()=>{ drawGridLines(); }, 100);
+    const newWrap = document.querySelector('.chart-wrap');
+    if(newChartEl && newWrap){
+      newWrap.replaceChild(savedChartNode, newChartEl);
     }
   } else {
     loadTVChart();
   }
+  setTimeout(()=>{ applyCompactLayout(); bindChartResize(); }, 600);
 
   startCountdown();
 }
@@ -1418,7 +1661,29 @@ document.querySelectorAll('.modal-overlay').forEach(o=>{
   o.addEventListener('click',e=>{if(e.target===o) o.classList.add('hidden');});
 });
 
-let tvWidgetLoaded=false, chartWs=null;
+let tvWidgetLoaded=false, chartWs=null, chartResizeObs=null;
+
+function bindChartResize(){
+  const wrap=document.querySelector('.mg-chart-wrap');
+  const tv=document.getElementById('tv-chart');
+  if(!wrap||!tv) return;
+  const apply=()=>{
+    const w=Math.max(Math.floor(wrap.clientWidth),180);
+    const h=Math.max(Math.floor(wrap.clientHeight),120);
+    if(lwChart){
+      try{ lwChart.resize(w,h); drawGridLines(); }catch(e){}
+    }
+    window.dispatchEvent(new Event('resize'));
+  };
+  apply();
+  if(chartResizeObs) chartResizeObs.disconnect();
+  chartResizeObs=new ResizeObserver(apply);
+  chartResizeObs.observe(wrap);
+  if(typeof ResizeObserver!=='undefined'){
+    const col=document.querySelector('.mg-chart-col');
+    if(col) chartResizeObs.observe(col);
+  }
+}
 let lwChart=null, candleSeries=null, priceLabelSeries=null, priceLines=[];
 const LW_ENABLED = false; // השתמש ב-TradingView Widget
 
@@ -1464,6 +1729,7 @@ function loadTVChart(){
       studies:[],
     });
     tvWidgetLoaded=true;
+    setTimeout(bindChartResize, 350);
   };
   document.head.appendChild(s);
   connectPriceWs();
@@ -1500,9 +1766,12 @@ async function buildLWChart(el){
     timeScale:{ borderColor:'#0f2030', timeVisible:true, secondsVisible:false, rightOffset:5 },
   });
 
+  const wrap=el.closest('.mg-chart-wrap')||el;
   new ResizeObserver(entries=>{
-    for(const e of entries) lwChart && lwChart.resize(e.contentRect.width, e.contentRect.height);
-  }).observe(el);
+    for(const e of entries){
+      if(lwChart) lwChart.resize(e.contentRect.width, e.contentRect.height);
+    }
+  }).observe(wrap);
 
   candleSeries=lwChart.addCandlestickSeries({
     upColor:'#00e676', downColor:'#ff5252',
@@ -1701,6 +1970,10 @@ function startCountdown(){
   },1000);
 }
 
+window.addEventListener('resize', ()=>{ applyCompactLayout(); setTimeout(bindChartResize, 80); });
+if(window.visualViewport){
+  window.visualViewport.addEventListener('resize', ()=>{ setTimeout(bindChartResize, 50); });
+}
 load();
 </script>
 </body>
